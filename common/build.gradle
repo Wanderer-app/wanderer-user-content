@@ -1,0 +1,3 @@
+project(":common") {
+    description = "common data structure module"
+}

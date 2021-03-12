@@ -1,0 +1,7 @@
+project(":core") {
+    description = "core module"
+
+    dependencies {
+        implementation project(':common')
+    }
+}
