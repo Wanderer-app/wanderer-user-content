@@ -1,17 +1,14 @@
 package ge.wanderer.core.model.content.status
 
-import org.joda.time.LocalDate
+import org.joda.time.LocalDateTime
 import java.lang.IllegalStateException
 
 class NotRelevant (
-    private val createdAt: LocalDate
-): PublicContentStatus {
-    override fun createdAt(): LocalDate = createdAt
-    override fun statusType(): StatusType =
-        StatusType.NOT_RELEVANT
-    override fun ban(onDate: LocalDate): PublicContentStatus = throw IllegalStateException("Cant ban irrelevant content")
-    override fun delete(onDate: LocalDate): PublicContentStatus =
-        Deleted(onDate)
-    override fun unBan(onDate: LocalDate): PublicContentStatus = throw IllegalStateException("Cant unban irrelevant content")
-    override fun markIrrelevant(onDate: LocalDate): PublicContentStatus = throw IllegalStateException("Already marked as irrelevant")
+    private val createdAt: LocalDateTime
+): UserAddedContentStatus {
+    override fun createdAt(): LocalDateTime = createdAt
+    override fun statusType(): StatusType = StatusType.NOT_RELEVANT
+    override fun remove(onDate: LocalDateTime): UserAddedContentStatus = throw IllegalStateException("Cant remove irrelevant content")
+    override fun activate(onDate: LocalDateTime): UserAddedContentStatus = throw IllegalStateException("Cant activate irrelevant content")
+    override fun markIrrelevant(onDate: LocalDateTime): UserAddedContentStatus = throw IllegalStateException("Already marked as irrelevant")
 }

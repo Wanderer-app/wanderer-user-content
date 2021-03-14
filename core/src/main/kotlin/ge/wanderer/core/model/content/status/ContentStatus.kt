@@ -9,5 +9,5 @@ data class ContentStatus (
 )
 
 enum class StatusType {
-    ACTIVE, BANNED, DELETED, NOT_RELEVANT
+    ACTIVE, REMOVED, NOT_RELEVANT
 }

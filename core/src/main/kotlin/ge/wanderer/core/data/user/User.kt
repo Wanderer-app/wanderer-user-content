@@ -1,4 +1,4 @@
-package ge.wanderer.core.model.user
+package ge.wanderer.core.data.user
 
 data class User (
     val id: Long,
