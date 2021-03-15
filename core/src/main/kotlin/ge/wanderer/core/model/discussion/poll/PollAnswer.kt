@@ -6,6 +6,7 @@ import ge.wanderer.core.model.content.status.UserAddedContentStatus
 import ge.wanderer.core.data.user.User
 import ge.wanderer.core.model.content.status.StatusType
 import org.joda.time.LocalDateTime
+import java.math.RoundingMode
 
 data class PollAnswer (
     private val id: Long,
@@ -30,7 +31,7 @@ data class PollAnswer (
         status = status.activate(onDate)
     }
 
-    fun selectors() = selectors
+    override fun selectors() = selectors.toList()
 
     override fun selectBy(user: User) {
         if (!selectors.add(user)) {
@@ -38,12 +39,14 @@ data class PollAnswer (
         }
     }
 
-    fun data(totalAnswerers: Int) = PollAnswerData(
+    override fun data(totalAnswerers: Int) = PollAnswerData(
         id,
         title,
         selectors.map { it.id },
         amount(selectors().size)
-            .multiply(amount(totalAnswerers))
-            .divide(amount(100)))
+            .multiply(amount(100))
+            .divide(amount(totalAnswerers), 2, RoundingMode.HALF_UP))
+
+    override fun numberOfAnswerers(): Int = selectors.size
 
 }

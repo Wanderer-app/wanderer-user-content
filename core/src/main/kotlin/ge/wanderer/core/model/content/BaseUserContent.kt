@@ -4,6 +4,7 @@ import ge.wanderer.core.data.user.User
 import ge.wanderer.core.model.comment.IComment
 import ge.wanderer.core.model.content.status.StatusType
 import ge.wanderer.core.model.content.status.UserAddedContentStatus
+import ge.wanderer.core.model.rating.IVote
 import ge.wanderer.core.model.rating.Vote
 import org.joda.time.LocalDateTime
 
@@ -13,7 +14,7 @@ abstract class BaseUserContent(
     protected val createdAt: LocalDateTime,
     protected var status: UserAddedContentStatus,
     protected val comments: MutableList<IComment>,
-    protected val votes: MutableList<Vote>
+    protected val votes: MutableList<IVote>
 ): UserAddedContent, Commentable, Rateable {
     
     override fun id(): Long = id
@@ -37,7 +38,7 @@ abstract class BaseUserContent(
         comments.add(comment)
     }
 
-    override fun giveVote(vote: Vote) {
+    override fun giveVote(vote: IVote) {
         votes.add(vote)
     }
 

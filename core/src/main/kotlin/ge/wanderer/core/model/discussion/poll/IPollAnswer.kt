@@ -4,6 +4,8 @@ import ge.wanderer.core.data.user.User
 import ge.wanderer.core.model.content.UserAddedContent
 
 interface IPollAnswer: UserAddedContent {
-
     fun selectBy(user: User)
+    fun data(totalAnswerers: Int): PollAnswerData
+    fun numberOfAnswerers(): Int
+    fun selectors(): List<User>
 }

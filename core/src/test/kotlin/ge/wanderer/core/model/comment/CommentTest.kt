@@ -55,6 +55,9 @@ class CommentTest {
         assertEquals(3, comment.comments().size)
         assertEquals(1, comment.comments()[0].comments().size)
 
+        reply2.remove(now())
+        assertEquals(2, comment.comments().size)
+
     }
 
     @Test

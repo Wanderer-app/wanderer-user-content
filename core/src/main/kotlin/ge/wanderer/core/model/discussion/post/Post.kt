@@ -10,6 +10,7 @@ import ge.wanderer.core.data.user.User
 import ge.wanderer.core.model.content.BaseUserContent
 import ge.wanderer.core.model.discussion.DiscussionElement
 import ge.wanderer.core.model.discussion.DiscussionElementType
+import ge.wanderer.core.model.rating.IVote
 import org.joda.time.LocalDateTime
 
 class Post (
@@ -21,8 +22,8 @@ class Post (
     private val attachedFiles: List<AttachedFile>,
     status: UserAddedContentStatus,
     comments: MutableList<IComment>,
-    votes: MutableList<Vote>
-): DiscussionElement, Rateable, Commentable, BaseUserContent(id, author, createdAt, status, comments, votes) {
+    votes: MutableList<IVote>
+): IPost, BaseUserContent(id, author, createdAt, status, comments, votes) {
 
     override fun content(): String = content
     override fun attachedFiles(): List<AttachedFile> = attachedFiles

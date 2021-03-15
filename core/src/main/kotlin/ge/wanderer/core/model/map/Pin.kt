@@ -7,6 +7,7 @@ import ge.wanderer.core.model.content.status.UserAddedContentStatus
 import ge.wanderer.core.data.user.User
 import ge.wanderer.core.model.content.BaseUserContent
 import ge.wanderer.core.model.content.status.StatusType
+import ge.wanderer.core.model.rating.IVote
 import org.joda.time.LocalDateTime
 
 class Pin(
@@ -19,7 +20,7 @@ class Pin(
     private val content: RouteElementContent,
     status: UserAddedContentStatus,
     comments: MutableList<IComment>,
-    votes: MutableList<Vote>
+    votes: MutableList<IVote>
 ): IPin, BaseUserContent(id, creator, createdAt, status, comments, votes) {
 
     override fun location(): LatLng = location

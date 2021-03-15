@@ -4,6 +4,7 @@ import ge.wanderer.common.toJson
 import ge.wanderer.core.model.content.status.UserAddedContentStatus
 import ge.wanderer.core.data.file.AttachedFile
 import ge.wanderer.core.data.user.User
+import ge.wanderer.core.model.comment.IComment
 import ge.wanderer.core.model.content.status.StatusType
 import ge.wanderer.core.model.discussion.DiscussionElement
 import ge.wanderer.core.model.discussion.DiscussionElementType
@@ -17,10 +18,10 @@ class Poll(
     private var status: UserAddedContentStatus,
     private val routeCode: String,
     private val question: String,
-    private val answers: Set<PollAnswer>
-): DiscussionElement {
-
-    override fun content(): String = toJson(getContent())
+    private val answers: MutableSet<IPollAnswer>,
+    private val comments: MutableList<IComment>
+): IPoll {
+    override fun content(): String = toJson(PollContent(question, answersData()))
     override fun attachedFiles(): List<AttachedFile> = listOf()
     override fun routeCode(): String = routeCode
     override fun type(): DiscussionElementType = DiscussionElementType.POLL
@@ -32,6 +33,17 @@ class Poll(
     override fun isRemoved(): Boolean = status.statusType() == StatusType.REMOVED
     override fun statusUpdatedAt(): LocalDateTime = status.createdAt()
 
+    override fun addAnswer(answer: IPollAnswer) {
+        answers.add(answer)
+    }
+
+    override fun answersData(): Set<PollAnswerData> {
+        val totalAnswerers = answers.map { it.selectors().size }.sum()
+        return answers
+            .filter { it.isActive() }
+            .map { it.data(totalAnswerers) }.toSet()
+    }
+
     override fun remove(onDate: LocalDateTime) {
         status = status.remove(onDate)
     }
@@ -40,9 +52,7 @@ class Poll(
         status = status.activate(onDate)
     }
 
-    private fun getContent(): PollContent {
-        val totalAnswerers = answers.map { it.selectors().size }.sum()
-        return PollContent(question, answers.map { it.data(totalAnswerers) }.toSet())
-    }
+    override fun comments(): List<IComment> = comments.filter { it.isActive() }
+    override fun addComment(comment: IComment) { comments.add(comment) }
 
 }
