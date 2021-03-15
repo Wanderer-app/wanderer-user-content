@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.lang.IllegalStateException
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class  PinTest {
@@ -54,11 +55,11 @@ class  PinTest {
         val pin = createTipPin(1L, mockk(), now(), LatLng(1f, 1f), "1234", "Rest here before going further")
 
         pin.remove(now())
-        assertTrue(pin.status() is Removed)
+        assertTrue(pin.isRemoved())
         assertThrows<IllegalStateException>("Content already removed") { pin.markIrrelevant(now()) }
 
         pin.activate(now())
-        assertTrue(pin.status() is Active)
+        assertTrue(pin.isActive())
     }
 
     @Test
@@ -66,7 +67,7 @@ class  PinTest {
         val pin = createTipPin(1L, mockk(), now(), LatLng(1f, 1f), "1234", "Rest here before going further")
 
         pin.markIrrelevant(now())
-        assertTrue(pin.status() is NotRelevant)
+        assertFalse(pin.isRelevant())
 
         assertThrows<IllegalStateException> { pin.activate(now()) }
         assertThrows<IllegalStateException> { pin.remove(now()) }

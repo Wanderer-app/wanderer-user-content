@@ -4,6 +4,7 @@ import ge.wanderer.common.amount
 import ge.wanderer.core.model.content.UserAddedContent
 import ge.wanderer.core.model.content.status.UserAddedContentStatus
 import ge.wanderer.core.data.user.User
+import ge.wanderer.core.model.content.status.StatusType
 import org.joda.time.LocalDateTime
 
 data class PollAnswer (
@@ -13,12 +14,15 @@ data class PollAnswer (
     private val creator: User,
     private var status: UserAddedContentStatus,
     private val selectors: MutableSet<User>
-): UserAddedContent {
+): IPollAnswer {
 
     override fun id(): Long = id
     override fun creator(): User = creator
     override fun createdAt(): LocalDateTime = createdAt
-    override fun status(): UserAddedContentStatus = status
+    override fun isActive(): Boolean = status.statusType() == StatusType.ACTIVE
+    override fun isRemoved(): Boolean = status.statusType() == StatusType.REMOVED
+    override fun statusUpdatedAt(): LocalDateTime = status.createdAt()
+
     override fun remove(onDate: LocalDateTime) {
         status = status.remove(onDate)
     }
@@ -28,7 +32,7 @@ data class PollAnswer (
 
     fun selectors() = selectors
 
-    fun selectBy(user: User) {
+    override fun selectBy(user: User) {
         if (!selectors.add(user)) {
             selectors.remove(user)
         }

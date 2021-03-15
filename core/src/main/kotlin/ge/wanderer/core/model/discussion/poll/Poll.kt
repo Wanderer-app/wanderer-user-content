@@ -4,6 +4,7 @@ import ge.wanderer.common.toJson
 import ge.wanderer.core.model.content.status.UserAddedContentStatus
 import ge.wanderer.core.data.file.AttachedFile
 import ge.wanderer.core.data.user.User
+import ge.wanderer.core.model.content.status.StatusType
 import ge.wanderer.core.model.discussion.DiscussionElement
 import ge.wanderer.core.model.discussion.DiscussionElementType
 import org.joda.time.LocalDateTime
@@ -27,7 +28,9 @@ class Poll(
     override fun id(): Long = id
     override fun creator(): User = creator
     override fun createdAt(): LocalDateTime = createdAt
-    override fun status(): UserAddedContentStatus = status
+    override fun isActive(): Boolean = status.statusType() == StatusType.ACTIVE
+    override fun isRemoved(): Boolean = status.statusType() == StatusType.REMOVED
+    override fun statusUpdatedAt(): LocalDateTime = status.createdAt()
 
     override fun remove(onDate: LocalDateTime) {
         status = status.remove(onDate)

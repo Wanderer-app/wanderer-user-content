@@ -8,7 +8,9 @@ interface UserAddedContent {
     fun id(): Long
     fun creator(): User
     fun createdAt(): LocalDateTime
-    fun status(): UserAddedContentStatus
+    fun isActive(): Boolean
+    fun isRemoved(): Boolean
+    fun statusUpdatedAt(): LocalDateTime
     fun remove(onDate: LocalDateTime)
     fun activate(onDate: LocalDateTime)
 }

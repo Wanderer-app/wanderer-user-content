@@ -11,6 +11,7 @@ import ge.wanderer.core.model.createUpVote
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class CommentTest {
 
@@ -63,14 +64,12 @@ class CommentTest {
         val comment = createNewComment(1L, now(), "Inappropriate text", mockk())
 
         comment.remove(banDate)
-        var commentStatus = comment.status()
-        assertEquals(banDate, commentStatus.createdAt())
-        assertEquals(StatusType.REMOVED, commentStatus.statusType())
+        assertEquals(banDate, comment.statusUpdatedAt())
+        assertTrue(comment.isRemoved())
 
         comment.activate(unBanDate)
-        commentStatus = comment.status()
-        assertEquals(unBanDate, commentStatus.createdAt())
-        assertEquals(StatusType.ACTIVE, commentStatus.statusType())
+        assertEquals(unBanDate, comment.statusUpdatedAt())
+        assertTrue(comment.isActive())
     }
 
 }

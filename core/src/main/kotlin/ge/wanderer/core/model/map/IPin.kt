@@ -12,4 +12,5 @@ interface IPin: UserAddedContent, Rateable, Commentable {
     fun content(): RouteElementContent
     fun type(): MarkerType
     fun markIrrelevant(onDate: LocalDateTime)
+    fun isRelevant(): Boolean
 }
