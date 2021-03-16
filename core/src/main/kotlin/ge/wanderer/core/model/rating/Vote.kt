@@ -1,7 +1,8 @@
 package ge.wanderer.core.model.rating
 
+import ge.wanderer.common.enums.UserContentType
 import ge.wanderer.core.model.content.status.UserAddedContentStatus
-import ge.wanderer.core.data.user.User
+import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.content.status.StatusType
 import org.joda.time.LocalDateTime
 
@@ -27,6 +28,8 @@ class Vote(
     override fun isActive(): Boolean = status.statusType() == StatusType.ACTIVE
     override fun isRemoved(): Boolean = status.statusType() == StatusType.REMOVED
     override fun statusUpdatedAt(): LocalDateTime = status.createdAt()
+    override fun type(): VoteType = type
+    override fun contentType(): UserContentType = UserContentType.VOTE
 
     override fun remove(onDate: LocalDateTime) {
         status = status.remove(onDate)
@@ -35,4 +38,5 @@ class Vote(
     override fun activate(onDate: LocalDateTime) {
         status = status.activate(onDate)
     }
+
 }

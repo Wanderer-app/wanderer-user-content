@@ -1,9 +1,9 @@
 package ge.wanderer.core.model.discussion.poll
 
 import ge.wanderer.common.amount
-import ge.wanderer.core.model.content.UserAddedContent
+import ge.wanderer.common.enums.UserContentType
 import ge.wanderer.core.model.content.status.UserAddedContentStatus
-import ge.wanderer.core.data.user.User
+import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.content.status.StatusType
 import org.joda.time.LocalDateTime
 import java.math.RoundingMode
@@ -23,6 +23,9 @@ data class PollAnswer (
     override fun isActive(): Boolean = status.statusType() == StatusType.ACTIVE
     override fun isRemoved(): Boolean = status.statusType() == StatusType.REMOVED
     override fun statusUpdatedAt(): LocalDateTime = status.createdAt()
+    override fun contentType(): UserContentType = UserContentType.POLL_ANSWER
+    override fun selectors() = selectors.toList()
+    override fun numberOfAnswerers(): Int = selectors.size
 
     override fun remove(onDate: LocalDateTime) {
         status = status.remove(onDate)
@@ -30,8 +33,6 @@ data class PollAnswer (
     override fun activate(onDate: LocalDateTime) {
         status = status.activate(onDate)
     }
-
-    override fun selectors() = selectors.toList()
 
     override fun selectBy(user: User) {
         if (!selectors.add(user)) {
@@ -46,7 +47,5 @@ data class PollAnswer (
         amount(selectors().size)
             .multiply(amount(100))
             .divide(amount(totalAnswerers), 2, RoundingMode.HALF_UP))
-
-    override fun numberOfAnswerers(): Int = selectors.size
 
 }

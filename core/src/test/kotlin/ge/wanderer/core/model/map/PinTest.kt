@@ -17,6 +17,7 @@ import org.junit.jupiter.api.assertThrows
 import java.lang.IllegalStateException
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 class  PinTest {
@@ -72,7 +73,17 @@ class  PinTest {
         assertThrows<IllegalStateException> { pin.activate(now()) }
         assertThrows<IllegalStateException> { pin.remove(now()) }
         assertThrows<IllegalStateException> { pin.markIrrelevant(now()) }
-
     }
 
+    @Test
+    fun canBeUpdated() {
+        val pin = createTipPin(1L, mockk(), now(), LatLng(1f, 1f), "1234", "Rest here")
+
+        val newContent = RouteElementContent("Resting place", "Rest here before going further", mockk())
+        val updated = pin.update(newContent)
+
+        assertEquals("Resting place", updated.content().title)
+        assertEquals("Rest here before going further", updated.content().text)
+        assertNotNull(updated.content().attachedFile)
+    }
 }

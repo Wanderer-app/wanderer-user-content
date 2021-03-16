@@ -1,4 +1,4 @@
-package ge.wanderer.core.model.content
+package ge.wanderer.core.model.rating
 
 import ge.wanderer.common.now
 import ge.wanderer.core.model.createDownVote

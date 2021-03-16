@@ -1,15 +1,15 @@
 package ge.wanderer.core.model.discussion.poll
 
+import ge.wanderer.common.enums.UserContentType
 import ge.wanderer.common.toJson
 import ge.wanderer.core.model.content.status.UserAddedContentStatus
 import ge.wanderer.core.data.file.AttachedFile
-import ge.wanderer.core.data.user.User
+import ge.wanderer.core.integration.user.User
+import ge.wanderer.core.model.UpdateDiscussionElementData
 import ge.wanderer.core.model.comment.IComment
 import ge.wanderer.core.model.content.status.StatusType
 import ge.wanderer.core.model.discussion.DiscussionElement
-import ge.wanderer.core.model.discussion.DiscussionElementType
 import org.joda.time.LocalDateTime
-import java.math.BigDecimal
 
 class Poll(
     private val id: Long,
@@ -24,7 +24,6 @@ class Poll(
     override fun content(): String = toJson(PollContent(question, answersData()))
     override fun attachedFiles(): List<AttachedFile> = listOf()
     override fun routeCode(): String = routeCode
-    override fun type(): DiscussionElementType = DiscussionElementType.POLL
 
     override fun id(): Long = id
     override fun creator(): User = creator
@@ -32,6 +31,7 @@ class Poll(
     override fun isActive(): Boolean = status.statusType() == StatusType.ACTIVE
     override fun isRemoved(): Boolean = status.statusType() == StatusType.REMOVED
     override fun statusUpdatedAt(): LocalDateTime = status.createdAt()
+    override fun contentType(): UserContentType = UserContentType.POLL
 
     override fun addAnswer(answer: IPollAnswer) {
         answers.add(answer)
@@ -54,5 +54,17 @@ class Poll(
 
     override fun comments(): List<IComment> = comments.filter { it.isActive() }
     override fun addComment(comment: IComment) { comments.add(comment) }
+
+    override fun update(updateData: UpdateDiscussionElementData): DiscussionElement =
+        Poll(
+            id,
+            creator,
+            createdAt,
+            status,
+            routeCode,
+            updateData.contentToUpdate,
+            answers,
+            comments
+        )
 
 }

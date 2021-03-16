@@ -7,7 +7,7 @@ import ge.wanderer.core.model.discussion.post.Post
 import ge.wanderer.core.model.map.RouteElementContent
 import ge.wanderer.core.model.map.MarkerType
 import ge.wanderer.core.model.map.Pin
-import ge.wanderer.core.data.user.User
+import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.discussion.poll.PollAnswer
 import ge.wanderer.core.model.rating.Vote
 import ge.wanderer.core.model.rating.VoteType
@@ -27,7 +27,7 @@ fun createNewComment(id: Long, createDate: LocalDateTime, text: String, author: 
     )
 
 fun createTipPin(id: Long, user: User, createTime: LocalDateTime, location: LatLng, routeCode: String, text: String): Pin {
-    val content = RouteElementContent("aaa", text, null)
+    val content = RouteElementContent("Title", text, null)
     return Pin(
         id,
         user,
@@ -58,9 +58,9 @@ fun createNewPostWithoutFiles(id: Long, user: User, content: String, createDate:
 fun createUpVote(id: Long, user: User, date: LocalDateTime, value: Int) = Vote(id, user, date, Active(date), value, VoteType.UP)
 fun createDownVote(id: Long, user: User, date: LocalDateTime, value: Int) = Vote(id, user, date, Active(date), value, VoteType.DOWN)
 
-fun jambura(): User = User(1, "Nika", "Jamburia")
-fun patata(): User = User(2, "Nika", "Patatishvili")
-fun jangula(): User = User(3, "Nika", "Jangulashvili")
+fun jambura(): User = User(1, "Nika", "Jamburia", 10, true)
+fun patata(): User = User(2, "Nika", "Patatishvili", 5, true)
+fun jangula(): User = User(3, "Nika", "Jangulashvili", 5, true)
 
 fun pollAnswer(id: Long, answerText: String, createTime: LocalDateTime, answerers: MutableSet<User>): PollAnswer {
     return PollAnswer(

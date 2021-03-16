@@ -1,11 +1,11 @@
 package ge.wanderer.core.model.discussion.post
 
+import ge.wanderer.common.enums.UserContentType
 import ge.wanderer.common.now
-import ge.wanderer.core.model.comment.IComment
+import ge.wanderer.core.model.UpdateDiscussionElementData
 import ge.wanderer.core.model.createDownVote
 import ge.wanderer.core.model.createNewPostWithoutFiles
 import ge.wanderer.core.model.createUpVote
-import ge.wanderer.core.model.discussion.DiscussionElementType.*
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
@@ -18,7 +18,7 @@ class PostTest {
     @Test
     fun isOfCorrectType() {
         val post = createNewPostWithoutFiles(1L, mockk(), "aaa", now())
-        assertEquals(POST, post.type())
+        assertEquals(UserContentType.POST, post.contentType())
     }
 
     @Test
@@ -71,5 +71,16 @@ class PostTest {
     fun correctlyReturnsContent() {
         val post = createNewPostWithoutFiles(1L, mockk(), "Some text", now())
         assertEquals("Some text", post.content())
+    }
+
+    @Test
+    fun canBeUpdated() {
+        val post = createNewPostWithoutFiles(1, mockk(), "Hellooo", now())
+
+        val updateData = UpdateDiscussionElementData("Hello", listOf(mockk(), mockk()))
+        val updated = post.update(updateData)
+
+        assertEquals("Hello", updated.content())
+        assertEquals(2, updated.attachedFiles().size)
     }
 }

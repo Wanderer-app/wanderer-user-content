@@ -2,6 +2,7 @@ package ge.wanderer.core.model.comment
 
 import ge.wanderer.common.now
 import ge.wanderer.common.dateTime
+import ge.wanderer.core.model.UpdateCommentData
 import ge.wanderer.core.model.rating.Vote
 import ge.wanderer.core.model.rating.VoteType.*
 import ge.wanderer.core.model.content.status.StatusType
@@ -73,6 +74,16 @@ class CommentTest {
         comment.activate(unBanDate)
         assertEquals(unBanDate, comment.statusUpdatedAt())
         assertTrue(comment.isActive())
+    }
+
+    @Test
+    fun canBeUpdated() {
+        val comment = createNewComment(1L, now(), "SomeText", mockk())
+
+        val updateData = UpdateCommentData("Some text")
+        val updated = comment.update(updateData)
+
+        assertEquals("Some text", updated.text())
     }
 
 }

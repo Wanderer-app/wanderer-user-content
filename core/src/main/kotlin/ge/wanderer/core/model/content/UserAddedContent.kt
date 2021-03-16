@@ -1,7 +1,7 @@
 package ge.wanderer.core.model.content
 
-import ge.wanderer.core.model.content.status.UserAddedContentStatus
-import ge.wanderer.core.data.user.User
+import ge.wanderer.common.enums.UserContentType
+import ge.wanderer.core.integration.user.User
 import org.joda.time.LocalDateTime
 
 interface UserAddedContent {
@@ -13,4 +13,5 @@ interface UserAddedContent {
     fun statusUpdatedAt(): LocalDateTime
     fun remove(onDate: LocalDateTime)
     fun activate(onDate: LocalDateTime)
+    fun contentType(): UserContentType
 }

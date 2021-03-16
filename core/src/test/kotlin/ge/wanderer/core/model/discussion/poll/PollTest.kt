@@ -82,4 +82,12 @@ class PollTest {
         ragaca.remove(now())
         assertEquals(3, poll.answersData().size)
     }
+
+    @Test
+    fun canBeUpdated() {
+        val poll = Poll(1L, mockk(), now(), Active(now()), "123", "Best video ggaeme?", mutableSetOf(), mutableListOf())
+
+        val updated = poll.update(UpdateDiscussionElementData("Best video game?", listOf()))
+        assertTrue(updated.content().startsWith("{\"question\":\"Best video game?\""))
+    }
 }
