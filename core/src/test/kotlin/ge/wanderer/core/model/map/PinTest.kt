@@ -2,15 +2,12 @@ package ge.wanderer.core.model.map
 
 import ge.wanderer.common.map.LatLng
 import ge.wanderer.common.now
+import ge.wanderer.core.model.*
 import ge.wanderer.core.model.rating.Vote
 import ge.wanderer.core.model.rating.VoteType.*
 import ge.wanderer.core.model.content.status.Active
 import ge.wanderer.core.model.content.status.NotRelevant
 import ge.wanderer.core.model.content.status.Removed
-import ge.wanderer.core.model.createDownVote
-import ge.wanderer.core.model.createNewComment
-import ge.wanderer.core.model.createTipPin
-import ge.wanderer.core.model.createUpVote
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -55,11 +52,11 @@ class  PinTest {
     fun canCorrectlyBeRemovedAndActivated() {
         val pin = createTipPin(1L, mockk(), now(), LatLng(1f, 1f), "1234", "Rest here before going further")
 
-        pin.remove(now())
+        pin.remove(now(), jambura())
         assertTrue(pin.isRemoved())
         assertThrows<IllegalStateException>("Content already removed") { pin.markIrrelevant(now()) }
 
-        pin.activate(now())
+        pin.activate(now(), jambura())
         assertTrue(pin.isActive())
     }
 
@@ -70,8 +67,8 @@ class  PinTest {
         pin.markIrrelevant(now())
         assertFalse(pin.isRelevant())
 
-        assertThrows<IllegalStateException> { pin.activate(now()) }
-        assertThrows<IllegalStateException> { pin.remove(now()) }
+        assertThrows<IllegalStateException> { pin.activate(now(), jambura()) }
+        assertThrows<IllegalStateException> { pin.remove(now(), jambura()) }
         assertThrows<IllegalStateException> { pin.markIrrelevant(now()) }
     }
 

@@ -11,7 +11,7 @@ interface UserAddedContent {
     fun isActive(): Boolean
     fun isRemoved(): Boolean
     fun statusUpdatedAt(): LocalDateTime
-    fun remove(onDate: LocalDateTime)
-    fun activate(onDate: LocalDateTime)
+    fun remove(onDate: LocalDateTime, remover: User)
+    fun activate(onDate: LocalDateTime, activator: User)
     fun contentType(): UserContentType
 }

@@ -6,7 +6,7 @@ import ge.wanderer.core.model.comment.IComment
 import ge.wanderer.core.model.content.status.UserAddedContentStatus
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.content.BaseUserContent
-import ge.wanderer.core.model.content.status.StatusType
+import ge.wanderer.core.model.content.status.ContentStatusType
 import ge.wanderer.core.model.rating.IVote
 import org.joda.time.LocalDateTime
 
@@ -27,7 +27,7 @@ class Pin(
     override fun routeCode(): String = routeCode
     override fun content(): RouteElementContent = content
     override fun type(): MarkerType = type
-    override fun isRelevant(): Boolean = status.statusType() != StatusType.NOT_RELEVANT
+    override fun isRelevant(): Boolean = status.statusType() != ContentStatusType.NOT_RELEVANT
     override fun contentType(): UserContentType = UserContentType.PIN
 
     override fun markIrrelevant(onDate: LocalDateTime) {

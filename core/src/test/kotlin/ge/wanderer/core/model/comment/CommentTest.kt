@@ -2,13 +2,9 @@ package ge.wanderer.core.model.comment
 
 import ge.wanderer.common.now
 import ge.wanderer.common.dateTime
-import ge.wanderer.core.model.UpdateCommentData
-import ge.wanderer.core.model.rating.Vote
-import ge.wanderer.core.model.rating.VoteType.*
-import ge.wanderer.core.model.content.status.StatusType
-import ge.wanderer.core.model.createDownVote
-import ge.wanderer.core.model.createNewComment
-import ge.wanderer.core.model.createUpVote
+import ge.wanderer.core.integration.user.User
+import ge.wanderer.core.model.*
+import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -56,7 +52,7 @@ class CommentTest {
         assertEquals(3, comment.comments().size)
         assertEquals(1, comment.comments()[0].comments().size)
 
-        reply2.remove(now())
+        reply2.remove(now(), mockk { every { isAdmin } returns true})
         assertEquals(2, comment.comments().size)
 
     }
@@ -65,13 +61,13 @@ class CommentTest {
     fun canBeRemovedAndActivated() {
         val banDate = dateTime("2021-03-15T00:00:00")
         val unBanDate = dateTime("2021-03-16T00:00:00")
-        val comment = createNewComment(1L, now(), "Inappropriate text", mockk())
+        val comment = createNewComment(1L, now(), "Inappropriate text", mockk<User>())
 
-        comment.remove(banDate)
+        comment.remove(banDate, jambura())
         assertEquals(banDate, comment.statusUpdatedAt())
         assertTrue(comment.isRemoved())
 
-        comment.activate(unBanDate)
+        comment.activate(unBanDate, jambura())
         assertEquals(unBanDate, comment.statusUpdatedAt())
         assertTrue(comment.isActive())
     }

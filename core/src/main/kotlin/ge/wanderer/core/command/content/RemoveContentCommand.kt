@@ -16,15 +16,13 @@ class RemoveContentCommand(
     private val userService: UserService
 ): Command<UserAddedContent> {
 
-    override fun execute(): CommandExecutionResult<UserAddedContent> =
-        if (remover == content.creator() || remover.isAdmin) {
-            content.remove(onDate)
-            if (remover.isAdmin) {
-                userService.notifyContentStatusChange(content)
-            }
-            success("${content.contentType()} removed successfully!", content)
-        } else {
-            throw IllegalStateException("You dont have rights to remove this comment")
+    override fun execute(): CommandExecutionResult<UserAddedContent> {
+        content.remove(onDate, remover)
+        if (remover.isAdmin) {
+            userService.notifyContentStatusChange(content)
         }
+        return success("${content.contentType()} removed successfully!", content)
+    }
+
 
 }

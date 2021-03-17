@@ -8,10 +8,11 @@ import ge.wanderer.core.model.map.RouteElementContent
 import ge.wanderer.core.model.map.MarkerType
 import ge.wanderer.core.model.map.Pin
 import ge.wanderer.core.integration.user.User
+import ge.wanderer.core.model.discussion.poll.IPollAnswer
+import ge.wanderer.core.model.discussion.poll.Poll
 import ge.wanderer.core.model.discussion.poll.PollAnswer
 import ge.wanderer.core.model.rating.Vote
 import ge.wanderer.core.model.rating.VoteType
-import io.mockk.mockk
 import org.joda.time.LocalDateTime
 import java.net.URL
 
@@ -23,7 +24,7 @@ fun createNewComment(id: Long, createDate: LocalDateTime, text: String, author: 
         text,
         mutableListOf(),
         mutableListOf(),
-        Active(createDate)
+        Active(createDate, author)
     )
 
 fun createTipPin(id: Long, user: User, createTime: LocalDateTime, location: LatLng, routeCode: String, text: String): Pin {
@@ -36,7 +37,7 @@ fun createTipPin(id: Long, user: User, createTime: LocalDateTime, location: LatL
         routeCode,
         MarkerType.TIP,
         content,
-        Active(createTime),
+        Active(createTime, user),
         mutableListOf(),
         mutableListOf()
     )
@@ -50,29 +51,34 @@ fun createNewPostWithoutFiles(id: Long, user: User, content: String, createDate:
         content,
         "123",
         listOf(),
-        Active(createDate),
+        Active(createDate, user),
         mutableListOf(),
         mutableListOf()
     )
 
-fun createUpVote(id: Long, user: User, date: LocalDateTime, value: Int) = Vote(id, user, date, Active(date), value, VoteType.UP)
-fun createDownVote(id: Long, user: User, date: LocalDateTime, value: Int) = Vote(id, user, date, Active(date), value, VoteType.DOWN)
+fun createUpVote(id: Long, user: User, date: LocalDateTime, value: Int) = Vote(id, user, date, Active(date, user), value, VoteType.UP)
+fun createDownVote(id: Long, user: User, date: LocalDateTime, value: Int) = Vote(id, user, date, Active(date, user), value, VoteType.DOWN)
 
 fun jambura(): User = User(1, "Nika", "Jamburia", 10, true)
 fun patata(): User = User(2, "Nika", "Patatishvili", 5, true)
 fun jangula(): User = User(3, "Nika", "Jangulashvili", 5, true)
+fun vipiSoxumski(): User = User(4, "Vipi", "Soxumski", 1, false)
+fun kalduna(): User = User(5, "Kalduna", "Kalduna", 10, false)
 
-fun pollAnswer(id: Long, answerText: String, createTime: LocalDateTime, answerers: MutableSet<User>): PollAnswer {
+fun pollAnswer(id: Long, answerText: String, createTime: LocalDateTime, answerers: MutableSet<User>, creator: User): PollAnswer {
     return PollAnswer(
         id,
         answerText,
         createTime,
-        mockk(),
-        Active(createTime),
+        creator,
+        Active(createTime, creator),
         answerers
     )
 }
 
 fun Any.getResourceFile(fileName: String): URL =
     this::class.java.classLoader.getResource(fileName)!!
+
+fun createPoll(id: Long, creator: User, createTime: LocalDateTime, routeCode: String, title: String, answers: MutableSet<IPollAnswer>) =
+    Poll(id, creator, createTime, Active(createTime, creator), routeCode, title, answers, mutableListOf())
 

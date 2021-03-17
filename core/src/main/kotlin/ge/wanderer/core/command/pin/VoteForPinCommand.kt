@@ -21,7 +21,7 @@ class VoteForPinCommand(
     private val userService: UserService
 ): Command<IPin> {
     override fun execute(): CommandExecutionResult<IPin> {
-        val vote = Vote(TRANSIENT_ID, voter, voteDate, Active(voteDate), voter.pinVoteWeight, voteType)
+        val vote = Vote(TRANSIENT_ID, voter, voteDate, Active(voteDate, voter), voter.pinVoteWeight, voteType)
         val giveVoteResult = GiveVoteCommand(vote, pin).execute()
 
         userService.usersPinWasRated(pin, vote)

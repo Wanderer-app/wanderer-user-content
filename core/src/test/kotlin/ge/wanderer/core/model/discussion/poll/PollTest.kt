@@ -15,10 +15,10 @@ class PollTest {
     @Test
     fun canCorrectlyBeCommented() {
         val answers = mutableSetOf<IPollAnswer>(
-            pollAnswer(1, "GTA", now(), mutableSetOf(jambura(), patata())),
-            pollAnswer(1, "RDR", now(), mutableSetOf(jangula()))
+            pollAnswer(1, "GTA", now(), mutableSetOf(jambura(), patata()), mockk()),
+            pollAnswer(1, "RDR", now(), mutableSetOf(jangula()), mockk())
         )
-        val poll = Poll(1L, mockk(), now(), Active(now()), "123", "Best video game?", answers, mutableListOf())
+        val poll = Poll(1L, mockk(), now(), Active(now(), jambura()), "123", "Best video game?", answers, mutableListOf())
 
         poll.addComment(mockk{ every { isActive() } returns true })
         assertEquals(1, poll.comments().size)
@@ -33,17 +33,17 @@ class PollTest {
     @Test
     fun canCorrectlyBeRemovedAndActivated() {
         val answers = mutableSetOf<IPollAnswer>(
-            pollAnswer(1, "GTA", now(), mutableSetOf(jambura(), patata())),
-            pollAnswer(1, "RDR", now(), mutableSetOf(jangula()))
+            pollAnswer(1, "GTA", now(), mutableSetOf(jambura(), patata()), mockk()),
+            pollAnswer(1, "RDR", now(), mutableSetOf(jangula()), mockk())
         )
-        val poll = Poll(1L, mockk(), now(), Active(now()), "123", "Best video game?", answers, mutableListOf())
+        val poll = Poll(1L, mockk(), now(), Active(now(), jambura()), "123", "Best video game?", answers, mutableListOf())
         assertTrue(poll.isActive())
 
-        poll.remove(now())
+        poll.remove(now(), jambura())
         assertTrue(poll.isRemoved())
         assertFalse(poll.isActive())
 
-        poll.activate(now())
+        poll.activate(now(), jambura())
         assertTrue(poll.isActive())
         assertFalse(poll.isRemoved())
     }
@@ -51,10 +51,10 @@ class PollTest {
     @Test
     fun correctlyReturnsItsContentAsJson() {
         val answers = mutableSetOf<IPollAnswer>(
-            pollAnswer(1, "GTA", now(), mutableSetOf(jambura(), patata())),
-            pollAnswer(1, "RDR", now(), mutableSetOf(jangula()))
+            pollAnswer(1, "GTA", now(), mutableSetOf(jambura(), patata()), mockk()),
+            pollAnswer(1, "RDR", now(), mutableSetOf(jangula()), mockk())
         )
-        val pollWith2Answers = Poll(1L, mockk(), now(), Active(now()), "123", "Best video game?", answers, mutableListOf())
+        val pollWith2Answers = Poll(1L, mockk(), now(), Active(now(), jambura()), "123", "Best video game?", answers, mutableListOf())
 
         val content = pollWith2Answers.content()
         val expectedJson = this.getResourceFile("pollWith2Answers3Answerers.json").readText()
@@ -64,28 +64,28 @@ class PollTest {
     @Test
     fun answersCanCorrectlyBeAdded() {
         val answers = mutableSetOf<IPollAnswer>(
-            pollAnswer(1, "GTA", now(), mutableSetOf(jambura(), patata())),
-            pollAnswer(2, "RDR", now(), mutableSetOf(jangula()))
+            pollAnswer(1, "GTA", now(), mutableSetOf(jambura(), patata()), mockk()),
+            pollAnswer(2, "RDR", now(), mutableSetOf(jangula()), mockk())
         )
-        val poll = Poll(1L, mockk(), now(), Active(now()), "123", "Best video game?", answers, mutableListOf())
+        val poll = Poll(1L, mockk(), now(), Active(now(), jambura()), "123", "Best video game?", answers, mutableListOf())
         assertEquals(2, poll.answersData().size)
 
         poll.addAnswer(
-            pollAnswer(3, "FIFA", now(), mutableSetOf())
+            pollAnswer(3, "FIFA", now(), mutableSetOf(), mockk())
         )
         assertEquals(3, poll.answersData().size)
 
-        val ragaca = pollAnswer(4, "ragaca", now(), mutableSetOf())
+        val ragaca = pollAnswer(4, "ragaca", now(), mutableSetOf(), mockk())
         poll.addAnswer(ragaca)
         assertEquals(4, poll.answersData().size)
 
-        ragaca.remove(now())
+        ragaca.remove(now(), jambura())
         assertEquals(3, poll.answersData().size)
     }
 
     @Test
     fun canBeUpdated() {
-        val poll = Poll(1L, mockk(), now(), Active(now()), "123", "Best video ggaeme?", mutableSetOf(), mutableListOf())
+        val poll = Poll(1L, mockk(), now(), Active(now(), jambura()), "123", "Best video ggaeme?", mutableSetOf(), mutableListOf())
 
         val updated = poll.update(UpdateDiscussionElementData("Best video game?", listOf()))
         assertTrue(updated.content().startsWith("{\"question\":\"Best video game?\""))

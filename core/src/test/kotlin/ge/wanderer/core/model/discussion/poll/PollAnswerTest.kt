@@ -3,6 +3,7 @@ package ge.wanderer.core.model.discussion.poll
 import ge.wanderer.common.amount
 import ge.wanderer.common.now
 import ge.wanderer.core.model.*
+import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import kotlin.test.assertEquals
@@ -13,7 +14,7 @@ class PollAnswerTest {
 
     @Test
     fun returnsCorrectData() {
-        val answer = pollAnswer(1, "GTO", now(), mutableSetOf(jambura(), patata(), jangula()))
+        val answer = pollAnswer(1, "GTO", now(), mutableSetOf(jambura(), patata(), jangula()), mockk())
         val data = answer.data(9)
 
         assertEquals(1, data.answerId)
@@ -24,7 +25,7 @@ class PollAnswerTest {
 
     @Test
     fun correctlyCalculatesPercentageOfItsAnswerers() {
-        val answer = pollAnswer(1, "GTO", now(), mutableSetOf(jambura(), patata(), jangula()))
+        val answer = pollAnswer(1, "GTO", now(), mutableSetOf(jambura(), patata(), jangula()), mockk())
 
         assertEquals(amount(30), answer.percentageOf(10))
         assertEquals(amount(33.33), answer.percentageOf(9))
@@ -36,7 +37,7 @@ class PollAnswerTest {
 
     @Test
     fun isCorrectlySelectedByUser() {
-        val answer = pollAnswer(1, "GTO", now(), mutableSetOf(jambura(), patata()))
+        val answer = pollAnswer(1, "GTO", now(), mutableSetOf(jambura(), patata()), mockk())
         assertEquals(2, answer.numberOfAnswerers())
 
         answer.selectBy(jangula())
@@ -54,14 +55,14 @@ class PollAnswerTest {
 
     @Test
     fun canCorrectlyBeRemovedAndActivated() {
-        val poll = pollAnswer(1, "GTO", now(), mutableSetOf(jambura(), patata()))
+        val poll = pollAnswer(1, "GTO", now(), mutableSetOf(jambura(), patata()), mockk())
         assertTrue(poll.isActive())
 
-        poll.remove(now())
+        poll.remove(now(), jambura())
         assertTrue(poll.isRemoved())
         assertFalse(poll.isActive())
 
-        poll.activate(now())
+        poll.activate(now(), jambura())
         assertTrue(poll.isActive())
         assertFalse(poll.isRemoved())
     }

@@ -2,10 +2,7 @@ package ge.wanderer.core.model.discussion.post
 
 import ge.wanderer.common.enums.UserContentType
 import ge.wanderer.common.now
-import ge.wanderer.core.model.UpdateDiscussionElementData
-import ge.wanderer.core.model.createDownVote
-import ge.wanderer.core.model.createNewPostWithoutFiles
-import ge.wanderer.core.model.createUpVote
+import ge.wanderer.core.model.*
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
@@ -31,11 +28,11 @@ class PostTest {
         post.giveVote(createDownVote(2, mockk(), now(), 1))
         assertEquals(0, post.rating())
 
-        val bigDownVote = createDownVote(3, mockk(), now(), 3)
+        val bigDownVote = createDownVote(3, jambura(), now(), 3)
         post.giveVote(bigDownVote)
         assertEquals(-3, post.rating())
 
-        bigDownVote.remove(now())
+        bigDownVote.remove(now(), jambura())
         assertEquals(0, post.rating())
     }
 
@@ -58,11 +55,11 @@ class PostTest {
         val post = createNewPostWithoutFiles(1L, mockk(), "aaa", now())
         assertTrue(post.isActive())
 
-        post.remove(now())
+        post.remove(now(), jambura())
         assertTrue(post.isRemoved())
         assertFalse(post.isActive())
 
-        post.activate(now())
+        post.activate(now(), jambura())
         assertTrue(post.isActive())
         assertFalse(post.isRemoved())
     }

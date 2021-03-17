@@ -7,7 +7,7 @@ import ge.wanderer.core.data.file.AttachedFile
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.UpdateDiscussionElementData
 import ge.wanderer.core.model.comment.IComment
-import ge.wanderer.core.model.content.status.StatusType
+import ge.wanderer.core.model.content.status.ContentStatusType
 import ge.wanderer.core.model.discussion.DiscussionElement
 import org.joda.time.LocalDateTime
 
@@ -28,8 +28,8 @@ class Poll(
     override fun id(): Long = id
     override fun creator(): User = creator
     override fun createdAt(): LocalDateTime = createdAt
-    override fun isActive(): Boolean = status.statusType() == StatusType.ACTIVE
-    override fun isRemoved(): Boolean = status.statusType() == StatusType.REMOVED
+    override fun isActive(): Boolean = status.statusType() == ContentStatusType.ACTIVE
+    override fun isRemoved(): Boolean = status.statusType() == ContentStatusType.REMOVED
     override fun statusUpdatedAt(): LocalDateTime = status.createdAt()
     override fun contentType(): UserContentType = UserContentType.POLL
 
@@ -44,16 +44,15 @@ class Poll(
             .map { it.data(totalAnswerers) }.toSet()
     }
 
-    override fun remove(onDate: LocalDateTime) {
-        status = status.remove(onDate)
-    }
-
-    override fun activate(onDate: LocalDateTime) {
-        status = status.activate(onDate)
-    }
-
     override fun comments(): List<IComment> = comments.filter { it.isActive() }
     override fun addComment(comment: IComment) { comments.add(comment) }
+
+    override fun remove(onDate: LocalDateTime, remover: User) {
+        status = status.remove(onDate, remover)
+    }
+    override fun activate(onDate: LocalDateTime, activator: User) {
+        status = status.activate(onDate, activator)
+    }
 
     override fun update(updateData: UpdateDiscussionElementData): DiscussionElement =
         Poll(

@@ -13,7 +13,7 @@ class GiveVoteCommand(
 ): Command<RateableContent> {
     override fun execute(): CommandExecutionResult<RateableContent> {
         if (vote.creator() == rateableContent.creator()) {
-            throw IllegalStateException("Cant vote for you own content!")
+            throw IllegalStateException("Cant vote for your own content!")
         }
         rateableContent.removeVotesBy(vote.creator(), vote.createdAt())
         rateableContent.giveVote(vote)

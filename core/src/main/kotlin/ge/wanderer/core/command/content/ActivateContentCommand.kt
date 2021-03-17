@@ -16,15 +16,14 @@ class ActivateContentCommand(
     private val userService: UserService
 ): Command<UserAddedContent> {
 
-    override fun execute(): CommandExecutionResult<UserAddedContent> =
-        if (activator == content.creator() || activator.isAdmin) {
-            content.activate(onDate)
-            if (activator.isAdmin) {
-                userService.notifyContentStatusChange(content)
-            }
-            success("${content.contentType()} activated successfully!", content)
-        } else {
-            throw IllegalStateException("You dont have rights to remove this comment")
+    override fun execute(): CommandExecutionResult<UserAddedContent> {
+        content.activate(onDate, activator)
+        if (activator.isAdmin) {
+            userService.notifyContentStatusChange(content)
         }
+        return success("${content.contentType()} activated successfully!", content)
+    }
+
+
 
 }

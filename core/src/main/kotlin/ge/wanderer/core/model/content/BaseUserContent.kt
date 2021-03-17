@@ -2,7 +2,7 @@ package ge.wanderer.core.model.content
 
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.comment.IComment
-import ge.wanderer.core.model.content.status.StatusType
+import ge.wanderer.core.model.content.status.ContentStatusType
 import ge.wanderer.core.model.content.status.UserAddedContentStatus
 import ge.wanderer.core.model.rating.IVote
 import org.joda.time.LocalDateTime
@@ -20,17 +20,17 @@ abstract class BaseUserContent(
     override fun creator(): User = creator
     override fun createdAt(): LocalDateTime = createdAt
     override fun comments(): List<IComment> = comments.filter { it.isActive() }
-    override fun isActive(): Boolean = status.statusType() == StatusType.ACTIVE
-    override fun isRemoved(): Boolean = status.statusType() == StatusType.REMOVED
+    override fun isActive(): Boolean = status.statusType() == ContentStatusType.ACTIVE
+    override fun isRemoved(): Boolean = status.statusType() == ContentStatusType.REMOVED
     override fun statusUpdatedAt(): LocalDateTime = status.createdAt()
 
 
-    override fun remove(onDate: LocalDateTime) {
-        status = status.remove(onDate)
+    override fun remove(onDate: LocalDateTime, remover: User) {
+        status = status.remove(onDate, remover)
     }
 
-    override fun activate(onDate: LocalDateTime) {
-        status = status.activate(onDate)
+    override fun activate(onDate: LocalDateTime, activator: User) {
+        status = status.activate(onDate, activator)
     }
 
     override fun addComment(comment: IComment) {
@@ -45,7 +45,7 @@ abstract class BaseUserContent(
         votes
             .filter { it.isActive() }
             .filter { it.creator() == user }
-            .forEach { it.remove(onDate) }
+            .forEach { it.remove(onDate, user) }
     }
 
     override fun rating(): Int =
