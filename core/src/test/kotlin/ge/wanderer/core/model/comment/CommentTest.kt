@@ -2,11 +2,16 @@ package ge.wanderer.core.model.comment
 
 import ge.wanderer.common.now
 import ge.wanderer.common.dateTime
+import ge.wanderer.core.*
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.*
+import ge.wanderer.core.model.report.Report
+import ge.wanderer.core.model.report.ReportReason
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import java.lang.IllegalStateException
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -80,6 +85,41 @@ class CommentTest {
         val updated = comment.update(updateData)
 
         assertEquals("Some text", updated.text())
+    }
+
+    @Test
+    fun canCorrectlyBeReported() {
+        val comment = createNewComment(1L, now(), "SomeText", mockk())
+
+        comment.report(Report(1, kalduna(), now(), ReportReason.INAPPROPRIATE_CONTENT))
+        assertEquals(1, comment.reports().size)
+
+        comment.report(Report(2, jangula(), now(), ReportReason.OFFENSIVE_CONTENT))
+        assertEquals(2, comment.reports().size)
+
+        comment.report(Report(3, vipiSoxumski(), now(), ReportReason.OFFENSIVE_CONTENT))
+        assertEquals(3, comment.reports().size)
+    }
+
+    @Test
+    fun cantBeReportedMoreThanOnceBySameUser() {
+        val comment = createNewComment(1L, now(), "SomeText", mockk())
+        comment.report(Report(1, kalduna(), now(), ReportReason.INAPPROPRIATE_CONTENT))
+
+        val exception = assertThrows<IllegalStateException> {
+            comment.report(Report(2, kalduna(), now(), ReportReason.OFFENSIVE_CONTENT))
+        }
+        assertEquals("You already reported this content", exception.message!!)
+    }
+
+    @Test
+    fun cantBeReportedAsIrrelevant() {
+        val comment = createNewComment(1L, now(), "SomeText", mockk())
+
+        val exception = assertThrows<IllegalStateException> {
+            comment.report(Report(2, kalduna(), now(), ReportReason.IRRELEVANT))
+        }
+        assertEquals("Cant report COMMENT with reason IRRELEVANT", exception.message!!)
     }
 
 }

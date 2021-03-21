@@ -2,10 +2,10 @@ package ge.wanderer.core.command.pin
 
 import ge.wanderer.common.now
 import ge.wanderer.core.integration.user.UserService
-import ge.wanderer.core.model.createTipPin
-import ge.wanderer.core.model.jambura
-import ge.wanderer.core.model.jangula
-import ge.wanderer.core.model.kalduna
+import ge.wanderer.core.createTipPin
+import ge.wanderer.core.jambura
+import ge.wanderer.core.jangula
+import ge.wanderer.core.kalduna
 import ge.wanderer.core.model.rating.VoteType
 import io.mockk.every
 import io.mockk.mockk

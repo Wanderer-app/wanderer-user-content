@@ -1,10 +1,10 @@
 package ge.wanderer.core.command.comment
 
 import ge.wanderer.common.now
-import ge.wanderer.core.model.createNewComment
-import ge.wanderer.core.model.createNewPostWithoutFiles
-import ge.wanderer.core.model.createPoll
-import ge.wanderer.core.model.createTipPin
+import ge.wanderer.core.createNewComment
+import ge.wanderer.core.createNewPostWithoutFiles
+import ge.wanderer.core.createPoll
+import ge.wanderer.core.createTipPin
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -16,8 +16,12 @@ class AddCommentCommandTest {
     fun correctlyAddsCommentsToOtherComments() {
 
         val comment = createNewComment(1, now(), "Some text", mockk())
-        val reply = createNewComment(2, now(), "Reply to some text", mockk())
-        val result = AddCommentCommand(reply, comment).execute()
+        val result = AddCommentCommand(
+            "Reply to some text",
+            mockk(),
+            now(),
+            comment
+        ).execute()
 
         assertTrue(result.isSuccessful)
         assertEquals("Comment added", result.message)
@@ -31,8 +35,7 @@ class AddCommentCommandTest {
     fun correctlyAddsCommentsToPins() {
 
         val pin = createTipPin(1, mockk(), now(), mockk(), "123", "Teeext")
-        val comment = createNewComment(1, now(), "Some text", mockk())
-        val result = AddCommentCommand(comment, pin).execute()
+        val result = AddCommentCommand("Some text", mockk(), now(), pin).execute()
 
         assertTrue(result.isSuccessful)
         assertEquals("Comment added", result.message)
@@ -46,8 +49,7 @@ class AddCommentCommandTest {
     fun correctlyAddsCommentToDiscussionElements() {
 
         val post = createNewPostWithoutFiles(1, mockk(), "Teeext", now())
-        val comment = createNewComment(1, now(), "Some text", mockk())
-        var result = AddCommentCommand(comment, post).execute()
+        var result = AddCommentCommand("Some text", mockk(), now(), post).execute()
 
         assertTrue(result.isSuccessful)
         assertEquals("Comment added", result.message)
@@ -55,7 +57,7 @@ class AddCommentCommandTest {
         assertEquals("Some text", result.returnedModel.comments().first().text())
 
         val poll = createPoll(1, mockk(), now(), "123", "Some question", mutableSetOf())
-        result = AddCommentCommand(comment, poll).execute()
+        result = AddCommentCommand("Some text", mockk(), now(), poll).execute()
 
         assertTrue(result.isSuccessful)
         assertEquals("Comment added", result.message)

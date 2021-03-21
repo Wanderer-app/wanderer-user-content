@@ -1,4 +1,4 @@
-package ge.wanderer.core.model
+package ge.wanderer.core
 
 import ge.wanderer.common.map.LatLng
 import ge.wanderer.core.model.comment.Comment
@@ -22,8 +22,6 @@ fun createNewComment(id: Long, createDate: LocalDateTime, text: String, author: 
         author,
         createDate,
         text,
-        mutableListOf(),
-        mutableListOf(),
         Active(createDate, author)
     )
 
@@ -37,9 +35,7 @@ fun createTipPin(id: Long, user: User, createTime: LocalDateTime, location: LatL
         routeCode,
         MarkerType.TIP,
         content,
-        Active(createTime, user),
-        mutableListOf(),
-        mutableListOf()
+        Active(createTime, user)
     )
 }
 
@@ -51,9 +47,7 @@ fun createNewPostWithoutFiles(id: Long, user: User, content: String, createDate:
         content,
         "123",
         listOf(),
-        Active(createDate, user),
-        mutableListOf(),
-        mutableListOf()
+        Active(createDate, user)
     )
 
 fun createUpVote(id: Long, user: User, date: LocalDateTime, value: Int) = Vote(id, user, date, Active(date, user), value, VoteType.UP)
@@ -81,4 +75,9 @@ fun Any.getResourceFile(fileName: String): URL =
 
 fun createPoll(id: Long, creator: User, createTime: LocalDateTime, routeCode: String, title: String, answers: MutableSet<IPollAnswer>) =
     Poll(id, creator, createTime, Active(createTime, creator), routeCode, title, answers, mutableListOf())
+
+fun Poll.addAnswer(id: Long, text: String) {
+    val answer = PollAnswer(id, text, this.createdAt(), this.creator(), Active(this.createdAt(), this.creator()), mutableSetOf())
+    this.addAnswer(answer)
+}
 

@@ -2,7 +2,10 @@ package ge.wanderer.core.model.discussion.poll
 
 import ge.wanderer.common.amount
 import ge.wanderer.common.now
-import ge.wanderer.core.model.*
+import ge.wanderer.core.jambura
+import ge.wanderer.core.jangula
+import ge.wanderer.core.patata
+import ge.wanderer.core.pollAnswer
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
@@ -21,6 +24,17 @@ class PollAnswerTest {
         assertEquals("GTO", data.title)
         assertEquals(amount(33.33), data.percentage)
         assertTrue(data.answererIds.containsAll(listOf(1L, 2L, 3L)))
+    }
+
+    @Test
+    fun returnsCorrectDataWhenZeroAnswers() {
+        val answer = pollAnswer(1, "GTO", now(), mutableSetOf(), mockk())
+
+        var data = answer.data(9)
+        assertEquals(amount(0), data.percentage)
+
+        data = answer.data(0)
+        assertEquals(amount(0), data.percentage)
     }
 
     @Test

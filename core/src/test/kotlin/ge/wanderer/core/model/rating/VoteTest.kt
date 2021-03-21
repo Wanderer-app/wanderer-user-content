@@ -1,10 +1,10 @@
 package ge.wanderer.core.model.rating
 
 import ge.wanderer.common.now
-import ge.wanderer.core.model.createDownVote
-import ge.wanderer.core.model.createUpVote
-import ge.wanderer.core.model.jambura
-import ge.wanderer.core.model.patata
+import ge.wanderer.core.createDownVote
+import ge.wanderer.core.createUpVote
+import ge.wanderer.core.jambura
+import ge.wanderer.core.patata
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

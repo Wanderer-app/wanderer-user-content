@@ -1,8 +1,8 @@
 package ge.wanderer.core.command.content
 
 import ge.wanderer.common.now
+import ge.wanderer.core.*
 import ge.wanderer.core.integration.user.UserService
-import ge.wanderer.core.model.*
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

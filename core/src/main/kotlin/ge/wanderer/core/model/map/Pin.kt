@@ -6,6 +6,9 @@ import ge.wanderer.core.model.comment.IComment
 import ge.wanderer.core.model.content.status.UserAddedContentStatus
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.content.BaseUserContent
+import ge.wanderer.core.model.report.Report
+import ge.wanderer.core.model.report.ReportReason
+import ge.wanderer.core.model.report.ReportReason.*
 import ge.wanderer.core.model.content.status.ContentStatusType
 import ge.wanderer.core.model.rating.IVote
 import org.joda.time.LocalDateTime
@@ -19,9 +22,10 @@ class Pin(
     private val type: MarkerType,
     private val content: RouteElementContent,
     status: UserAddedContentStatus,
-    comments: MutableList<IComment>,
-    votes: MutableList<IVote>
-) : IPin, BaseUserContent(id, creator, createdAt, status, comments, votes) {
+    comments: MutableList<IComment> = mutableListOf(),
+    votes: MutableList<IVote> = mutableListOf(),
+    reports: MutableSet<Report> = mutableSetOf()
+) : IPin, BaseUserContent(id, creator, createdAt, status, comments, votes, reports) {
 
     override fun location(): LatLng = location
     override fun routeCode(): String = routeCode
@@ -33,6 +37,9 @@ class Pin(
     override fun markIrrelevant(onDate: LocalDateTime) {
         status = status.markIrrelevant(onDate)
     }
+
+    override fun acceptableReportReasons(): Set<ReportReason> =
+        setOf(INAPPROPRIATE_CONTENT, IRRELEVANT, OFFENSIVE_CONTENT)
 
     override fun update(content: RouteElementContent) =
         Pin(

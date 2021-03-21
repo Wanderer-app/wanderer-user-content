@@ -2,10 +2,12 @@ package ge.wanderer.core.model.discussion.poll
 
 import ge.wanderer.common.amount
 import ge.wanderer.common.enums.UserContentType
+import ge.wanderer.common.percentOf
 import ge.wanderer.core.model.content.status.UserAddedContentStatus
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.content.status.ContentStatusType
 import org.joda.time.LocalDateTime
+import java.math.BigDecimal
 import java.math.RoundingMode
 
 data class PollAnswer (
@@ -40,12 +42,12 @@ data class PollAnswer (
         }
     }
 
-    override fun data(totalAnswerers: Int) = PollAnswerData(
-        id,
-        title,
-        selectors.map { it.id },
-        amount(selectors().size)
-            .multiply(amount(100))
-            .divide(amount(totalAnswerers), 2, RoundingMode.HALF_UP))
+    override fun data(totalAnswerers: Int) =
+        PollAnswerData(
+            id,
+            title,
+            selectors.map { it.id },
+            amount(selectors().size).percentOf(amount(totalAnswerers))
+        )
 
 }

@@ -2,6 +2,8 @@ package ge.wanderer.core.model.content
 
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.comment.IComment
+import ge.wanderer.core.model.report.Report
+import ge.wanderer.core.model.report.ReportReason
 import ge.wanderer.core.model.content.status.ContentStatusType
 import ge.wanderer.core.model.content.status.UserAddedContentStatus
 import ge.wanderer.core.model.rating.IVote
@@ -13,8 +15,9 @@ abstract class BaseUserContent(
     protected val createdAt: LocalDateTime,
     protected var status: UserAddedContentStatus,
     protected val comments: MutableList<IComment>,
-    protected val votes: MutableList<IVote>
-): CommentableContent, RateableContent {
+    protected val votes: MutableList<IVote>,
+    protected val reports: MutableSet<Report>
+): CommentableContent, RateableContent, ReportableContent {
     
     override fun id(): Long = id
     override fun creator(): User = creator
@@ -23,7 +26,6 @@ abstract class BaseUserContent(
     override fun isActive(): Boolean = status.statusType() == ContentStatusType.ACTIVE
     override fun isRemoved(): Boolean = status.statusType() == ContentStatusType.REMOVED
     override fun statusUpdatedAt(): LocalDateTime = status.createdAt()
-
 
     override fun remove(onDate: LocalDateTime, remover: User) {
         status = status.remove(onDate, remover)
@@ -53,5 +55,17 @@ abstract class BaseUserContent(
             .filter { it.isActive() }
             .map { it.weight() }
             .sum()
+
+    override fun report(report: Report) {
+        check(acceptableReportReasons().contains(report.reason)) {
+            "Cant report ${this.contentType()} with reason ${report.reason}"
+        }
+        check(reports.none { it.creator == report.creator }) { "You already reported this content" }
+        reports.add(report)
+    }
+
+    override fun reports(): Set<Report> = reports.toSet()
+
+    abstract fun acceptableReportReasons(): Set<ReportReason>
 
 }

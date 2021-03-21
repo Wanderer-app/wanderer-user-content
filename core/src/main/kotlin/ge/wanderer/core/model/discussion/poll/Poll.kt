@@ -37,11 +37,24 @@ class Poll(
         answers.add(answer)
     }
 
-    override fun answersData(): Set<PollAnswerData> {
-        val totalAnswerers = answers.map { it.selectors().size }.sum()
-        return answers
+    override fun selectAnswer(answerId: Long, user: User) {
+        answers
+            .filter { it.id() != answerId }
+            .filter { it.selectors().contains(user) }
+            .forEach { it.selectBy(user) }
+        answers
+            .asSequence()
             .filter { it.isActive() }
-            .map { it.data(totalAnswerers) }.toSet()
+            .first { it.id() == answerId }
+            .selectBy(user)
+
+    }
+
+    override fun answersData(): Set<PollAnswerData> {
+        val activeAnswers = answers.filter { it.isActive() }
+
+        val totalAnswerers = activeAnswers.map { it.selectors().size }.sum()
+        return activeAnswers.map { it.data(totalAnswerers) }.toSet()
     }
 
     override fun comments(): List<IComment> = comments.filter { it.isActive() }

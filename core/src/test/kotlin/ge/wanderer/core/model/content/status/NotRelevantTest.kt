@@ -2,7 +2,7 @@ package ge.wanderer.core.model.content.status
 
 import ge.wanderer.common.now
 import ge.wanderer.core.model.content.status.ContentStatusType.*
-import ge.wanderer.core.model.jambura
+import ge.wanderer.core.jambura
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.lang.IllegalStateException

@@ -1,7 +1,7 @@
 package ge.wanderer.core.command.rating
 
 import ge.wanderer.common.now
-import ge.wanderer.core.model.*
+import ge.wanderer.core.*
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

@@ -1,9 +1,9 @@
 package ge.wanderer.core.model.content.status
 
 import ge.wanderer.common.now
-import ge.wanderer.core.model.jambura
-import ge.wanderer.core.model.kalduna
-import ge.wanderer.core.model.vipiSoxumski
+import ge.wanderer.core.jambura
+import ge.wanderer.core.kalduna
+import ge.wanderer.core.vipiSoxumski
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.lang.IllegalStateException

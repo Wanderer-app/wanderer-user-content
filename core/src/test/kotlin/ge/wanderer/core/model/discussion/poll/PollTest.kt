@@ -1,6 +1,8 @@
 package ge.wanderer.core.model.discussion.poll
 
+import ge.wanderer.common.amount
 import ge.wanderer.common.now
+import ge.wanderer.core.*
 import ge.wanderer.core.model.*
 import ge.wanderer.core.model.content.status.Active
 import io.mockk.every
@@ -50,15 +52,56 @@ class PollTest {
 
     @Test
     fun correctlyReturnsItsContentAsJson() {
-        val answers = mutableSetOf<IPollAnswer>(
-            pollAnswer(1, "GTA", now(), mutableSetOf(jambura(), patata()), mockk()),
-            pollAnswer(1, "RDR", now(), mutableSetOf(jangula()), mockk())
-        )
-        val pollWith2Answers = Poll(1L, mockk(), now(), Active(now(), jambura()), "123", "Best video game?", answers, mutableListOf())
+        val poll = createPoll(1, jambura(), now(), "123", "What is the best video game?", mutableSetOf())
 
-        val content = pollWith2Answers.content()
-        val expectedJson = this.getResourceFile("pollWith2Answers3Answerers.json").readText()
-        assertEquals(expectedJson, content)
+        poll.addAnswer(1, "Gta")
+        assertEquals(this.getResourceFile("bestVideoGamePoll1Answer0Answerers.json").readText(), poll.content())
+
+        poll.addAnswer(2, "Rdr")
+        assertEquals(this.getResourceFile("bestVideoGamePoll2Answers0Answerers.json").readText(), poll.content())
+
+        poll.selectAnswer(1, jambura())
+        assertEquals(this.getResourceFile("bestVideoGamePoll2Answers1Answerer.json").readText(), poll.content())
+
+        poll.selectAnswer(1, patata())
+        poll.selectAnswer(2, jangula())
+        assertEquals(this.getResourceFile("bestVideoGamePoll2Answers3Answerers.json").readText(), poll.content())
+
+        poll.addAnswer(3, "Fifa")
+        assertEquals(this.getResourceFile("bestVideoGamePoll3Answers3Answerers.json").readText(), poll.content())
+
+    }
+
+    @Test
+    fun correctlySelectsAnswerByUser() {
+        val poll = createPoll(1, jambura(), now(), "123", "What is the best video game?", mutableSetOf())
+        val gta = pollAnswer(1, "Gta", now(), mutableSetOf(), jambura())
+        val rdr = pollAnswer(2, "Rdr", now(), mutableSetOf(), jambura())
+
+        poll.addAnswer(gta)
+        poll.addAnswer(rdr)
+        assertEquals(2, poll.answersData().size)
+
+        poll.selectAnswer(1, patata())
+        poll.selectAnswer(2, jangula())
+        assertTrue(poll.answersData().all { it.percentage == amount(50) })
+
+        assertEquals(1, gta.numberOfAnswerers())
+        assertEquals(1, rdr.numberOfAnswerers())
+
+        poll.selectAnswer(2, patata())
+        assertEquals(0, gta.numberOfAnswerers())
+        assertEquals(2, rdr.numberOfAnswerers())
+
+        poll.selectAnswer(1, jangula())
+        assertEquals(1, gta.numberOfAnswerers())
+        assertEquals(1, rdr.numberOfAnswerers())
+
+        poll.selectAnswer(2, kalduna())
+        assertEquals(2, rdr.numberOfAnswerers())
+
+        poll.selectAnswer(2, kalduna())
+        assertEquals(1, rdr.numberOfAnswerers())
     }
 
     @Test

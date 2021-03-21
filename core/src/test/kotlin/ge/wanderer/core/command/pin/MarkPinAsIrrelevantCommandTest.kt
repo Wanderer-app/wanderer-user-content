@@ -2,8 +2,8 @@ package ge.wanderer.core.command.pin
 
 import ge.wanderer.common.now
 import ge.wanderer.core.integration.user.UserService
-import ge.wanderer.core.model.createTipPin
-import ge.wanderer.core.model.jambura
+import ge.wanderer.core.createTipPin
+import ge.wanderer.core.jambura
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

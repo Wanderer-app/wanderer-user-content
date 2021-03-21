@@ -1,8 +1,10 @@
 package ge.wanderer.core.command.rating
 
 import ge.wanderer.common.now
+import ge.wanderer.core.createNewPostWithoutFiles
 import ge.wanderer.core.integration.user.UserService
-import ge.wanderer.core.model.*
+import ge.wanderer.core.jambura
+import ge.wanderer.core.jangula
 import ge.wanderer.core.model.rating.VoteType
 import io.mockk.every
 import io.mockk.mockk

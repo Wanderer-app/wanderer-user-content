@@ -2,10 +2,15 @@ package ge.wanderer.core.model.discussion.post
 
 import ge.wanderer.common.enums.UserContentType
 import ge.wanderer.common.now
+import ge.wanderer.core.*
 import ge.wanderer.core.model.*
+import ge.wanderer.core.model.report.Report
+import ge.wanderer.core.model.report.ReportReason.*
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import java.lang.IllegalStateException
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -79,5 +84,40 @@ class PostTest {
 
         assertEquals("Hello", updated.content())
         assertEquals(2, updated.attachedFiles().size)
+    }
+
+    @Test
+    fun canCorrectlyBeReported() {
+        val post = createNewPostWithoutFiles(1, mockk(), "Hellooo", now())
+
+        post.report(Report(1, kalduna(), now(), INAPPROPRIATE_CONTENT))
+        assertEquals(1, post.reports().size)
+
+        post.report(Report(2, jangula(), now(), OFFENSIVE_CONTENT))
+        assertEquals(2, post.reports().size)
+
+        post.report(Report(3, vipiSoxumski(), now(), OFFENSIVE_CONTENT))
+        assertEquals(3, post.reports().size)
+    }
+
+    @Test
+    fun cantBeReportedMoreThanOnceBySameUser() {
+        val post = createNewPostWithoutFiles(1, mockk(), "Hellooo", now())
+        post.report(Report(1, kalduna(), now(), INAPPROPRIATE_CONTENT))
+
+        val exception = assertThrows<IllegalStateException> {
+            post.report(Report(2, kalduna(), now(), OFFENSIVE_CONTENT))
+        }
+        assertEquals("You already reported this content", exception.message!!)
+    }
+
+    @Test
+    fun cantBeReportedAsIrrelevant() {
+        val post = createNewPostWithoutFiles(1, mockk(), "Hellooo", now())
+
+        val exception = assertThrows<IllegalStateException> {
+            post.report(Report(2, kalduna(), now(), IRRELEVANT))
+        }
+        assertEquals("Cant report POST with reason IRRELEVANT", exception.message!!)
     }
 }

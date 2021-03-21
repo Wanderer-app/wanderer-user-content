@@ -2,12 +2,9 @@ package ge.wanderer.core.model.map
 
 import ge.wanderer.common.map.LatLng
 import ge.wanderer.common.now
-import ge.wanderer.core.model.*
-import ge.wanderer.core.model.rating.Vote
-import ge.wanderer.core.model.rating.VoteType.*
-import ge.wanderer.core.model.content.status.Active
-import ge.wanderer.core.model.content.status.NotRelevant
-import ge.wanderer.core.model.content.status.Removed
+import ge.wanderer.core.*
+import ge.wanderer.core.model.report.Report
+import ge.wanderer.core.model.report.ReportReason.*
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -82,5 +79,30 @@ class  PinTest {
         assertEquals("Resting place", updated.content().title)
         assertEquals("Rest here before going further", updated.content().text)
         assertNotNull(updated.content().attachedFile)
+    }
+
+    @Test
+    fun canCorrectlyBeReported() {
+        val pin = createTipPin(1L, mockk(), now(), LatLng(1f, 1f), "1234", "Inappropriate text")
+
+        pin.report(Report(1, kalduna(), now(), INAPPROPRIATE_CONTENT))
+        assertEquals(1, pin.reports().size)
+
+        pin.report(Report(2, jangula(), now(), OFFENSIVE_CONTENT))
+        assertEquals(2, pin.reports().size)
+
+        pin.report(Report(3, vipiSoxumski(), now(), IRRELEVANT))
+        assertEquals(3, pin.reports().size)
+    }
+
+    @Test
+    fun cantBeReportedMoreThanOnceBySameUser() {
+        val pin = createTipPin(1L, mockk(), now(), LatLng(1f, 1f), "1234", "Inappropriate text")
+        pin.report(Report(1, kalduna(), now(), INAPPROPRIATE_CONTENT))
+
+        val exception = assertThrows<IllegalStateException> {
+            pin.report(Report(2, kalduna(), now(), OFFENSIVE_CONTENT))
+        }
+        assertEquals("You already reported this content", exception.message!!)
     }
 }
