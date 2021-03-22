@@ -6,7 +6,6 @@ import ge.wanderer.core.command.success
 import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.content.RateableContent
 import ge.wanderer.core.model.rating.IVote
-import java.lang.IllegalStateException
 
 abstract class GiveVoteCommand(
     private val rateableContent: RateableContent,

@@ -1,17 +1,18 @@
 package ge.wanderer.core.model.discussion.post
 
 import ge.wanderer.common.enums.UserContentType
-import ge.wanderer.core.model.comment.IComment
-import ge.wanderer.core.model.content.status.UserAddedContentStatus
 import ge.wanderer.core.data.file.AttachedFile
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.UpdateDiscussionElementData
+import ge.wanderer.core.model.comment.IComment
 import ge.wanderer.core.model.content.BaseUserContent
-import ge.wanderer.core.model.report.Report
-import ge.wanderer.core.model.report.ReportReason
-import ge.wanderer.core.model.report.ReportReason.*
+import ge.wanderer.core.model.content.status.UserAddedContentStatus
 import ge.wanderer.core.model.discussion.DiscussionElement
 import ge.wanderer.core.model.rating.IVote
+import ge.wanderer.core.model.report.Report
+import ge.wanderer.core.model.report.ReportReason
+import ge.wanderer.core.model.report.ReportReason.INAPPROPRIATE_CONTENT
+import ge.wanderer.core.model.report.ReportReason.OFFENSIVE_CONTENT
 import org.joda.time.LocalDateTime
 
 class Post(

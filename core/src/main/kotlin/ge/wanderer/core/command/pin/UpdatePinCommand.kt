@@ -6,7 +6,6 @@ import ge.wanderer.core.command.success
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.map.IPin
 import ge.wanderer.core.model.map.RouteElementContent
-import java.lang.IllegalStateException
 
 class UpdatePinCommand(
     private val pin: IPin,

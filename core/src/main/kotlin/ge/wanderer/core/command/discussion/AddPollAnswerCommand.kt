@@ -9,7 +9,6 @@ import ge.wanderer.core.model.discussion.poll.IPoll
 import ge.wanderer.core.model.discussion.poll.PollAnswer
 import ge.wanderer.core.repository.TRANSIENT_ID
 import org.joda.time.LocalDateTime
-import java.lang.IllegalStateException
 
 class AddPollAnswerCommand(
     private val poll: IPoll,

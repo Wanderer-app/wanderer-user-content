@@ -2,11 +2,11 @@ package ge.wanderer.core.model.content
 
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.comment.IComment
-import ge.wanderer.core.model.report.Report
-import ge.wanderer.core.model.report.ReportReason
 import ge.wanderer.core.model.content.status.ContentStatusType
 import ge.wanderer.core.model.content.status.UserAddedContentStatus
 import ge.wanderer.core.model.rating.IVote
+import ge.wanderer.core.model.report.Report
+import ge.wanderer.core.model.report.ReportReason
 import org.joda.time.LocalDateTime
 
 abstract class BaseUserContent(

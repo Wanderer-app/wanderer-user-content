@@ -7,7 +7,6 @@ import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.content.UserAddedContent
 import org.joda.time.LocalDateTime
-import java.lang.IllegalStateException
 
 class ActivateContentCommand(
     private val activator: User,

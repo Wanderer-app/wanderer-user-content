@@ -2,7 +2,6 @@ package ge.wanderer.core.model.content.status
 
 import ge.wanderer.core.integration.user.User
 import org.joda.time.LocalDateTime
-import java.lang.IllegalStateException
 
 class NotRelevant (
     private val createdAt: LocalDateTime

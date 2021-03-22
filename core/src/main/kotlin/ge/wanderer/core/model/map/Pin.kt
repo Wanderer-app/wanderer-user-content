@@ -2,15 +2,15 @@ package ge.wanderer.core.model.map
 
 import ge.wanderer.common.enums.UserContentType
 import ge.wanderer.common.map.LatLng
-import ge.wanderer.core.model.comment.IComment
-import ge.wanderer.core.model.content.status.UserAddedContentStatus
 import ge.wanderer.core.integration.user.User
+import ge.wanderer.core.model.comment.IComment
 import ge.wanderer.core.model.content.BaseUserContent
+import ge.wanderer.core.model.content.status.ContentStatusType
+import ge.wanderer.core.model.content.status.UserAddedContentStatus
+import ge.wanderer.core.model.rating.IVote
 import ge.wanderer.core.model.report.Report
 import ge.wanderer.core.model.report.ReportReason
 import ge.wanderer.core.model.report.ReportReason.*
-import ge.wanderer.core.model.content.status.ContentStatusType
-import ge.wanderer.core.model.rating.IVote
 import org.joda.time.LocalDateTime
 
 class Pin(

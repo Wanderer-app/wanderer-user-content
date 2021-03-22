@@ -6,7 +6,6 @@ import ge.wanderer.core.command.success
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.UpdateCommentData
 import ge.wanderer.core.model.comment.IComment
-import java.lang.IllegalStateException
 
 class UpdateCommentCommand(
     private val comment: IComment,

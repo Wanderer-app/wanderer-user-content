@@ -2,12 +2,12 @@ package ge.wanderer.core.model.discussion.poll
 
 import ge.wanderer.common.enums.UserContentType
 import ge.wanderer.common.toJson
-import ge.wanderer.core.model.content.status.UserAddedContentStatus
 import ge.wanderer.core.data.file.AttachedFile
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.UpdateDiscussionElementData
 import ge.wanderer.core.model.comment.IComment
 import ge.wanderer.core.model.content.status.ContentStatusType
+import ge.wanderer.core.model.content.status.UserAddedContentStatus
 import ge.wanderer.core.model.discussion.DiscussionElement
 import org.joda.time.LocalDateTime
 

@@ -1,11 +1,10 @@
 package ge.wanderer.core.model.rating
 
 import ge.wanderer.common.enums.UserContentType
-import ge.wanderer.core.model.content.status.UserAddedContentStatus
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.content.status.ContentStatusType
+import ge.wanderer.core.model.content.status.UserAddedContentStatus
 import org.joda.time.LocalDateTime
-import java.lang.IllegalStateException
 
 class Vote(
     private val id: Long,

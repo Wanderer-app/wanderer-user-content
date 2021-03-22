@@ -3,12 +3,10 @@ package ge.wanderer.core.model.discussion.poll
 import ge.wanderer.common.amount
 import ge.wanderer.common.enums.UserContentType
 import ge.wanderer.common.percentOf
-import ge.wanderer.core.model.content.status.UserAddedContentStatus
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.content.status.ContentStatusType
+import ge.wanderer.core.model.content.status.UserAddedContentStatus
 import org.joda.time.LocalDateTime
-import java.math.BigDecimal
-import java.math.RoundingMode
 
 data class PollAnswer (
     private val id: Long,

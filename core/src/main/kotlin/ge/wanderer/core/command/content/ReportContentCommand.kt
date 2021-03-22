@@ -1,11 +1,11 @@
 package ge.wanderer.core.command.content
 
+import ge.wanderer.core.configuration.ReportingConfiguration
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.content.ReportableContent
 import ge.wanderer.core.model.report.Report
 import ge.wanderer.core.model.report.ReportReason
-import ge.wanderer.core.configuration.ReportingConfiguration
 import ge.wanderer.core.repository.TRANSIENT_ID
 import org.joda.time.LocalDateTime
 

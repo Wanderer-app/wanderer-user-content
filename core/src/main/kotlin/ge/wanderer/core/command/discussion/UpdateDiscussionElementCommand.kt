@@ -6,7 +6,6 @@ import ge.wanderer.core.command.success
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.UpdateDiscussionElementData
 import ge.wanderer.core.model.discussion.DiscussionElement
-import java.lang.IllegalStateException
 
 
 class UpdateDiscussionElementCommand(
