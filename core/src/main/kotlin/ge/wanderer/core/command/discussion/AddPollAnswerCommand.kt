@@ -18,13 +18,11 @@ class AddPollAnswerCommand(
     private val user: User
 ): Command<IPoll> {
     override fun execute(): CommandExecutionResult<IPoll> {
-        if (user.isAdmin) {
-            val answer = PollAnswer(TRANSIENT_ID, answerText, onDate, user, Active(onDate, user), mutableSetOf())
-            poll.addAnswer(answer)
-            return success("Answer added!", poll)
-        } else {
-            throw IllegalStateException("Only administrators can add new answers to polls")
-        }
+        check(user.isAdmin) { "Only administrators can add new answers to polls" }
+
+        val answer = PollAnswer(TRANSIENT_ID, answerText, onDate, user, Active(onDate, user), mutableSetOf())
+        poll.addAnswer(answer)
+        return success("Answer added!", poll)
     }
 
 }

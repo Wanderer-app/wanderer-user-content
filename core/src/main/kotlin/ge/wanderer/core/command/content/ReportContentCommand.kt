@@ -38,7 +38,4 @@ class ReportContentCommand(
             userService.getAdministrationUser(),
             userService
         ).execute()
-
-
-
 }

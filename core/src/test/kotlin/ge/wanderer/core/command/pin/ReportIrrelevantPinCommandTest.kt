@@ -1,7 +1,6 @@
-package ge.wanderer.core.command.content
+package ge.wanderer.core.command.pin
 
 import ge.wanderer.common.now
-import ge.wanderer.core.command.pin.ReportIrrelevantPinCommand
 import ge.wanderer.core.configuration.ReportingConfiguration
 import ge.wanderer.core.createTipPin
 import ge.wanderer.core.integration.user.UserService

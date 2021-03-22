@@ -14,9 +14,7 @@ abstract class GiveVoteCommand(
 ): Command<RateableContent> {
     override fun execute(): CommandExecutionResult<RateableContent> {
         val vote = createVote()
-        if (vote.creator() == rateableContent.creator()) {
-            throw IllegalStateException("Cant vote for your own content!")
-        }
+        check(vote.creator() != rateableContent.creator()) { "Cant vote for your own content!" }
         rateableContent.removeVotesBy(vote.creator(), vote.createdAt())
         rateableContent.giveVote(vote)
         userService.usersContentWasRated(rateableContent, vote)

@@ -13,10 +13,8 @@ class UpdatePinCommand(
     private val newContent: RouteElementContent,
     private val updater: User
 ): Command<IPin> {
-    override fun execute(): CommandExecutionResult<IPin> =
-        if (pin.creator() == updater) {
-            success("Pin updated", pin.update(newContent))
-        } else {
-            throw IllegalStateException("You can't update this pin")
-        }
+    override fun execute(): CommandExecutionResult<IPin> {
+        check(pin.creator() == updater) { "You can't update this pin" }
+        return success("Pin updated", pin.update(newContent))
+    }
 }

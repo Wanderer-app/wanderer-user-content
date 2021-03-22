@@ -14,10 +14,8 @@ class UpdateDiscussionElementCommand(
     private val data: UpdateDiscussionElementData,
     private val updater: User
 ): Command<DiscussionElement> {
-    override fun execute(): CommandExecutionResult<DiscussionElement> =
-        if (element.creator() == updater) {
-            success("Element updated", element.update(data))
-        } else {
-            throw IllegalStateException("You can't update this element")
-        }
+    override fun execute(): CommandExecutionResult<DiscussionElement> {
+        check(element.creator() == updater) { "You can't update this element" }
+        return success("Element updated", element.update(data))
+    }
 }

@@ -13,11 +13,11 @@ class Removed (
     override fun remove(onDate: LocalDateTime, remover: User): UserAddedContentStatus = throw IllegalStateException("Content already removed")
     override fun markIrrelevant(onDate: LocalDateTime): UserAddedContentStatus = throw IllegalStateException("Content already removed")
 
-    override fun activate(onDate: LocalDateTime, activator: User): UserAddedContentStatus =
-        if ((remover.isAdmin && activator.isAdmin) || remover == activator) {
-            Active(onDate, activator)
-        } else {
-            throw IllegalStateException("You dont have rights to activate this content")
+    override fun activate(onDate: LocalDateTime, activator: User): UserAddedContentStatus {
+        check((remover.isAdmin && activator.isAdmin) || remover == activator) {
+            "You dont have rights to activate this content"
         }
+        return Active(onDate, activator)
+    }
 
 }

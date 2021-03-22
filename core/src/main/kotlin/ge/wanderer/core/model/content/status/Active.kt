@@ -13,10 +13,8 @@ class Active (
     override fun activate(onDate: LocalDateTime, activator: User): UserAddedContentStatus = throw IllegalStateException("Content already active")
     override fun markIrrelevant(onDate: LocalDateTime): UserAddedContentStatus = NotRelevant(onDate)
 
-    override fun remove(onDate: LocalDateTime, remover: User): UserAddedContentStatus =
-        if (remover == creator || remover.isAdmin) {
-            Removed(onDate, remover)
-        } else {
-            throw IllegalStateException("You dont have rights to remove this content")
-        }
+    override fun remove(onDate: LocalDateTime, remover: User): UserAddedContentStatus {
+        check(remover == creator || remover.isAdmin) { "You dont have rights to remove this content" }
+        return Removed(onDate, remover)
+    }
 }
