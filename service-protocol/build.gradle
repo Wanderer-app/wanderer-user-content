@@ -1,0 +1,8 @@
+project(":service-protocol") {
+    description = "Interfaces and request/response data structures for services"
+
+    dependencies {
+        implementation project(':common')
+        implementation project(':core')
+    }
+}

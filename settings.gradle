@@ -1,4 +1,5 @@
 rootProject.name = 'wanderer-user-content'
 include 'core'
 include 'common'
+include 'service-protocol'
 
