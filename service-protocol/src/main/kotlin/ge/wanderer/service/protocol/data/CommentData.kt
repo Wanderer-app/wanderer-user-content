@@ -8,6 +8,8 @@ data class CommentData (
     val author: User,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
+    val text: String,
     val rating: Int,
-    val responseNumber: Int
+    val responseNumber: Int,
+    val responsesPreview: List<CommentData>
 )

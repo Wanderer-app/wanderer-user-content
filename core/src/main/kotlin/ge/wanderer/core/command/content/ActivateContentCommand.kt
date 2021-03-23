@@ -8,14 +8,14 @@ import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.content.UserAddedContent
 import org.joda.time.LocalDateTime
 
-class ActivateContentCommand(
+class ActivateContentCommand<T: UserAddedContent>(
     private val activator: User,
-    private val content: UserAddedContent,
+    private val content: T,
     private val onDate: LocalDateTime,
     private val userService: UserService
-): Command<UserAddedContent> {
+): Command<T> {
 
-    override fun execute(): CommandExecutionResult<UserAddedContent> {
+    override fun execute(): CommandExecutionResult<T> {
         content.activate(onDate, activator)
         if (activator.isAdmin) {
             userService.notifyContentStatusChange(content)

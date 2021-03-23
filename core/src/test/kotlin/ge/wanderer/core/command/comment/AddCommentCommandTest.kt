@@ -49,20 +49,20 @@ class AddCommentCommandTest {
     fun correctlyAddsCommentToDiscussionElements() {
 
         val post = createNewPostWithoutFiles(1, mockk(), "Teeext", now())
-        var result = AddCommentCommand("Some text", mockk(), now(), post).execute()
+        val postResult = AddCommentCommand("Some text", mockk(), now(), post).execute()
 
-        assertTrue(result.isSuccessful)
-        assertEquals("Comment added", result.message)
-        assertEquals(1,result.returnedModel.comments().size)
-        assertEquals("Some text", result.returnedModel.comments().first().text())
+        assertTrue(postResult.isSuccessful)
+        assertEquals("Comment added", postResult.message)
+        assertEquals(1,postResult.returnedModel.comments().size)
+        assertEquals("Some text", postResult.returnedModel.comments().first().text())
 
         val poll = createPoll(1, mockk(), now(), "123", "Some question", mutableSetOf())
-        result = AddCommentCommand("Some text", mockk(), now(), poll).execute()
+        val pollResult = AddCommentCommand("Some text", mockk(), now(), poll).execute()
 
-        assertTrue(result.isSuccessful)
-        assertEquals("Comment added", result.message)
+        assertTrue(pollResult.isSuccessful)
+        assertEquals("Comment added", pollResult.message)
 
-        val returnedContentComments = result.returnedModel.comments()
+        val returnedContentComments = pollResult.returnedModel.comments()
         assertEquals(1, returnedContentComments.size)
         assertEquals("Some text", returnedContentComments.first().text())
     }

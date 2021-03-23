@@ -8,14 +8,14 @@ import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.content.UserAddedContent
 import org.joda.time.LocalDateTime
 
-class RemoveContentCommand(
-    private val content: UserAddedContent,
-    private val onDate: LocalDateTime,
+class RemoveContentCommand<T: UserAddedContent>(
     private val remover: User,
+    private val content: T,
+    private val onDate: LocalDateTime,
     private val userService: UserService
-): Command<UserAddedContent> {
+): Command<T> {
 
-    override fun execute(): CommandExecutionResult<UserAddedContent> {
+    override fun execute(): CommandExecutionResult<T> {
         content.remove(onDate, remover)
         if (remover.isAdmin) {
             userService.notifyContentStatusChange(content)

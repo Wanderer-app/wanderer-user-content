@@ -20,7 +20,7 @@ class RemoveContentCommandTest {
         pin.remove(now(), jambura())
 
         val exception = assertThrows<IllegalStateException> {
-            RemoveContentCommand(pin, now(), jambura(), mockk()).execute()
+            RemoveContentCommand(jambura(), pin, now(), mockk()).execute()
         }
         assertEquals("Content already removed", exception.message!!)
     }
@@ -31,7 +31,7 @@ class RemoveContentCommandTest {
         pin.markIrrelevant(now())
 
         val exception = assertThrows<IllegalStateException> {
-            RemoveContentCommand(pin, now(), jambura(), mockk()).execute()
+            RemoveContentCommand(jambura(), pin, now(), mockk()).execute()
         }
         assertEquals("Cant remove irrelevant content", exception.message!!)
     }
@@ -41,7 +41,7 @@ class RemoveContentCommandTest {
         val comment = createNewComment(1, now(), "Some text", kalduna())
         val userService = mockk<UserService> { every { notifyContentStatusChange(comment) } returns Unit }
 
-        val result = RemoveContentCommand(comment, now(), jambura(), userService).execute()
+        val result = RemoveContentCommand(jambura(), comment, now(), userService).execute()
         assertTrue(result.isSuccessful)
         assertTrue(result.returnedModel.isRemoved())
         verify(exactly = 1) { userService.notifyContentStatusChange(comment) }
@@ -52,7 +52,7 @@ class RemoveContentCommandTest {
         val comment = createNewComment(1, now(), "Some text", kalduna())
         val userService = mockk<UserService> { every { notifyContentStatusChange(comment) } returns Unit }
 
-        val result = RemoveContentCommand(comment, now(), kalduna(), userService).execute()
+        val result = RemoveContentCommand(kalduna(), comment, now(), userService).execute()
         assertTrue(result.isSuccessful)
         assertTrue(result.returnedModel.isRemoved())
         verify(exactly = 0) { userService.notifyContentStatusChange(comment) }
@@ -64,7 +64,7 @@ class RemoveContentCommandTest {
         val userService = mockk<UserService> { every { notifyContentStatusChange(comment) } returns Unit }
 
         val exception = assertThrows<IllegalStateException> {
-            RemoveContentCommand(comment, now(), vipiSoxumski(), userService).execute()
+            RemoveContentCommand(vipiSoxumski(), comment, now(), userService).execute()
         }
         assertEquals("You dont have rights to remove this content", exception.message!!)
     }

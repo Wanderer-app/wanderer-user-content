@@ -1,4 +1,4 @@
-package ge.wanderer.service.protocol.request.listing
+package ge.wanderer.common.listing
 
 data class FilterParam (
     val fieldName: String,

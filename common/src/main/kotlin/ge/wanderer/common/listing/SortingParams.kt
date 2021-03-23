@@ -1,4 +1,6 @@
-package ge.wanderer.service.protocol.request.listing
+package ge.wanderer.common.listing
+
+import ge.wanderer.common.listing.SortingDirection
 
 data class SortingParams (
     val fieldName: String,

@@ -1,4 +1,7 @@
-package ge.wanderer.service.protocol.request.listing
+package ge.wanderer.common.listing
+
+import ge.wanderer.common.listing.FilterParam
+import ge.wanderer.common.listing.SortingParams
 
 data class ListingRequest (
     val batchSize: Int,

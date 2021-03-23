@@ -10,14 +10,14 @@ import ge.wanderer.core.model.content.status.Active
 import ge.wanderer.core.repository.TRANSIENT_ID
 import org.joda.time.LocalDateTime
 
-class AddCommentCommand(
+class AddCommentCommand<T: CommentableContent>(
     private val commentText: String,
     private val commentor: User,
     private val onDateTime: LocalDateTime,
-    private val commentableContent: CommentableContent
-): Command<CommentableContent> {
+    private val commentableContent: T
+): Command<T> {
 
-    override fun execute(): CommandExecutionResult<CommentableContent> {
+    override fun execute(): CommandExecutionResult<T> {
         val comment = Comment(TRANSIENT_ID, commentor, onDateTime, commentText, Active(onDateTime, commentor))
         commentableContent.addComment(comment)
         return success("Comment added", commentableContent);

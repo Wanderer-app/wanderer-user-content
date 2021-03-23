@@ -33,9 +33,9 @@ class ReportContentCommand(
 
     private fun remove(content: ReportableContent) =
         RemoveContentCommand(
+            userService.getAdministrationUser(),
             content,
             reportTime,
-            userService.getAdministrationUser(),
             userService
         ).execute()
 }

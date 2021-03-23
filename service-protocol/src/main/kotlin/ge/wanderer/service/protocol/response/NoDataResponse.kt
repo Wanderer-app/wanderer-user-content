@@ -1,7 +1,6 @@
 package ge.wanderer.service.protocol.response
 
-class ServiceResponse<T> (
+data class NoDataResponse (
     val isSuccessful: Boolean,
-    val message: String,
-    val data: T?
+    val message: String
 )

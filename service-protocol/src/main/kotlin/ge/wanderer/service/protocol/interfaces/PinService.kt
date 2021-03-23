@@ -8,7 +8,7 @@ import ge.wanderer.service.protocol.interfaces.base.UserContentService
 import ge.wanderer.service.protocol.request.CreatePinRequest
 import ge.wanderer.service.protocol.request.OperateOnContentRequest
 import ge.wanderer.service.protocol.request.UpdatePinRequest
-import ge.wanderer.service.protocol.request.listing.ListingRequest
+import ge.wanderer.common.listing.ListingRequest
 import ge.wanderer.service.protocol.response.ServiceListingResponse
 import ge.wanderer.service.protocol.response.ServiceResponse
 
