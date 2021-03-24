@@ -8,7 +8,7 @@ import ge.wanderer.service.protocol.data.RatingData
 fun IComment.data(
     repliesPreview: List<CommentData> = listOf()
 ): CommentData =
-    CommentData(this.id(), this.creator(), this.createdAt(), this.statusUpdatedAt(), this.text(), this.rating(), this.comments().size, repliesPreview)
+    CommentData(this.id(), this.creator(), this.createdAt(), this.statusUpdatedAt(), this.text(), this.rating(), this.isActive(), this.isRemoved(), this.comments().size, repliesPreview)
 
 fun RateableContent.ratingData() =
     RatingData(this.rating())

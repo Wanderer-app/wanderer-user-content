@@ -10,6 +10,8 @@ data class CommentData (
     val updatedAt: LocalDateTime,
     val text: String,
     val rating: Int,
+    val isActive: Boolean,
+    val isRemoved: Boolean,
     val responseNumber: Int,
     val responsesPreview: List<CommentData>
 )
