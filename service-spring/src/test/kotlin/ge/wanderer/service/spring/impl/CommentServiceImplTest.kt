@@ -68,7 +68,7 @@ class CommentServiceImplTest {
         assertEquals(kalduna(), commentData.author)
         assertEquals("sadaa chemi 1000 maneti?", commentData.text)
 
-        verify(exactly = 1) { commentRepository.findById(3) }
+        verify(exactly = 1) { commentRepository.findById(4) }
         verify(exactly = 1) { userService.findUserById(5) }
     }
 
