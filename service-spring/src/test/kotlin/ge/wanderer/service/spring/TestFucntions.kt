@@ -1,6 +1,7 @@
 package ge.wanderer.service.spring
 
 import ge.wanderer.common.map.LatLng
+import ge.wanderer.common.now
 import ge.wanderer.core.model.comment.Comment
 import ge.wanderer.core.model.content.status.Active
 import ge.wanderer.core.model.discussion.post.Post
@@ -14,6 +15,7 @@ import ge.wanderer.core.model.discussion.poll.Poll
 import ge.wanderer.core.model.discussion.poll.PollAnswer
 import ge.wanderer.core.model.rating.Vote
 import ge.wanderer.core.model.rating.VoteType
+import ge.wanderer.core.repository.TRANSIENT_ID
 import io.mockk.mockk
 import org.joda.time.LocalDateTime
 import java.net.URL
@@ -77,6 +79,13 @@ fun Any.getResourceFile(fileName: String): URL =
 
 fun createPoll(id: Long, creator: User, createTime: LocalDateTime, routeCode: String, title: String, answers: MutableSet<IPollAnswer>) =
     Poll(id, creator, createTime, Active(createTime, creator), routeCode, title, answers, mutableListOf())
+
+fun pollWithAnswers(id: Long, creator: User, createTime: LocalDateTime, routeCode: String, title: String, answers: Set<String>): Poll {
+    val pollAnswers: MutableSet<IPollAnswer> = answers
+        .map { PollAnswer(TRANSIENT_ID, it, createTime, creator, Active(createTime, creator), mutableSetOf()) }
+        .toMutableSet()
+    return Poll(id, creator, createTime, Active(createTime, creator), routeCode, title, pollAnswers, mutableListOf())
+}
 
 fun Poll.addAnswer(id: Long, text: String) {
     val answer = PollAnswer(id, text, this.createdAt(), this.creator(), Active(this.createdAt(), this.creator()), mutableSetOf())

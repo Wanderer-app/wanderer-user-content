@@ -1,9 +1,7 @@
 package ge.wanderer.common.listing
 
-import ge.wanderer.common.listing.FilterParam
-import ge.wanderer.common.listing.SortingParams
 
-data class ListingRequest (
+data class ListingParams (
     val batchSize: Int,
     val batchNumber: Int,
     val sortingParams: SortingParams?,

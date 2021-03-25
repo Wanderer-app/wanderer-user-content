@@ -2,10 +2,10 @@ package ge.wanderer.service.protocol.interfaces.base
 
 import ge.wanderer.core.model.report.Report
 import ge.wanderer.service.protocol.request.ReportContentRequest
-import ge.wanderer.service.protocol.response.NoDataResponse
 import ge.wanderer.service.protocol.response.ServiceListingResponse
+import ge.wanderer.service.protocol.response.ServiceResponse
 
 interface ReportableContentService {
-    fun report(request: ReportContentRequest): NoDataResponse
+    fun report(request: ReportContentRequest): ServiceResponse<Report>
     fun listReportsForContent(contentId: Long): ServiceListingResponse<Report>
 }

@@ -22,8 +22,7 @@ import ge.wanderer.service.protocol.request.AddCommentRequest
 import ge.wanderer.service.protocol.request.OperateOnContentRequest
 import ge.wanderer.service.protocol.request.ReportContentRequest
 import ge.wanderer.service.protocol.request.UpdateCommentRequest
-import ge.wanderer.common.listing.ListingRequest
-import ge.wanderer.service.protocol.response.NoDataResponse
+import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.service.protocol.response.ServiceListingResponse
 import ge.wanderer.service.protocol.response.ServiceResponse
 import ge.wanderer.service.spring.CommentPreviewProvider
@@ -118,20 +117,20 @@ class CommentServiceImpl(
 
     }
 
-    override fun listComments(contentId: Long, listingRequest: ListingRequest): ServiceListingResponse<CommentData> {
+    override fun listComments(contentId: Long, listingParams: ListingParams): ServiceListingResponse<CommentData> {
         val comment = commentRepository.findById(contentId)
         val replies = comment.comments()
         return ServiceListingResponse(true, "Replies Retrieved!", replies.size, 1, replies.map { it.data() })
     }
 
-    override fun report(request: ReportContentRequest): NoDataResponse {
+    override fun report(request: ReportContentRequest): ServiceResponse<Report> {
         val comment = commentRepository.findById(request.contentId)
         val user = userService.findUserById(request.userId)
 
         val commandResult = ReportContentCommand(user, request.date, request.reportReason, comment, userService, reportingConfiguration)
             .execute()
 
-        return NoDataResponse(commandResult.isSuccessful, commandResult.message)
+        return ServiceResponse(commandResult.isSuccessful, commandResult.message, null)
     }
 
     override fun listReportsForContent(contentId: Long): ServiceListingResponse<Report> {

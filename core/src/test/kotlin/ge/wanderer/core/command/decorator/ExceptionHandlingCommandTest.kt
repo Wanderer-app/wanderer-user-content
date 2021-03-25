@@ -26,15 +26,15 @@ class ExceptionHandlingCommandTest {
 
     @Test
     fun correctlyHandlesIllegalStateExceptionWithNoMessage() {
-        val loan = mockk<IPin>()
+        val pin = mockk<IPin>()
         val command = mockk<Command<IPin>>() {
             every { execute() } throws IllegalStateException()
         }
 
-        val result = ExceptionHandlingCommand<IPin>(command, loan)
+        val result = ExceptionHandlingCommand(command, pin)
             .execute()
 
         assertFalse(result.isSuccessful)
-        assertTrue(result.message.startsWith("Exception occured: java.lang.IllegalStateException"))
+        assertTrue(result.message.startsWith("Exception occurred: java.lang.IllegalStateException"))
     }
 }

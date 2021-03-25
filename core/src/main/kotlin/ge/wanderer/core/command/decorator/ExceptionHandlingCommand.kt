@@ -1,5 +1,7 @@
 package ge.wanderer.core.command.decorator
 
+import ge.wanderer.common.functions.asStandardMessage
+import ge.wanderer.common.functions.stackTraceString
 import ge.wanderer.core.command.Command
 import ge.wanderer.core.command.CommandExecutionResult
 import ge.wanderer.core.command.fail
@@ -15,13 +17,6 @@ class ExceptionHandlingCommand<T>(
         try {
             command.execute()
         } catch (e: Exception) {
-            fail(e.message ?: "Exception occured: ${e.stackTraceString()}", model)
+            fail(e.asStandardMessage(), model)
         }
-}
-
-private fun Exception.stackTraceString(): String {
-    val sw = StringWriter()
-    val pw = PrintWriter(sw)
-    this.printStackTrace(pw)
-    return sw.toString()
 }

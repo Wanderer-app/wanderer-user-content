@@ -1,8 +1,6 @@
 package ge.wanderer.service.spring.impl
 
 import ge.wanderer.common.dateTime
-import ge.wanderer.common.listing.ListingRequest
-import ge.wanderer.common.listing.SortingParams
 import ge.wanderer.common.now
 import ge.wanderer.core.configuration.ReportingConfiguration
 import ge.wanderer.core.integration.user.UserService
