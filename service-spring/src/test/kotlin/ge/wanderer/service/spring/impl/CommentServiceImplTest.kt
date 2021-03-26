@@ -3,15 +3,14 @@ package ge.wanderer.service.spring.impl
 import ge.wanderer.common.dateTime
 import ge.wanderer.common.now
 import ge.wanderer.core.configuration.ReportingConfiguration
-import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.report.ReportReason
-import ge.wanderer.core.repository.CommentRepository
 import ge.wanderer.service.protocol.request.AddCommentRequest
 import ge.wanderer.service.protocol.request.OperateOnContentRequest
 import ge.wanderer.service.protocol.request.ReportContentRequest
 import ge.wanderer.service.protocol.request.UpdateCommentRequest
 import ge.wanderer.service.spring.*
 import ge.wanderer.service.spring.command.CommandProvider
+import ge.wanderer.service.spring.test_support.*
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -27,22 +26,8 @@ class CommentServiceImplTest {
     private val comment3 = createNewComment(3, now(), "baro baro", patata())
     private val comment4 = createNewComment(4, now(), "sadaa chemi 10 maneti", kalduna())
 
-    private val commentRepository = mockk<CommentRepository> {
-        every { findById(1) } returns comment1
-        every { findById(2) } returns comment2
-        every { findById(3) } returns comment3
-        every { findById(4) } returns comment4
-    }
-    private val userService = mockk<UserService> {
-        every { findUserById(1) } returns jambura()
-        every { findUserById(2) } returns patata()
-        every { findUserById(3) } returns jangula()
-        every { findUserById(5) } returns kalduna()
-        every { notifyContentStatusChange(any()) } returns Unit
-        every { notifyAdministrationAboutReport(any()) } returns Unit
-        every { getAdministrationUser() } returns jambura()
-        every { usersContentWasRated(any(), any()) } returns Unit
-    }
+    private val commentRepository = mockedCommentRepository(listOf(comment1, comment2, comment3, comment4))
+    private val userService = mockedUserService()
 
     private val commandProvider = CommandProvider()
     private val commentPreviewProvider = CommentPreviewProvider(3)
@@ -192,6 +177,7 @@ class CommentServiceImplTest {
         comment1.addComment(createNewComment(6, now(), "rogor xar lamaso", vipiSoxumski()))
         comment1.addComment(createNewComment(7, now(), "sd", jangula()))
 
+        every { commentRepository.listActiveFor(comment1) } returns comment1.comments()
         val response = service.listComments(1, mockk())
         assertTrue(response.isSuccessful)
 

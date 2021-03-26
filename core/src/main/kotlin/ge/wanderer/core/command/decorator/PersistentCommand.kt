@@ -13,7 +13,7 @@ class PersistentCommand<T>(
         val result = command.execute()
         return if (result.isSuccessful) {
             success(
-                result.message + ". Persisted successfully",
+                result.message + ". New model persisted successfully",
                 repository.persist(result.returnedModel)
             )
         } else {

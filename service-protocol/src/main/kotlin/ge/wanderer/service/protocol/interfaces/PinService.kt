@@ -9,13 +9,14 @@ import ge.wanderer.service.protocol.request.CreatePinRequest
 import ge.wanderer.service.protocol.request.OperateOnContentRequest
 import ge.wanderer.service.protocol.request.UpdatePinRequest
 import ge.wanderer.common.listing.ListingParams
+import ge.wanderer.service.protocol.data.PinMapData
 import ge.wanderer.service.protocol.response.ServiceListingResponse
 import ge.wanderer.service.protocol.response.ServiceResponse
 
 interface PinService : UserContentService<PinData>, RateableContentService, CommentableContentService, ReportableContentService {
 
     fun createPin(request: CreatePinRequest): ServiceResponse<PinData>
-    fun listForRoute(routeCode: String, listingParams: ListingParams): ServiceListingResponse<PinData>
+    fun listForRoute(routeCode: String, listingParams: ListingParams): ServiceListingResponse<PinMapData>
     fun list(listingParams: ListingParams): ServiceListingResponse<PinData>
     fun reportIrrelevant(request: OperateOnContentRequest): ServiceResponse<PinData>
     fun updatePin(request: UpdatePinRequest): ServiceResponse<PinData>

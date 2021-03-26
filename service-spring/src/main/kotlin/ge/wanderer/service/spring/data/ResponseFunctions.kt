@@ -10,3 +10,5 @@ fun ratingResponse(command: Command<RateableContent>): ServiceResponse<RatingDat
     val data = executionResult.returnedModel.ratingData()
     return ServiceResponse(executionResult.isSuccessful, executionResult.message, data)
 }
+
+fun <T> noDataResponse(isSuccessful: Boolean, message: String): ServiceResponse<T> = ServiceResponse(isSuccessful, message, null)

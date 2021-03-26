@@ -28,6 +28,7 @@ import ge.wanderer.service.protocol.response.ServiceResponse
 import ge.wanderer.service.spring.CommentPreviewProvider
 import ge.wanderer.service.spring.command.CommandProvider
 import ge.wanderer.service.spring.data.data
+import ge.wanderer.service.spring.data.noDataResponse
 import ge.wanderer.service.spring.data.ratingResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -114,12 +115,11 @@ class CommentServiceImpl(
         return response(
             commandProvider.decorateCommand(command, comment)
         )
-
     }
 
     override fun listComments(contentId: Long, listingParams: ListingParams): ServiceListingResponse<CommentData> {
         val comment = commentRepository.findById(contentId)
-        val replies = comment.comments()
+        val replies = commentRepository.listActiveFor(comment)
         return ServiceListingResponse(true, "Replies Retrieved!", replies.size, 1, replies.map { it.data() })
     }
 
@@ -130,7 +130,7 @@ class CommentServiceImpl(
         val commandResult = ReportContentCommand(user, request.date, request.reportReason, comment, userService, reportingConfiguration)
             .execute()
 
-        return ServiceResponse(commandResult.isSuccessful, commandResult.message, null)
+        return noDataResponse(commandResult.isSuccessful, commandResult.message)
     }
 
     override fun listReportsForContent(contentId: Long): ServiceListingResponse<Report> {

@@ -6,7 +6,7 @@ data class CommandExecutionResult<T> (
     val returnedModel: T
 )
 fun <T> success(message: String, containedEntity: T): CommandExecutionResult<T> =
-    CommandExecutionResult<T>(true, message, containedEntity)
+    CommandExecutionResult(true, message, containedEntity)
 
 fun <T> fail(message: String, containedEntity: T): CommandExecutionResult<T>  =
-    CommandExecutionResult<T>(false, message, containedEntity)
+    CommandExecutionResult(false, message, containedEntity)

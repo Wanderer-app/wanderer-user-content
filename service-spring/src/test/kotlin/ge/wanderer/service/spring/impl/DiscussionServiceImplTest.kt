@@ -5,6 +5,7 @@ import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.common.now
 import ge.wanderer.core.repository.DiscussionRepository
 import ge.wanderer.service.spring.*
+import ge.wanderer.service.spring.test_support.*
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test

@@ -4,5 +4,5 @@ import ge.wanderer.core.model.comment.IComment
 import ge.wanderer.core.model.content.UserAddedContent
 
 interface CommentRepository: BaseRepository<IComment> {
-    fun listFor(content: UserAddedContent): List<IComment>
+    fun listActiveFor(content: UserAddedContent): List<IComment>
 }
