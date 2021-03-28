@@ -13,6 +13,7 @@ import ge.wanderer.core.model.discussion.poll.Poll
 import ge.wanderer.core.model.discussion.poll.PollAnswer
 import ge.wanderer.core.model.rating.Vote
 import ge.wanderer.core.model.rating.VoteType
+import ge.wanderer.core.repository.TRANSIENT_ID
 import org.joda.time.LocalDateTime
 import java.net.URL
 
@@ -68,6 +69,13 @@ fun pollAnswer(id: Long, answerText: String, createTime: LocalDateTime, answerer
         Active(createTime, creator),
         answerers
     )
+}
+
+fun pollWithAnswers(id: Long, creator: User, createTime: LocalDateTime, routeCode: String, title: String, answers: Set<String>): Poll {
+    val pollAnswers: MutableSet<IPollAnswer> = answers
+        .map { PollAnswer(TRANSIENT_ID, it, createTime, creator, Active(createTime, creator), mutableSetOf()) }
+        .toMutableSet()
+    return Poll(id, creator, createTime, Active(createTime, creator), routeCode, title, pollAnswers, mutableListOf())
 }
 
 fun Any.getResourceFile(fileName: String): URL =

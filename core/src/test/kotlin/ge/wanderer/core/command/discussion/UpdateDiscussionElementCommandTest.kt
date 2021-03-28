@@ -33,7 +33,7 @@ class UpdateDiscussionElementCommandTest {
         ).execute()
 
         assertTrue(result.isSuccessful)
-        assertEquals("Element updated", result.message)
+        assertEquals("POST updated", result.message)
         assertEquals(2, result.returnedModel.attachedFiles().size)
         assertEquals("Updated text", result.returnedModel.content())
     }
@@ -46,7 +46,7 @@ class UpdateDiscussionElementCommandTest {
 
         val result = UpdateDiscussionElementCommand(poll, UpdateDiscussionElementData("What is the best video game?", mutableListOf()), jambura()).execute()
         assertTrue(result.isSuccessful)
-        assertEquals("Element updated", result.message)
+        assertEquals("POLL updated", result.message)
         assertEquals(this.getResourceFile("bestVideoGamePoll2Answers0Answerers.json").readText(), result.returnedModel.content())
 
     }

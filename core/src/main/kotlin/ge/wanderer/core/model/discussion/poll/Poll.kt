@@ -34,6 +34,7 @@ class Poll(
     override fun contentType(): UserContentType = UserContentType.POLL
 
     override fun addAnswer(answer: IPollAnswer) {
+        check(answers.none { it.text() == answer.text() }) { "Such answer already exists" }
         answers.add(answer)
     }
 

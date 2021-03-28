@@ -30,7 +30,7 @@ class CommentServiceImplTest {
     private val userService = mockedUserService()
 
     private val commandProvider = CommandProvider()
-    private val commentPreviewProvider = CommentPreviewProvider(3)
+    private val commentPreviewProvider = testCommentPreviewProvider()
     private val reportingConfiguration = mockk<ReportingConfiguration> {
         every { shouldBeRemoved(any()) } returns false
         every { shouldNotifyAdministration(any()) } returns false
@@ -177,7 +177,7 @@ class CommentServiceImplTest {
         comment1.addComment(createNewComment(6, now(), "rogor xar lamaso", vipiSoxumski()))
         comment1.addComment(createNewComment(7, now(), "sd", jangula()))
 
-        every { commentRepository.listActiveFor(comment1) } returns comment1.comments()
+        every { commentRepository.listActiveFor(comment1, any()) } returns comment1.comments()
         val response = service.listComments(1, mockk())
         assertTrue(response.isSuccessful)
 

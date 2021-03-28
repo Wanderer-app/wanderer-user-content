@@ -1,10 +1,7 @@
 package ge.wanderer.core.command.discussion
 
 import ge.wanderer.common.now
-import ge.wanderer.core.createPoll
-import ge.wanderer.core.jambura
-import ge.wanderer.core.kalduna
-import ge.wanderer.core.patata
+import ge.wanderer.core.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.lang.IllegalStateException
@@ -38,5 +35,15 @@ class AddPollAnswerCommandTest {
 
         assertEquals("Answer 1", answersData.first().title)
         assertEquals("Answer 2", answersData.last().title)
+    }
+
+    @Test
+    fun failsIfAnswerAlreadyExists() {
+        val poll = pollWithAnswers(1, jambura(), now(), "123", "Some question", mutableSetOf("Answer 1", "Answer 2"))
+
+        val exception = assertThrows<IllegalStateException> {
+            AddPollAnswerCommand(poll, "Answer 2", now(), jambura()).execute()
+        }
+        assertEquals("Such answer already exists", exception.message!!)
     }
 }

@@ -1,6 +1,7 @@
 package ge.wanderer.service.protocol.request
 
 import ge.wanderer.core.data.file.AttachedFile
+import ge.wanderer.core.integration.user.User
 import org.joda.time.LocalDateTime
 
 data class CreatePollRequest (
@@ -25,9 +26,22 @@ data class UpdatePollRequest (
     val updaterId: Long
 )
 
-class UpdatePostRequest (
+data class UpdatePostRequest (
     val postId: Long,
     val newText: String,
     val files: List<AttachedFile>,
     val updaterId: Long
+)
+
+data class AddAnswerToPollRequest(
+    val pollId: Long,
+    val userId: Long,
+    val answerText: String,
+    val date: LocalDateTime
+)
+
+data class SelectPollAnswerRequest(
+    val pollId: Long,
+    val userId: Long,
+    val answerId: Long
 )

@@ -110,7 +110,7 @@ class CommentServiceImpl(
     override fun addComment(request: AddCommentRequest): ServiceResponse<CommentData> {
         val comment = commentRepository.findById(request.contentId)
         val user = userService.findUserById(request.commenterId)
-        val command = AddCommentCommand(request.commentContent, user, request.date, comment)
+        val command = AddCommentCommand(request.commentContent, user, request.date, comment, userService)
 
         return response(
             commandProvider.decorateCommand(command, comment)
@@ -119,7 +119,7 @@ class CommentServiceImpl(
 
     override fun listComments(contentId: Long, listingParams: ListingParams): ServiceListingResponse<CommentData> {
         val comment = commentRepository.findById(contentId)
-        val replies = commentRepository.listActiveFor(comment)
+        val replies = commentRepository.listActiveFor(comment, listingParams)
         return ServiceListingResponse(true, "Replies Retrieved!", replies.size, 1, replies.map { it.data() })
     }
 

@@ -8,4 +8,5 @@ interface IPollAnswer: UserAddedContent {
     fun data(totalAnswerers: Int): PollAnswerData
     fun numberOfAnswerers(): Int
     fun selectors(): List<User>
+    fun text(): String
 }

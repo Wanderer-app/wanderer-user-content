@@ -26,6 +26,7 @@ data class PollAnswer (
     override fun contentType(): UserContentType = UserContentType.POLL_ANSWER
     override fun selectors() = selectors.toList()
     override fun numberOfAnswerers(): Int = selectors.size
+    override fun text(): String = title
 
     override fun remove(onDate: LocalDateTime, remover: User) {
         status = status.remove(onDate, remover)

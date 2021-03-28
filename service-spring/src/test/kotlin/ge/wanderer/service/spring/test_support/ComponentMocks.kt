@@ -1,10 +1,12 @@
 package ge.wanderer.service.spring.test_support
 
+import ge.wanderer.common.enums.UserContentType
 import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.comment.IComment
 import ge.wanderer.core.model.map.IPin
 import ge.wanderer.core.repository.CommentRepository
 import ge.wanderer.core.repository.PinRepository
+import ge.wanderer.service.spring.CommentPreviewProvider
 import io.mockk.every
 import io.mockk.mockk
 
@@ -18,6 +20,7 @@ fun mockedUserService() = mockk<UserService> {
     every { notifyAdministrationAboutReport(any()) } returns Unit
     every { getAdministrationUser() } returns jambura()
     every { usersContentWasRated(any(), any()) } returns Unit
+    every { notifyContentWasCommented(any(), any()) } returns Unit
 }
 
 fun mockedCommentRepository(comments: List<IComment>) = mockk<CommentRepository> {
@@ -32,4 +35,14 @@ fun mockedPinRepository(pins: List<IPin>) = mockk<PinRepository> {
     every { findById(2) } returns pins[1]
     every { findById(3) } returns pins[2]
     every { findById(4) } returns pins[3]
+    every { findById(5) } returns pins[4]
+    every { list(any()) } returns pins
 }
+
+fun testCommentPreviewProvider() =
+    CommentPreviewProvider(mapOf(
+        Pair(UserContentType.PIN, 3),
+        Pair(UserContentType.POST, 3),
+        Pair(UserContentType.POLL, 3),
+        Pair(UserContentType.COMMENT, 3)
+    ))

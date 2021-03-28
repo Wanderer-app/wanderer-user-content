@@ -16,22 +16,22 @@ class CreatePollCommandTest {
     @Test
     fun failsIfCreatorIsNotAdmin() {
         val exception = assertThrows<IllegalStateException> {
-            CreatePollCommand(now(), kalduna(), "some text", "123", listOf("a1", "a2")).execute()
+            CreatePollCommand(now(), kalduna(), "some text", "123", setOf("a1", "a2")).execute()
         }
         assertEquals("Only admin can create polls", exception.message!!)
     }
 
     @Test
-    fun failsIfNoAnswersProvided() {
+    fun failsIfLessThenTwoProvided() {
         val exception = assertThrows<IllegalStateException> {
-            CreatePollCommand(now(), kalduna(), "some text", "123", listOf()).execute()
+            CreatePollCommand(now(), kalduna(), "some text", "123", setOf("answer 1")).execute()
         }
-        assertEquals("Answers must be provided for a poll!", exception.message!!)
+        assertEquals("Poll must have at least 2 answers!", exception.message!!)
     }
 
     @Test
     fun correctlyCreatesPoll() {
-        val answers = listOf("Gta", "Rdr")
+        val answers = setOf("Gta", "Rdr")
         val result = CreatePollCommand(
             now(),
             patata(),

@@ -9,6 +9,7 @@ import ge.wanderer.core.command.content.ReportContentCommand
 import ge.wanderer.core.command.pin.CreatePinCommand
 import ge.wanderer.core.command.pin.ReportIrrelevantPinCommand
 import ge.wanderer.core.command.pin.UpdatePinCommand
+import ge.wanderer.core.command.pin.VoteForPinCommand
 import ge.wanderer.core.command.rating.GiveOnePointCommand
 import ge.wanderer.core.command.rating.RemoveVoteCommand
 import ge.wanderer.core.configuration.ReportingConfiguration
@@ -16,6 +17,7 @@ import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.map.IPin
 import ge.wanderer.core.model.rating.VoteType
 import ge.wanderer.core.model.report.Report
+import ge.wanderer.core.model.report.ReportReason
 import ge.wanderer.core.repository.CommentRepository
 import ge.wanderer.core.repository.PinRepository
 import ge.wanderer.service.protocol.data.CommentData
@@ -113,7 +115,7 @@ class PinServiceImpl(
     override fun giveUpVote(request: OperateOnContentRequest): ServiceResponse<RatingData> {
         val pin = pinRepository.findById(request.contentId)
         val user = userService.findUserById(request.userId)
-        val command = GiveOnePointCommand(VoteType.UP, user, request.date, pin, userService)
+        val command = VoteForPinCommand(VoteType.UP, user, request.date, pin, userService)
 
         return ratingResponse(
             commandProvider.decorateCommand(command, pin)
@@ -123,7 +125,7 @@ class PinServiceImpl(
     override fun giveDownVote(request: OperateOnContentRequest): ServiceResponse<RatingData> {
         val pin = pinRepository.findById(request.contentId)
         val user = userService.findUserById(request.userId)
-        val command = GiveOnePointCommand(VoteType.DOWN, user, request.date, pin, userService)
+        val command = VoteForPinCommand(VoteType.DOWN, user, request.date, pin, userService)
 
         return ratingResponse(
             commandProvider.decorateCommand(command, pin)
@@ -143,7 +145,7 @@ class PinServiceImpl(
     override fun addComment(request: AddCommentRequest): ServiceResponse<CommentData> {
         val pin = pinRepository.findById(request.contentId)
         val user = userService.findUserById(request.commenterId)
-        val command = AddCommentCommand(request.commentContent, user, request.date, pin)
+        val command = AddCommentCommand(request.commentContent, user, request.date, pin, userService)
 
         val result = commandProvider.decorateCommand(command, pin).execute()
         return ServiceResponse(result.isSuccessful, result.message, result.returnedModel.comments().last().data())
@@ -151,13 +153,15 @@ class PinServiceImpl(
 
     override fun listComments(contentId: Long, listingParams: ListingParams): ServiceListingResponse<CommentData> {
         val pin = pinRepository.findById(contentId)
-        val commentsData = this.commentRepository.listActiveFor(pin)
+        val commentsData = commentRepository.listActiveFor(pin, listingParams)
             .map { it.data(commentPreviewProvider.getPreviewFor(it)) }
 
-        return ServiceListingResponse(true, "Replies Retrieved!", commentsData.size, 1, commentsData)
+        return ServiceListingResponse(true, "Comments fetched!", commentsData.size, listingParams.batchNumber, commentsData)
     }
 
     override fun report(request: ReportContentRequest): ServiceResponse<Report> {
+        check(request.reportReason != ReportReason.IRRELEVANT) { "Use reportIrrelevant() method for reporting a pin as irrelevant" }
+
         val pin = pinRepository.findById(request.contentId)
         val user = userService.findUserById(request.userId)
 

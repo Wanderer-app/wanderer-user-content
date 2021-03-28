@@ -8,13 +8,13 @@ import ge.wanderer.core.model.UpdateDiscussionElementData
 import ge.wanderer.core.model.discussion.DiscussionElement
 
 
-class UpdateDiscussionElementCommand(
-    private val element: DiscussionElement,
+class UpdateDiscussionElementCommand<T: DiscussionElement>(
+    private val element: T,
     private val data: UpdateDiscussionElementData,
     private val updater: User
-): Command<DiscussionElement> {
-    override fun execute(): CommandExecutionResult<DiscussionElement> {
+): Command<T> {
+    override fun execute(): CommandExecutionResult<T> {
         check(element.creator() == updater) { "You can't update this element" }
-        return success("Element updated", element.update(data))
+        return success("${element.contentType()} updated", element.update(data) as T)
     }
 }

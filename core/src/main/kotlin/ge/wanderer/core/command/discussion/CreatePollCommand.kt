@@ -17,10 +17,11 @@ class CreatePollCommand(
     private val user: User,
     private val pollText: String,
     private val routeCode: String,
-    private val answersText: List<String>
+    private val answersText: Set<String>
 ) : Command<IPoll> {
     override fun execute(): CommandExecutionResult<IPoll> {
-        check(answersText.isNotEmpty()) { "Answers must be provided for a poll!" }
+
+        check(answersText.size >= 2) { "Poll must have at least 2 answers!" }
         check(user.isAdmin) { "Only admin can create polls" }
 
         val poll = Poll(
@@ -37,7 +38,6 @@ class CreatePollCommand(
 
     private fun answers(): MutableSet<IPollAnswer> =
         answersText
-            .toSet()
             .map { PollAnswer(TRANSIENT_ID, it, onDate, user, Active(onDate, user), mutableSetOf()) }
             .toMutableSet()
 }

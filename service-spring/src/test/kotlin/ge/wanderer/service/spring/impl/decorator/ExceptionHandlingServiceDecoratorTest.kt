@@ -1,10 +1,10 @@
 package ge.wanderer.service.spring.impl.decorator
 
 import ge.wanderer.common.listing.ListingParams
+import ge.wanderer.service.protocol.data.PinMapData
 import ge.wanderer.service.protocol.response.ServiceListingResponse
 import ge.wanderer.service.protocol.response.ServiceResponse
-import ge.wanderer.service.spring.impl.CommentServiceImpl
-import ge.wanderer.service.spring.impl.DiscussionServiceImpl
+import ge.wanderer.service.spring.impl.*
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
@@ -71,5 +71,95 @@ class ExceptionHandlingServiceDecoratorTest {
         assertFalse(result.isSuccessful)
         assertTrue(result.message.startsWith("Exception occurred: java.lang.IllegalStateException"))
         assertTrue(result.data.isEmpty())
+    }
+
+    @Test
+    fun correctlyHandlesPinService() {
+
+        val service = mockk<PinServiceImpl> {
+            every { findById(1) } returns ServiceResponse(true, "fetched", mockk())
+            every { findById(2) } throws IllegalStateException("Not found")
+            every { listForRoute("123", any()) } returns ServiceListingResponse(true, "pins fetched",  2, 2, listOf(mockk(), mockk()))
+            every { listForRoute("1234", any()) } throws IllegalStateException("Route Not found")
+        }
+        val decorator = ExceptionHandlingPinService(service)
+
+        var response = decorator.findById(1)
+        assertTrue(response.isSuccessful)
+        assertEquals("fetched", response.message)
+
+        response = decorator.findById(2)
+        assertFalse(response.isSuccessful)
+        assertEquals("Not found", response.message)
+
+        var listingResponse = decorator.listForRoute("123", mockk())
+        assertTrue(listingResponse.isSuccessful)
+        assertEquals("pins fetched", listingResponse.message)
+        assertEquals(2, listingResponse.resultSize)
+        assertEquals(2, listingResponse.data.size)
+
+        listingResponse = decorator.listForRoute("1234", mockk())
+        assertFalse(listingResponse.isSuccessful)
+        assertEquals("Route Not found", listingResponse.message)
+        assertEquals(0, listingResponse.resultSize)
+        assertEquals(0, listingResponse.data.size)
+    }
+
+    @Test
+    fun correctlyHandlesPollService() {
+
+        val service = mockk<PollServiceImpl> {
+            every { findById(1) } returns ServiceResponse(true, "Fetched", mockk())
+            every { findById(2) } throws IllegalStateException("Not found")
+
+            every { listComments(1, any()) } returns ServiceListingResponse(true, "Poll comments fetched",  2, 2, listOf(mockk(), mockk()))
+            every { listComments(5, any()) } throws IllegalStateException("Poll Not found")
+        }
+        val decorator = ExceptionHandlingPollService(service)
+
+        var response = decorator.findById(1)
+        assertTrue(response.isSuccessful)
+        assertEquals("Fetched", response.message)
+
+        response = decorator.findById(2)
+        assertFalse(response.isSuccessful)
+        assertEquals("Not found", response.message)
+
+        var listingResponse = decorator.listComments(1, mockk())
+        assertTrue(listingResponse.isSuccessful)
+        assertEquals("Poll comments fetched", listingResponse.message)
+        assertEquals(2, listingResponse.resultSize)
+        assertEquals(2, listingResponse.data.size)
+
+        listingResponse = decorator.listComments(5, mockk())
+        assertFalse(listingResponse.isSuccessful)
+        assertEquals("Poll Not found", listingResponse.message)
+        assertEquals(0, listingResponse.resultSize)
+        assertEquals(0, listingResponse.data.size)
+    }
+
+    @Test
+    fun correctlyHandlesReportService() {
+        val service = mockk<ReportServiceImpl> {
+            every { list(any()) } returns ServiceListingResponse(true, "Reports Fetched!", 2, 1, listOf(mockk(), mockk()))
+            every { dismiss(1) } returns ServiceResponse(true, "Deleted", null)
+            every { dismiss(2) } throws IllegalStateException("Report does not exist")
+        }
+        val decorator = ExceptionHandlingReportService(service)
+
+        val listResponse = decorator.list(mockk())
+        assertTrue(listResponse.isSuccessful)
+        assertEquals("Reports Fetched!", listResponse.message)
+        assertEquals(2, listResponse.resultSize)
+        assertEquals(2, listResponse.data.size)
+
+        val dismissResponse = decorator.dismiss(1)
+        assertTrue(dismissResponse.isSuccessful)
+        assertEquals("Deleted", dismissResponse.message)
+        assertNull(dismissResponse.data)
+
+        val dismissFailedResponse = decorator.dismiss(2)
+        assertFalse(dismissFailedResponse.isSuccessful)
+        assertEquals("Report does not exist", dismissFailedResponse.message)
     }
 }
