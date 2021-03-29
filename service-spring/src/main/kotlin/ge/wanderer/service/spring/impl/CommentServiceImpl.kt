@@ -120,7 +120,7 @@ class CommentServiceImpl(
     override fun listComments(contentId: Long, listingParams: ListingParams): ServiceListingResponse<CommentData> {
         val comment = commentRepository.findById(contentId)
         val replies = commentRepository.listActiveFor(comment, listingParams)
-        return ServiceListingResponse(true, "Replies Retrieved!", replies.size, 1, replies.map { it.data() })
+        return ServiceListingResponse(true, "Replies Retrieved!", replies.size, listingParams.batchNumber, replies.map { it.data() })
     }
 
     override fun report(request: ReportContentRequest): ServiceResponse<Report> {

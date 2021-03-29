@@ -1,7 +1,6 @@
 package ge.wanderer.service.spring.impl.decorator
 
 import ge.wanderer.common.listing.ListingParams
-import ge.wanderer.service.protocol.data.PinMapData
 import ge.wanderer.service.protocol.response.ServiceListingResponse
 import ge.wanderer.service.protocol.response.ServiceResponse
 import ge.wanderer.service.spring.impl.*
@@ -161,5 +160,36 @@ class ExceptionHandlingServiceDecoratorTest {
         val dismissFailedResponse = decorator.dismiss(2)
         assertFalse(dismissFailedResponse.isSuccessful)
         assertEquals("Report does not exist", dismissFailedResponse.message)
+    }
+
+    @Test
+    fun correctlyHandlesPostService() {
+        val service = mockk<PostServiceImpl> {
+            every { listComments(1, any()) } returns ServiceListingResponse(true, "Comments Fetched!", 2, 1, listOf(mockk(), mockk()))
+            every { listComments(2, any()) } throws IllegalStateException("Cant find post")
+            every { findById(1) } returns ServiceResponse(true, "Post fetched", mockk())
+            every { findById(2) } throws IllegalStateException("Post does not exist")
+        }
+        val decorator = ExceptionHandlingPostService(service)
+
+        val listResponse = decorator.listComments(1, mockk())
+        assertTrue(listResponse.isSuccessful)
+        assertEquals("Comments Fetched!", listResponse.message)
+        assertEquals(2, listResponse.resultSize)
+        assertEquals(2, listResponse.data.size)
+
+        val listFailedResponse = decorator.listComments(2, mockk())
+        assertFalse(listFailedResponse.isSuccessful)
+        assertEquals("Cant find post", listFailedResponse.message)
+        assertTrue(listFailedResponse.data.isEmpty())
+
+        val findByIdResponse = decorator.findById(1)
+        assertTrue(findByIdResponse.isSuccessful)
+        assertEquals("Post fetched", findByIdResponse.message)
+        assertNotNull(findByIdResponse.data)
+
+        val findByIdFailedResponse = decorator.findById(2)
+        assertFalse(findByIdFailedResponse.isSuccessful)
+        assertEquals("Post does not exist", findByIdFailedResponse.message)
     }
 }
