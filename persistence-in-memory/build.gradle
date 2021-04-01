@@ -1,16 +1,17 @@
-project(":service-spring") {
-    description = "Service protocol implementation in Spring framework"
+project(":persistence-in-memory") {
+    description = "Persistence implementation using transient in-memory data structures"
 
     apply plugin: "kotlin-spring"
 
     dependencies {
         implementation project(":core")
-        implementation project(":service-protocol")
         implementation project(":common")
 
         implementation 'org.springframework:spring-core:5.2.8.RELEASE'
         implementation 'org.springframework:spring-context:5.2.8.RELEASE'
         implementation 'org.springframework.boot:spring-boot-starter:2.3.4.RELEASE'
-        implementation 'org.springframework:spring-tx:5.2.8.RELEASE'
+
+        testImplementation 'org.springframework:spring-test:5.2.8.RELEASE'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test:2.3.4.RELEASE'
     }
 }

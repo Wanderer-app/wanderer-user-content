@@ -14,7 +14,7 @@ data class PollAnswer (
     private val createdAt: LocalDateTime,
     private val creator: User,
     private var status: UserAddedContentStatus,
-    private val selectors: MutableSet<User>
+    private val selectors: MutableSet<User> = mutableSetOf()
 ): IPollAnswer {
 
     override fun id(): Long = id
