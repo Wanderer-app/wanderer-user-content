@@ -2,11 +2,10 @@ package ge.wanderer.core.command.discussion
 
 import ge.wanderer.common.now
 import ge.wanderer.core.*
-import ge.wanderer.core.model.*
+import ge.wanderer.core.model.UpdateDiscussionElementData
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.lang.IllegalStateException
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 

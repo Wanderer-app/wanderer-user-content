@@ -1,19 +1,18 @@
 package ge.wanderer.core.command.content
 
 import ge.wanderer.common.now
+import ge.wanderer.core.createNewPostWithoutFiles
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.integration.user.UserService
-import ge.wanderer.core.createNewPostWithoutFiles
-import ge.wanderer.core.model.discussion.post.IPost
 import ge.wanderer.core.jambura
 import ge.wanderer.core.kalduna
+import ge.wanderer.core.model.discussion.post.IPost
 import ge.wanderer.core.vipiSoxumski
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.lang.IllegalStateException
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 

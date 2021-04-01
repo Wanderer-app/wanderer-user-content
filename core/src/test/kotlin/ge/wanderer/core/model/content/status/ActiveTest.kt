@@ -6,7 +6,6 @@ import ge.wanderer.core.kalduna
 import ge.wanderer.core.vipiSoxumski
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.lang.IllegalStateException
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 

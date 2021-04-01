@@ -1,6 +1,8 @@
 package ge.wanderer.service.protocol.interfaces
 
+import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.service.protocol.data.PinData
+import ge.wanderer.service.protocol.data.PinMapData
 import ge.wanderer.service.protocol.interfaces.base.CommentableContentService
 import ge.wanderer.service.protocol.interfaces.base.RateableContentService
 import ge.wanderer.service.protocol.interfaces.base.ReportableContentService
@@ -8,8 +10,6 @@ import ge.wanderer.service.protocol.interfaces.base.UserContentService
 import ge.wanderer.service.protocol.request.CreatePinRequest
 import ge.wanderer.service.protocol.request.OperateOnContentRequest
 import ge.wanderer.service.protocol.request.UpdatePinRequest
-import ge.wanderer.common.listing.ListingParams
-import ge.wanderer.service.protocol.data.PinMapData
 import ge.wanderer.service.protocol.response.ServiceListingResponse
 import ge.wanderer.service.protocol.response.ServiceResponse
 

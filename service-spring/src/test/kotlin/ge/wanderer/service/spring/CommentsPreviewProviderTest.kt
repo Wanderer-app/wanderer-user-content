@@ -8,7 +8,6 @@ import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.lang.IllegalStateException
 import kotlin.test.assertEquals
 
 class CommentsPreviewProviderTest {

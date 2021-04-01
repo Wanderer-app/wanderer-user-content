@@ -7,8 +7,6 @@ import ge.wanderer.service.spring.impl.*
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
-import java.lang.Exception
-import java.lang.IllegalStateException
 import kotlin.test.*
 
 class ExceptionHandlingServiceDecoratorTest {

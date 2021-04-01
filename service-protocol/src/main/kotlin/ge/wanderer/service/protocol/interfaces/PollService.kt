@@ -2,7 +2,6 @@ package ge.wanderer.service.protocol.interfaces
 
 import ge.wanderer.service.protocol.data.DiscussionElementData
 import ge.wanderer.service.protocol.interfaces.base.CommentableContentService
-import ge.wanderer.service.protocol.interfaces.base.RateableContentService
 import ge.wanderer.service.protocol.interfaces.base.UserContentService
 import ge.wanderer.service.protocol.request.AddAnswerToPollRequest
 import ge.wanderer.service.protocol.request.CreatePollRequest

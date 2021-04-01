@@ -1,24 +1,19 @@
 package ge.wanderer.service.spring.test_support
 
 import ge.wanderer.common.map.LatLng
+import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.comment.Comment
 import ge.wanderer.core.model.content.status.Active
-import ge.wanderer.core.model.discussion.post.Post
-import ge.wanderer.core.model.map.RouteElementContent
-import ge.wanderer.core.model.map.MarkerType
-import ge.wanderer.core.model.map.Pin
-import ge.wanderer.core.integration.user.User
-import ge.wanderer.core.integration.user.UserService
-import ge.wanderer.core.model.comment.IComment
 import ge.wanderer.core.model.discussion.poll.IPollAnswer
 import ge.wanderer.core.model.discussion.poll.Poll
 import ge.wanderer.core.model.discussion.poll.PollAnswer
+import ge.wanderer.core.model.discussion.post.Post
+import ge.wanderer.core.model.map.MarkerType
+import ge.wanderer.core.model.map.Pin
+import ge.wanderer.core.model.map.RouteElementContent
 import ge.wanderer.core.model.rating.Vote
 import ge.wanderer.core.model.rating.VoteType
-import ge.wanderer.core.repository.CommentRepository
 import ge.wanderer.core.repository.TRANSIENT_ID
-import io.mockk.every
-import io.mockk.mockk
 import org.joda.time.LocalDateTime
 import java.net.URL
 

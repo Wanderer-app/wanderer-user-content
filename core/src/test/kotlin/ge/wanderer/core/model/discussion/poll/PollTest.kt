@@ -3,7 +3,7 @@ package ge.wanderer.core.model.discussion.poll
 import ge.wanderer.common.amount
 import ge.wanderer.common.now
 import ge.wanderer.core.*
-import ge.wanderer.core.model.*
+import ge.wanderer.core.model.UpdateDiscussionElementData
 import ge.wanderer.core.model.content.status.Active
 import io.mockk.every
 import io.mockk.mockk

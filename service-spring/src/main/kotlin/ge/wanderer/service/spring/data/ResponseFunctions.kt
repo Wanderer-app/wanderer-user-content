@@ -2,8 +2,6 @@ package ge.wanderer.service.spring.data
 
 import ge.wanderer.core.command.Command
 import ge.wanderer.core.model.content.RateableContent
-import ge.wanderer.core.model.discussion.poll.IPoll
-import ge.wanderer.service.protocol.data.DiscussionElementData
 import ge.wanderer.service.protocol.data.RatingData
 import ge.wanderer.service.protocol.response.ServiceResponse
 

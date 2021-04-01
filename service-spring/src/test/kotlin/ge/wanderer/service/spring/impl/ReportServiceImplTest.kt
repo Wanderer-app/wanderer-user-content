@@ -3,7 +3,8 @@ package ge.wanderer.service.spring.impl
 import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.common.now
 import ge.wanderer.core.model.report.Report
-import ge.wanderer.core.model.report.ReportReason.*
+import ge.wanderer.core.model.report.ReportReason.INAPPROPRIATE_CONTENT
+import ge.wanderer.core.model.report.ReportReason.OFFENSIVE_CONTENT
 import ge.wanderer.core.repository.ReportRepository
 import ge.wanderer.service.spring.test_support.jambura
 import ge.wanderer.service.spring.test_support.jangula

@@ -1,13 +1,12 @@
 package ge.wanderer.core.command.comment
 
 import ge.wanderer.common.now
-import ge.wanderer.core.model.UpdateCommentData
 import ge.wanderer.core.createNewComment
 import ge.wanderer.core.jambura
+import ge.wanderer.core.model.UpdateCommentData
 import ge.wanderer.core.patata
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.lang.IllegalStateException
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 

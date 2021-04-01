@@ -5,7 +5,6 @@ import ge.wanderer.core.model.content.CommentableContent
 import ge.wanderer.service.protocol.data.CommentData
 import ge.wanderer.service.spring.data.data
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.PropertySource
 import org.springframework.stereotype.Component
 
@@ -19,6 +18,10 @@ class CommentPreviewProvider(
             .asSequence()
             .sortedByDescending { it.rating() }
             .map { it.data() }
-            .take(commentPreviewProperties[content.contentType()] ?: error("Comments preview not available for ${content.contentType()}"))
+            .take(getPreviewSize(content))
             .toList()
+
+    private fun getPreviewSize(content: CommentableContent) =
+        commentPreviewProperties[content.contentType()]
+            ?: error("Comments preview not available for ${content.contentType()}")
 }

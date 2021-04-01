@@ -10,7 +10,6 @@ import ge.wanderer.core.command.pin.CreatePinCommand
 import ge.wanderer.core.command.pin.ReportIrrelevantPinCommand
 import ge.wanderer.core.command.pin.UpdatePinCommand
 import ge.wanderer.core.command.pin.VoteForPinCommand
-import ge.wanderer.core.command.rating.GiveOnePointCommand
 import ge.wanderer.core.command.rating.RemoveVoteCommand
 import ge.wanderer.core.configuration.ReportingConfiguration
 import ge.wanderer.core.integration.user.UserService

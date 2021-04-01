@@ -1,7 +1,7 @@
 package ge.wanderer.service.protocol.interfaces
 
-import ge.wanderer.core.model.report.Report
 import ge.wanderer.common.listing.ListingParams
+import ge.wanderer.core.model.report.Report
 import ge.wanderer.service.protocol.response.ServiceListingResponse
 import ge.wanderer.service.protocol.response.ServiceResponse
 

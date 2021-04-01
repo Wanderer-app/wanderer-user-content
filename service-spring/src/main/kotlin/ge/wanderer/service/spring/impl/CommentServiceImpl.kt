@@ -1,5 +1,6 @@
 package ge.wanderer.service.spring.impl
 
+import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.core.command.Command
 import ge.wanderer.core.command.comment.AddCommentCommand
 import ge.wanderer.core.command.comment.UpdateCommentCommand
@@ -22,7 +23,6 @@ import ge.wanderer.service.protocol.request.AddCommentRequest
 import ge.wanderer.service.protocol.request.OperateOnContentRequest
 import ge.wanderer.service.protocol.request.ReportContentRequest
 import ge.wanderer.service.protocol.request.UpdateCommentRequest
-import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.service.protocol.response.ServiceListingResponse
 import ge.wanderer.service.protocol.response.ServiceResponse
 import ge.wanderer.service.spring.CommentPreviewProvider

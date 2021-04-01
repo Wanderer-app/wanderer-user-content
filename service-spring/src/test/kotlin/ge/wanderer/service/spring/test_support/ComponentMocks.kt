@@ -7,6 +7,7 @@ import ge.wanderer.core.model.map.IPin
 import ge.wanderer.core.repository.CommentRepository
 import ge.wanderer.core.repository.PinRepository
 import ge.wanderer.service.spring.CommentPreviewProvider
+import ge.wanderer.service.spring.configuration.ReportingConfigurationImpl
 import io.mockk.every
 import io.mockk.mockk
 
@@ -46,3 +47,23 @@ fun testCommentPreviewProvider() =
         Pair(UserContentType.POLL, 3),
         Pair(UserContentType.COMMENT, 3)
     ))
+
+fun testReportingConfiguration() = ReportingConfigurationImpl(
+    mapOf(
+        Pair(UserContentType.PIN, 100),
+        Pair(UserContentType.POST, 100),
+        Pair(UserContentType.COMMENT, 100)
+    ),
+    mapOf(
+        Pair(UserContentType.PIN, 100),
+        Pair(UserContentType.POST, 100),
+        Pair(UserContentType.COMMENT, 100)
+    ),
+    100
+)
+
+fun mockedReportingConfiguration() = mockk<ReportingConfigurationImpl> {
+    every { shouldBeMarkedIrrelevant(any()) } returns false
+    every { shouldBeRemoved(any()) } returns false
+    every { shouldNotifyAdministration(any()) } returns false
+}

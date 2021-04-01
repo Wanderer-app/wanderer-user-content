@@ -4,7 +4,6 @@ import ge.wanderer.common.functions.asStandardMessage
 import ge.wanderer.service.protocol.response.ServiceListingResponse
 import ge.wanderer.service.protocol.response.ServiceResponse
 import ge.wanderer.service.spring.data.noDataResponse
-import java.lang.Exception
 
 fun <T> handle(function: () -> ServiceResponse<T>): ServiceResponse<T> =
     try {

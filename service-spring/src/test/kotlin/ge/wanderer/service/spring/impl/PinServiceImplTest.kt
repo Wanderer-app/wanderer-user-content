@@ -6,14 +6,12 @@ import ge.wanderer.common.map.LatLng
 import ge.wanderer.common.now
 import ge.wanderer.core.configuration.ReportingConfiguration
 import ge.wanderer.core.data.file.AttachedFile
-import ge.wanderer.core.model.map.IPin
 import ge.wanderer.core.model.map.MarkerType.*
 import ge.wanderer.core.model.map.RouteElementContent
 import ge.wanderer.core.model.report.Report
 import ge.wanderer.core.model.report.ReportReason
 import ge.wanderer.core.repository.CommentRepository
 import ge.wanderer.service.protocol.request.*
-import ge.wanderer.service.spring.CommentPreviewProvider
 import ge.wanderer.service.spring.command.CommandProvider
 import ge.wanderer.service.spring.test_support.*
 import io.mockk.every
@@ -21,7 +19,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.lang.IllegalStateException
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull

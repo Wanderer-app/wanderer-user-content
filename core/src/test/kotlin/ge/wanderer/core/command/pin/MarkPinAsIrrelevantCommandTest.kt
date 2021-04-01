@@ -1,15 +1,14 @@
 package ge.wanderer.core.command.pin
 
 import ge.wanderer.common.now
-import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.createTipPin
+import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.jambura
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.lang.IllegalStateException
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 

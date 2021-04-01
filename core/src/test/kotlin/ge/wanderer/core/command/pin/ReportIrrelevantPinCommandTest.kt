@@ -7,13 +7,13 @@ import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.jambura
 import ge.wanderer.core.kalduna
 import ge.wanderer.core.model.report.Report
-import ge.wanderer.core.model.report.ReportReason.*
+import ge.wanderer.core.model.report.ReportReason.INAPPROPRIATE_CONTENT
+import ge.wanderer.core.model.report.ReportReason.IRRELEVANT
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.lang.IllegalStateException
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue

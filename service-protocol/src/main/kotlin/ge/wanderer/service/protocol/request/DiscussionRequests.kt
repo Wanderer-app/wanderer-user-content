@@ -1,7 +1,6 @@
 package ge.wanderer.service.protocol.request
 
 import ge.wanderer.core.data.file.AttachedFile
-import ge.wanderer.core.integration.user.User
 import org.joda.time.LocalDateTime
 
 data class CreatePollRequest (

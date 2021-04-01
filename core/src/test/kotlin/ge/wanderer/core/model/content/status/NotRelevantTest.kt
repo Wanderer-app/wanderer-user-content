@@ -1,11 +1,10 @@
 package ge.wanderer.core.model.content.status
 
 import ge.wanderer.common.now
-import ge.wanderer.core.model.content.status.ContentStatusType.*
 import ge.wanderer.core.jambura
+import ge.wanderer.core.model.content.status.ContentStatusType.NOT_RELEVANT
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.lang.IllegalStateException
 import kotlin.test.assertEquals
 
 class NotRelevantTest {

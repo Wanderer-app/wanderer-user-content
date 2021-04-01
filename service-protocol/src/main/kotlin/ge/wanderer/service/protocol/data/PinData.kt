@@ -2,7 +2,6 @@ package ge.wanderer.service.protocol.data
 
 import ge.wanderer.common.map.LatLng
 import ge.wanderer.core.integration.user.User
-import ge.wanderer.core.model.content.status.ContentStatusType
 import ge.wanderer.core.model.map.MarkerType
 import ge.wanderer.core.model.map.RouteElementContent
 import org.joda.time.LocalDateTime

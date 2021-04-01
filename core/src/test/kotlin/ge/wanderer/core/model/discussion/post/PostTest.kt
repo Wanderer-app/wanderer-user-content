@@ -3,14 +3,13 @@ package ge.wanderer.core.model.discussion.post
 import ge.wanderer.common.enums.UserContentType
 import ge.wanderer.common.now
 import ge.wanderer.core.*
-import ge.wanderer.core.model.*
+import ge.wanderer.core.model.UpdateDiscussionElementData
 import ge.wanderer.core.model.report.Report
 import ge.wanderer.core.model.report.ReportReason.*
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.lang.IllegalStateException
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue

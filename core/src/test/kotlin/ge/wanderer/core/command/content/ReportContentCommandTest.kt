@@ -4,7 +4,8 @@ import ge.wanderer.common.now
 import ge.wanderer.core.*
 import ge.wanderer.core.configuration.ReportingConfiguration
 import ge.wanderer.core.integration.user.UserService
-import ge.wanderer.core.model.report.ReportReason.*
+import ge.wanderer.core.model.report.ReportReason.INAPPROPRIATE_CONTENT
+import ge.wanderer.core.model.report.ReportReason.IRRELEVANT
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

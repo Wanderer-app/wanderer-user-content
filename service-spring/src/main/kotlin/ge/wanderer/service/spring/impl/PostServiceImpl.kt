@@ -56,13 +56,12 @@ class PostServiceImpl(
     override fun updatePost(request: UpdatePostRequest): ServiceResponse<DiscussionElementData> {
         val post = postRepository.findById(request.postId)
         val user = userService.findUserById(request.updaterId)
-        val updateData = UpdateDiscussionElementData(request.newText, listOf())
+        val updateData = UpdateDiscussionElementData(request.newText, request.files)
         val command = UpdateDiscussionElementCommand(post, updateData, user)
 
         return response(
             commandProvider.decorateCommand(command, post)
         )
-
     }
 
     override fun findById(id: Long): ServiceResponse<DiscussionElementData> {
@@ -131,7 +130,7 @@ class PostServiceImpl(
     override fun listComments(contentId: Long, listingParams: ListingParams): ServiceListingResponse<CommentData> {
         val post = postRepository.findById(contentId)
         val comments = commentRepository.listActiveFor(post, listingParams)
-        return ServiceListingResponse(true, "Replies Retrieved!", comments.size, listingParams.batchNumber, comments.map { it.data() })
+        return ServiceListingResponse(true, "Comments Retrieved!", comments.size, listingParams.batchNumber, comments.map { it.data() })
     }
 
     override fun report(request: ReportContentRequest): ServiceResponse<Report> {
@@ -147,7 +146,8 @@ class PostServiceImpl(
     override fun listReportsForContent(contentId: Long): ServiceListingResponse<Report> {
         val post = postRepository.findById(contentId)
         val reports = post.reports()
-        return ServiceListingResponse(true, "Reports Retrieved!", reports.size, 1, reports.toList())    }
+        return ServiceListingResponse(true, "Reports Retrieved!", reports.size, 1, reports.toList())
+    }
 
     private fun IPost.dataWithCommentsPreview(): DiscussionElementData {
         return this.data(commentPreviewProvider.getPreviewFor(this))
