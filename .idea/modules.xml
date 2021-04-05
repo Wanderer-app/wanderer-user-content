@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/persistence-in-memory.iml" filepath="$PROJECT_DIR$/.idea/modules/persistence-in-memory.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/service-protocol.iml" filepath="$PROJECT_DIR$/.idea/modules/service-protocol.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/wanderer-user-content.iml" filepath="$PROJECT_DIR$/.idea/wanderer-user-content.iml" />
     </modules>
   </component>
 </project>
