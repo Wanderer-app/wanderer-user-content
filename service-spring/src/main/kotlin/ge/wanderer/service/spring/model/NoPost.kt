@@ -1,12 +1,12 @@
 package ge.wanderer.service.spring.model
 
+import ge.wanderer.common.enums.ReportReason
 import ge.wanderer.common.enums.UserContentType
 import ge.wanderer.common.now
 import ge.wanderer.core.data.file.AttachedFile
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.UpdateDiscussionElementData
 import ge.wanderer.core.model.comment.IComment
-import ge.wanderer.core.model.discussion.DiscussionElement
 import ge.wanderer.core.model.discussion.post.IPost
 import ge.wanderer.core.model.rating.IVote
 import ge.wanderer.core.model.report.Report
@@ -14,7 +14,7 @@ import org.joda.time.LocalDateTime
 
 class NoPost: IPost {
     override fun content(): String = ""
-    override fun update(updateData: UpdateDiscussionElementData): DiscussionElement = this
+    override fun update(updateData: UpdateDiscussionElementData) {}
     override fun attachedFiles(): List<AttachedFile> = listOf()
     override fun routeCode(): String = ""
     override fun comments(): List<IComment> = listOf()
@@ -33,4 +33,5 @@ class NoPost: IPost {
     override fun removeVotesBy(user: User, onDate: LocalDateTime) { }
     override fun report(report: Report) { }
     override fun reports(): Set<Report> = setOf()
+    override fun acceptableReportReasons(): Set<ReportReason> = setOf()
 }

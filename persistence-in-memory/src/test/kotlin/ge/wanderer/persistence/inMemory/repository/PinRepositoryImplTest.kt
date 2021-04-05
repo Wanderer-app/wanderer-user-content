@@ -1,13 +1,12 @@
 package ge.wanderer.persistence.inMemory.repository
 
+import ge.wanderer.common.constants.TRANSIENT_ID
+import ge.wanderer.common.enums.PinType
 import ge.wanderer.common.map.LatLng
 import ge.wanderer.common.now
 import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.comment.Comment
 import ge.wanderer.core.model.content.status.Active
-import ge.wanderer.core.model.map.MarkerType
-import ge.wanderer.core.model.map.Pin
-import ge.wanderer.core.repository.TRANSIENT_ID
 import ge.wanderer.persistence.inMemory.WandererInMemoryPersistenceApplication
 import ge.wanderer.persistence.inMemory.support.createPin
 import ge.wanderer.persistence.inMemory.support.jambura
@@ -16,8 +15,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import java.lang.IllegalStateException
 import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
 @SpringBootTest(classes = [WandererInMemoryPersistenceApplication::class])
@@ -42,12 +41,12 @@ class PinRepositoryImplTest(
 
     @Test
     fun persistsNewPins() {
-        val pin = createPin(TRANSIENT_ID, MarkerType.TIP, jambura(), now(), LatLng(5f, 5f), "1231", "Some text")
+        val pin = createPin(TRANSIENT_ID, PinType.TIP, jambura(), now(), LatLng(5f, 5f), "1231", "Some text")
         pinRepositoryImpl.persist(pin)
 
         val persistedPin = pinRepositoryImpl.findById(6)
         assertEquals("Some text", persistedPin.content().text)
-        assertEquals(TRANSIENT_ID, persistedPin.id())
+        assertNotEquals(TRANSIENT_ID, persistedPin.id())
     }
 
     @Test

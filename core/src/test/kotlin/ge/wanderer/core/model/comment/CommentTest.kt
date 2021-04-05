@@ -1,12 +1,12 @@
 package ge.wanderer.core.model.comment
 
 import ge.wanderer.common.dateTime
+import ge.wanderer.common.enums.ReportReason
 import ge.wanderer.common.now
 import ge.wanderer.core.*
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.UpdateCommentData
 import ge.wanderer.core.model.report.Report
-import ge.wanderer.core.model.report.ReportReason
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
@@ -81,9 +81,9 @@ class CommentTest {
         val comment = createNewComment(1L, now(), "SomeText", mockk())
 
         val updateData = UpdateCommentData("Some text")
-        val updated = comment.update(updateData)
+        comment.update(updateData)
 
-        assertEquals("Some text", updated.text())
+        assertEquals("Some text", comment.text())
     }
 
     @Test

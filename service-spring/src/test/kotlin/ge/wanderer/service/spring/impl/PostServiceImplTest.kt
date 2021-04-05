@@ -1,12 +1,12 @@
 package ge.wanderer.service.spring.impl
 
 import ge.wanderer.common.dateTime
-import ge.wanderer.common.listing.ListingParams
+import ge.wanderer.common.enums.ReportReason
 import ge.wanderer.common.now
 import ge.wanderer.core.model.report.Report
-import ge.wanderer.core.model.report.ReportReason
-import ge.wanderer.core.repository.CommentRepository
-import ge.wanderer.core.repository.PostRepository
+import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.persistence.repository.CommentRepository
+import ge.wanderer.persistence.repository.PostRepository
 import ge.wanderer.service.protocol.request.*
 import ge.wanderer.service.spring.command.CommandProvider
 import ge.wanderer.service.spring.test_support.*
@@ -36,7 +36,7 @@ class PostServiceImplTest {
         val data = response.data!!
         assertEquals("Some text", data.content)
         assertEquals("123", data.routeCode)
-        assertEquals(jambura(), data.creator)
+        assertEquals(jambura().id, data.creator.id)
         assertEquals(2, data.attachedFiles.size)
         assertTrue(data.isActive)
         assertFalse(data.isRemoved)
@@ -56,7 +56,7 @@ class PostServiceImplTest {
 
         val data = response.data!!
         assertEquals("Updated text", data.content)
-        assertEquals(jambura(), data.creator)
+        assertEquals(jambura().id, data.creator.id)
         assertEquals(1, data.attachedFiles.size)
         assertTrue(data.isActive)
         assertFalse(data.isRemoved)
@@ -141,7 +141,7 @@ class PostServiceImplTest {
 
         val data = response.data!!
         assertEquals("aaaa", data.text)
-        assertEquals(patata(), data.author)
+        assertEquals(patata().id, data.author.id)
     }
 
     @Test

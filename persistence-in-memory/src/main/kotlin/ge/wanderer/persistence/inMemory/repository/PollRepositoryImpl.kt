@@ -1,5 +1,6 @@
 package ge.wanderer.persistence.inMemory.repository
 
+import ge.wanderer.common.constants.TRANSIENT_ID
 import ge.wanderer.common.now
 import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.comment.Comment
@@ -9,9 +10,9 @@ import ge.wanderer.core.model.discussion.poll.IPoll
 import ge.wanderer.core.model.discussion.poll.IPollAnswer
 import ge.wanderer.core.model.discussion.poll.Poll
 import ge.wanderer.core.model.discussion.poll.PollAnswer
-import ge.wanderer.core.repository.CommentRepository
-import ge.wanderer.core.repository.PollRepository
-import ge.wanderer.core.repository.TRANSIENT_ID
+import ge.wanderer.persistence.inMemory.model.InMemoryPoll
+import ge.wanderer.persistence.repository.CommentRepository
+import ge.wanderer.persistence.repository.PollRepository
 import org.joda.time.LocalDateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -40,14 +41,14 @@ class PollRepositoryImpl(
         createDate: LocalDateTime,
         routeCode: String,
         question: String,
-        answerTxts: Set<String>,
+        answerTexts: Set<String>,
         commentIds: Set<Pair<Long, String>>
     ): Pair<Long, IPoll> {
         val id = currentId.getAndIncrement()
         val user = userService.findUserById(userId)
         val comments = commentIds.map { createComment(it.first, it.second, createDate) }.toMutableList()
 
-        val answers: MutableSet<IPollAnswer> = answerTxts
+        val answers: MutableSet<IPollAnswer> = answerTexts
             .map { PollAnswer(pollAnswerCurrentId.getAndIncrement(), it, createDate, user, Active(createDate, user)) }
             .toMutableSet()
 
@@ -59,4 +60,19 @@ class PollRepositoryImpl(
         val comment =  Comment(TRANSIENT_ID, user, createDate, text, Active(createDate, user))
         return commentRepository.persist(comment)
     }
+
+    fun makeAnswerPersistent(answer: IPollAnswer): IPollAnswer {
+        return PollAnswer(pollAnswerCurrentId.getAndIncrement(), answer.text(), answer.createdAt(), answer.creator(), Active(answer.createdAt(), answer.creator()))
+    }
+
+    override fun makePersistent(model: IPoll, id: Long): IPoll {
+        val answers = model.answers()
+        answers.forEach { it.remove(model.createdAt(), model.creator()) }
+        answers
+            .map { makeAnswerPersistent(it) }
+            .forEach { model.addAnswer(it) }
+
+       return InMemoryPoll(id, model, this, commentRepository)
+    }
+
 }

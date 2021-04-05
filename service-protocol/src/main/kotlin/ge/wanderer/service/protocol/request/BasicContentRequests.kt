@@ -1,6 +1,6 @@
 package ge.wanderer.service.protocol.request
 
-import ge.wanderer.core.model.report.ReportReason
+import ge.wanderer.common.enums.ReportReason
 import org.joda.time.LocalDateTime
 
 data class OperateOnContentRequest (

@@ -1,9 +1,9 @@
 package ge.wanderer.service.spring.impl
 
 import ge.wanderer.common.enums.UserContentType
-import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.common.now
-import ge.wanderer.core.repository.DiscussionRepository
+import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.persistence.repository.DiscussionRepository
 import ge.wanderer.service.spring.test_support.*
 import io.mockk.every
 import io.mockk.mockk
@@ -39,20 +39,20 @@ class DiscussionServiceImplTest {
         assertEquals(3, discussion.size)
 
         assertEquals("Some text", discussion[0].content)
-        assertEquals(patata(), discussion[0].creator)
+        assertEquals(patata().id, discussion[0].creator.id)
         assertTrue(discussion[0].commentsPreview.isEmpty())
         assertEquals(UserContentType.POST, discussion[0].type)
         assertNotNull(discussion[0].ratingData)
 
         val expectedPollJson = "{\"question\":\"Some question\",\"answers\":[{\"answerId\":0,\"title\":\"Answer 1\",\"answererIds\":[],\"percentage\":0.00},{\"answerId\":0,\"title\":\"Answer 2\",\"answererIds\":[],\"percentage\":0.00},{\"answerId\":0,\"title\":\"Answer 3\",\"answererIds\":[],\"percentage\":0.00}]}"
         assertEquals(expectedPollJson, discussion[1].content)
-        assertEquals(jambura(), discussion[1].creator)
+        assertEquals(jambura().id, discussion[1].creator.id)
         assertTrue(discussion[1].commentsPreview.isEmpty())
         assertEquals(UserContentType.POLL, discussion[1].type)
         assertNull(discussion[1].ratingData)
 
         assertEquals("Some text 2", discussion[2].content)
-        assertEquals(jangula(), discussion[2].creator)
+        assertEquals(jangula().id, discussion[2].creator.id)
         assertTrue(discussion[2].commentsPreview.isEmpty())
         assertEquals(UserContentType.POST, discussion[2].type)
         assertNotNull(discussion[2].ratingData)

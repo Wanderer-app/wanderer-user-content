@@ -3,10 +3,12 @@ package ge.wanderer.service.spring.impl
 import ge.wanderer.common.amount
 import ge.wanderer.common.dateTime
 import ge.wanderer.common.enums.UserContentType
-import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.common.now
-import ge.wanderer.core.repository.CommentRepository
-import ge.wanderer.core.repository.PollRepository
+import ge.wanderer.core.model.content.status.Active
+import ge.wanderer.core.model.discussion.poll.PollAnswer
+import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.persistence.repository.CommentRepository
+import ge.wanderer.persistence.repository.PollRepository
 import ge.wanderer.service.protocol.request.*
 import ge.wanderer.service.spring.command.CommandProvider
 import ge.wanderer.service.spring.test_support.*
@@ -39,7 +41,7 @@ class PollServiceImplTest {
 
         val data = response.data!!
         assertEquals("123", data.routeCode)
-        assertEquals(jambura(), data.creator)
+        assertEquals(jambura().id, data.creator.id)
         assertTrue(data.isActive)
         assertTrue(data.content.contains("Some question"))
         assertTrue(data.content.contains("Answer 1"))
@@ -80,6 +82,26 @@ class PollServiceImplTest {
         assertTrue(response.isSuccessful)
         assertEquals("Answer added!", response.message)
         assertTrue(response.data!!.content.contains("Answer 3"))
+    }
+
+    @Test
+    fun correctlyRemovesPollAnswer() {
+        val answer1 = PollAnswer(1, "answer 1", now(), jambura(), Active(now(), jambura()), mutableSetOf())
+        val answer2 = PollAnswer(2, "answer 2", now(), jambura(), Active(now(), jambura()), mutableSetOf())
+        val answer3 = PollAnswer(3, "answer 3", now(), jambura(), Active(now(), jambura()), mutableSetOf())
+        val poll = createPoll(1, jambura(), now(), "123", "aaa", mutableSetOf(answer1, answer2, answer3))
+
+        every { pollRepository.findById(1) } returns poll
+
+        val request = RemovePollAnswerRequest(1, 2, 3, now())
+        val response = service.removeAnswer(request)
+
+        assertTrue(response.isSuccessful)
+        assertEquals("Answer Removed!", response.message)
+        assertFalse(response.data!!.content.contains("answer 2"))
+        assertEquals(2, poll.answers().size)
+        assertTrue(answer2.isRemoved())
+        verify(exactly = 1) { userService.notifyContentStatusChange(answer2) }
     }
 
     @Test
@@ -125,7 +147,7 @@ class PollServiceImplTest {
         val data = response.data!!
         assertEquals(1, data.id)
         assertNull(data.ratingData)
-        assertEquals(jangula(), data.creator)
+        assertEquals(jangula().id, data.creator.id)
     }
 
     @Test
@@ -170,7 +192,7 @@ class PollServiceImplTest {
         assertTrue(response.isSuccessful)
         assertEquals("Comment added", response.message)
         assertEquals("gaparchanavebs?", response.data!!.text)
-        assertEquals(jambura(), response.data!!.author)
+        assertEquals(jambura().id, response.data!!.author.id)
         verify(exactly = 1) { userService.notifyContentWasCommented(any(), any()) }
     }
 

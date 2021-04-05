@@ -12,27 +12,11 @@ import org.springframework.stereotype.Component
 
 @Component
 class UserServiceImpl: UserService {
-    override fun findUserById(userId: Long): User {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
-    override fun usersContentWasRated(rateableContent: RateableContent, vote: IVote) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun notifyContentStatusChange(content: UserAddedContent) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getAdministrationUser(): User {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun notifyAdministrationAboutReport(reportableContent: ReportableContent) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun notifyContentWasCommented(commentableContent: CommentableContent, comment: IComment) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun findUserById(userId: Long): User = error("User service not ready yet")
+    override fun usersContentWasRated(rateableContent: RateableContent, vote: IVote) {}
+    override fun notifyContentStatusChange(content: UserAddedContent) {}
+    override fun getAdministrationUser(): User = error("User service not ready yet")
+    override fun notifyAdministrationAboutReport(reportableContent: ReportableContent) {}
+    override fun notifyContentWasCommented(commentableContent: CommentableContent, comment: IComment) {}
 }

@@ -2,8 +2,8 @@ package ge.wanderer.service.spring.command
 
 import ge.wanderer.core.command.Command
 import ge.wanderer.core.command.decorator.ExceptionHandlingCommand
-import ge.wanderer.core.command.decorator.PersistentCommand
-import ge.wanderer.core.repository.BaseRepository
+import ge.wanderer.persistence.command.decorator.PersistentCommand
+import ge.wanderer.persistence.repository.BaseRepository
 import org.springframework.stereotype.Component
 
 @Component

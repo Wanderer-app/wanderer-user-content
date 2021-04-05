@@ -1,6 +1,5 @@
 package ge.wanderer.service.spring.impl
 
-import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.core.command.Command
 import ge.wanderer.core.command.comment.AddCommentCommand
 import ge.wanderer.core.command.content.ActivateContentCommand
@@ -11,13 +10,15 @@ import ge.wanderer.core.command.discussion.UpdateDiscussionElementCommand
 import ge.wanderer.core.command.rating.GiveOnePointCommand
 import ge.wanderer.core.command.rating.RemoveVoteCommand
 import ge.wanderer.core.configuration.ReportingConfiguration
+import ge.wanderer.core.data.file.AttachedFile
 import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.UpdateDiscussionElementData
 import ge.wanderer.core.model.discussion.post.IPost
 import ge.wanderer.core.model.rating.VoteType
 import ge.wanderer.core.model.report.Report
-import ge.wanderer.core.repository.CommentRepository
-import ge.wanderer.core.repository.PostRepository
+import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.persistence.repository.CommentRepository
+import ge.wanderer.persistence.repository.PostRepository
 import ge.wanderer.service.protocol.data.CommentData
 import ge.wanderer.service.protocol.data.DiscussionElementData
 import ge.wanderer.service.protocol.data.RatingData
@@ -30,6 +31,7 @@ import ge.wanderer.service.spring.command.CommandProvider
 import ge.wanderer.service.spring.data.data
 import ge.wanderer.service.spring.data.noDataResponse
 import ge.wanderer.service.spring.data.ratingResponse
+import ge.wanderer.service.spring.model.NoComment
 import ge.wanderer.service.spring.model.NoPost
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -46,7 +48,7 @@ class PostServiceImpl(
 
     override fun createPost(request: CreatePostRequest): ServiceResponse<DiscussionElementData> {
         val user = userService.findUserById(request.userId)
-        val command = CreatePostCommand(request.onDate, user, request.routeCode, request.text, request.attachedFiles)
+        val command = CreatePostCommand(request.onDate, user, request.routeCode, request.text, request.attachedFiles.map { AttachedFile() })
 
         return response(
             commandProvider.decoratePersistentCommand(command, NoPost(), postRepository)
@@ -124,8 +126,8 @@ class PostServiceImpl(
         val user = userService.findUserById(request.commenterId)
         val command = AddCommentCommand(request.commentContent, user, request.date, post, userService)
 
-        val result = commandProvider.decorateCommand(command, post).execute()
-        return ServiceResponse(result.isSuccessful, result.message, result.returnedModel.comments().last().data())    }
+        val result = commandProvider.decorateCommand(command, NoComment()).execute()
+        return ServiceResponse(result.isSuccessful, result.message, result.returnedModel.data())    }
 
     override fun listComments(contentId: Long, listingParams: ListingParams): ServiceListingResponse<CommentData> {
         val post = postRepository.findById(contentId)

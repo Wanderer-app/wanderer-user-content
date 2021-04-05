@@ -6,7 +6,6 @@ import ge.wanderer.core.data.file.AttachedFile
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.UpdateDiscussionElementData
 import ge.wanderer.core.model.comment.IComment
-import ge.wanderer.core.model.discussion.DiscussionElement
 import ge.wanderer.core.model.discussion.poll.IPoll
 import ge.wanderer.core.model.discussion.poll.IPollAnswer
 import ge.wanderer.core.model.discussion.poll.PollAnswerData
@@ -17,8 +16,9 @@ class NoPoll: IPoll {
     override fun addAnswer(answer: IPollAnswer) {}
     override fun selectAnswer(answerId: Long, user: User) {}
     override fun answersData(): Set<PollAnswerData> = setOf()
+    override fun answers(): List<IPollAnswer> = listOf()
     override fun content(): String = ""
-    override fun update(updateData: UpdateDiscussionElementData): DiscussionElement = this
+    override fun update(updateData: UpdateDiscussionElementData) {}
     override fun attachedFiles(): List<AttachedFile> = listOf()
     override fun routeCode(): String = ""
     override fun comments(): List<IComment> = listOf()

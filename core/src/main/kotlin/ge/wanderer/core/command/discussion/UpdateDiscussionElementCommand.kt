@@ -15,6 +15,7 @@ class UpdateDiscussionElementCommand<T: DiscussionElement>(
 ): Command<T> {
     override fun execute(): CommandExecutionResult<T> {
         check(element.creator() == updater) { "You can't update this element" }
-        return success("${element.contentType()} updated", element.update(data) as T)
+        element.update(data)
+        return success("${element.contentType()} updated", element)
     }
 }

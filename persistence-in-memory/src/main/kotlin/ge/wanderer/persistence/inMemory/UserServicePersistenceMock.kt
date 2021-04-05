@@ -8,7 +8,6 @@ import ge.wanderer.core.model.content.RateableContent
 import ge.wanderer.core.model.content.ReportableContent
 import ge.wanderer.core.model.content.UserAddedContent
 import ge.wanderer.core.model.rating.IVote
-import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
 @Component

@@ -1,5 +1,6 @@
 package ge.wanderer.core.command.discussion
 
+import ge.wanderer.common.constants.TRANSIENT_ID
 import ge.wanderer.core.command.Command
 import ge.wanderer.core.command.CommandExecutionResult
 import ge.wanderer.core.command.success
@@ -9,7 +10,6 @@ import ge.wanderer.core.model.discussion.poll.IPoll
 import ge.wanderer.core.model.discussion.poll.IPollAnswer
 import ge.wanderer.core.model.discussion.poll.Poll
 import ge.wanderer.core.model.discussion.poll.PollAnswer
-import ge.wanderer.core.repository.TRANSIENT_ID
 import org.joda.time.LocalDateTime
 
 class CreatePollCommand(

@@ -6,7 +6,7 @@ import ge.wanderer.core.model.content.CommentableContent
 
 interface DiscussionElement: CommentableContent {
     fun content(): String
-    fun update(updateData: UpdateDiscussionElementData): DiscussionElement
+    fun update(updateData: UpdateDiscussionElementData)
     fun attachedFiles(): List<AttachedFile>
     fun routeCode(): String
 }

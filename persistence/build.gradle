@@ -1,0 +1,8 @@
+project(":persistence") {
+    description = "Interfaces and data structures for persistence"
+
+    dependencies {
+        implementation project(":core")
+        implementation project(":common")
+    }
+}

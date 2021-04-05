@@ -1,5 +1,7 @@
 package ge.wanderer.core
 
+import ge.wanderer.common.constants.TRANSIENT_ID
+import ge.wanderer.common.enums.PinType
 import ge.wanderer.common.map.LatLng
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.comment.Comment
@@ -8,12 +10,10 @@ import ge.wanderer.core.model.discussion.poll.IPollAnswer
 import ge.wanderer.core.model.discussion.poll.Poll
 import ge.wanderer.core.model.discussion.poll.PollAnswer
 import ge.wanderer.core.model.discussion.post.Post
-import ge.wanderer.core.model.map.MarkerType
 import ge.wanderer.core.model.map.Pin
-import ge.wanderer.core.model.map.RouteElementContent
+import ge.wanderer.core.model.map.PinContent
 import ge.wanderer.core.model.rating.Vote
 import ge.wanderer.core.model.rating.VoteType
-import ge.wanderer.core.repository.TRANSIENT_ID
 import org.joda.time.LocalDateTime
 import java.net.URL
 
@@ -27,14 +27,14 @@ fun createNewComment(id: Long, createDate: LocalDateTime, text: String, author: 
     )
 
 fun createTipPin(id: Long, user: User, createTime: LocalDateTime, location: LatLng, routeCode: String, text: String): Pin {
-    val content = RouteElementContent("Title", text, null)
+    val content = PinContent("Title", text, null)
     return Pin(
         id,
         user,
         createTime,
         location,
         routeCode,
-        MarkerType.TIP,
+        PinType.TIP,
         content,
         Active(createTime, user)
     )

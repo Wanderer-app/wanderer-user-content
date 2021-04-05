@@ -1,7 +1,7 @@
 package ge.wanderer.persistence.inMemory.repository
 
 import ge.wanderer.core.model.report.Report
-import ge.wanderer.core.repository.*
+import ge.wanderer.persistence.repository.ReportRepository
 import org.springframework.stereotype.Component
 import java.util.concurrent.atomic.AtomicLong
 
@@ -11,4 +11,5 @@ class ReportRepositoryImpl: ReportRepository, BaseInMemoryRepository<Report>() {
 
     override fun data(): HashMap<Long, Report> = hashMapOf()
     override fun nextId(): Long = id.getAndIncrement()
+    override fun makePersistent(model: Report, id: Long): Report = model
 }

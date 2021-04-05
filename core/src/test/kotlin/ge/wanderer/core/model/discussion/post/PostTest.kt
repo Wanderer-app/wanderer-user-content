@@ -1,11 +1,11 @@
 package ge.wanderer.core.model.discussion.post
 
+import ge.wanderer.common.enums.ReportReason.*
 import ge.wanderer.common.enums.UserContentType
 import ge.wanderer.common.now
 import ge.wanderer.core.*
 import ge.wanderer.core.model.UpdateDiscussionElementData
 import ge.wanderer.core.model.report.Report
-import ge.wanderer.core.model.report.ReportReason.*
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
@@ -79,10 +79,10 @@ class PostTest {
         val post = createNewPostWithoutFiles(1, mockk(), "Hellooo", now())
 
         val updateData = UpdateDiscussionElementData("Hello", listOf(mockk(), mockk()))
-        val updated = post.update(updateData)
+        post.update(updateData)
 
-        assertEquals("Hello", updated.content())
-        assertEquals(2, updated.attachedFiles().size)
+        assertEquals("Hello", post.content())
+        assertEquals(2, post.attachedFiles().size)
     }
 
     @Test

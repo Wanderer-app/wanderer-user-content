@@ -4,5 +4,6 @@ project(":service-protocol") {
     dependencies {
         implementation project(':common')
         implementation project(':core')
+        implementation project(":persistence")
     }
 }

@@ -7,5 +7,5 @@ import ge.wanderer.core.model.content.ReportableContent
 
 interface IComment: RateableContent, CommentableContent, ReportableContent {
     fun text(): String
-    fun update(updateData: UpdateCommentData): IComment
+    fun update(updateData: UpdateCommentData)
 }

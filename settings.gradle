@@ -4,4 +4,6 @@ include 'common'
 include 'service-protocol'
 include 'service-spring'
 include 'persistence-in-memory'
+include 'persistence'
+include 'integration-tests'
 

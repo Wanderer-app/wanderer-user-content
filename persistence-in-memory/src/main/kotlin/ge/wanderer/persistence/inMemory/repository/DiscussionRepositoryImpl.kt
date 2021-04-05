@@ -1,10 +1,10 @@
 package ge.wanderer.persistence.inMemory.repository
 
-import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.core.model.discussion.DiscussionElement
-import ge.wanderer.core.repository.DiscussionRepository
-import ge.wanderer.core.repository.PollRepository
-import ge.wanderer.core.repository.PostRepository
+import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.persistence.repository.DiscussionRepository
+import ge.wanderer.persistence.repository.PollRepository
+import ge.wanderer.persistence.repository.PostRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 

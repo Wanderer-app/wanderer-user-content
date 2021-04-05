@@ -7,4 +7,5 @@ interface IPoll: DiscussionElement {
     fun addAnswer(answer: IPollAnswer)
     fun selectAnswer(answerId: Long, user: User)
     fun answersData(): Set<PollAnswerData>
+    fun answers(): List<IPollAnswer>
 }

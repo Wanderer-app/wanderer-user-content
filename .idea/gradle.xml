@@ -11,6 +11,8 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/integration-tests" />
+            <option value="$PROJECT_DIR$/persistence" />
             <option value="$PROJECT_DIR$/persistence-in-memory" />
             <option value="$PROJECT_DIR$/service-protocol" />
             <option value="$PROJECT_DIR$/service-spring" />

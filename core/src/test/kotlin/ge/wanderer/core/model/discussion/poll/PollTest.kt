@@ -130,7 +130,7 @@ class PollTest {
     fun canBeUpdated() {
         val poll = Poll(1L, mockk(), now(), Active(now(), jambura()), "123", "Best video ggaeme?", mutableSetOf(), mutableListOf())
 
-        val updated = poll.update(UpdateDiscussionElementData("Best video game?", listOf()))
-        assertTrue(updated.content().startsWith("{\"question\":\"Best video game?\""))
+        poll.update(UpdateDiscussionElementData("Best video game?", listOf()))
+        assertTrue(poll.content().startsWith("{\"question\":\"Best video game?\""))
     }
 }

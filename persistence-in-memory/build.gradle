@@ -6,6 +6,7 @@ project(":persistence-in-memory") {
     dependencies {
         implementation project(":core")
         implementation project(":common")
+        implementation project(":persistence")
 
         implementation 'org.springframework:spring-core:5.2.8.RELEASE'
         implementation 'org.springframework:spring-context:5.2.8.RELEASE'

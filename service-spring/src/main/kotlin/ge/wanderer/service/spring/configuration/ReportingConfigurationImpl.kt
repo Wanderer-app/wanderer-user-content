@@ -1,10 +1,10 @@
 package ge.wanderer.service.spring.configuration
 
+import ge.wanderer.common.enums.ReportReason.IRRELEVANT
 import ge.wanderer.common.enums.UserContentType
 import ge.wanderer.core.configuration.ReportingConfiguration
 import ge.wanderer.core.model.content.ReportableContent
 import ge.wanderer.core.model.map.IPin
-import ge.wanderer.core.model.report.ReportReason.IRRELEVANT
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -34,7 +34,8 @@ class ReportingConfigurationImpl(
         reportedContentRemovalProperties[reportableContent.contentType()]
         ?: error("Reporting configuration does not support ${reportableContent.contentType()}")
 
-    private fun reportsNumberToRemove(reportableContent: ReportableContent) = (reportedContentNotificationProperties[reportableContent.contentType()]
-        ?: error("Reporting configuration does not support ${reportableContent.contentType()}"))
+    private fun reportsNumberToRemove(reportableContent: ReportableContent) =
+        reportedContentNotificationProperties[reportableContent.contentType()]
+        ?: error("Reporting configuration does not support ${reportableContent.contentType()}")
 
 }

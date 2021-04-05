@@ -4,8 +4,8 @@ import ge.wanderer.common.enums.UserContentType
 import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.comment.IComment
 import ge.wanderer.core.model.map.IPin
-import ge.wanderer.core.repository.CommentRepository
-import ge.wanderer.core.repository.PinRepository
+import ge.wanderer.persistence.repository.CommentRepository
+import ge.wanderer.persistence.repository.PinRepository
 import ge.wanderer.service.spring.CommentPreviewProvider
 import ge.wanderer.service.spring.configuration.ReportingConfigurationImpl
 import io.mockk.every

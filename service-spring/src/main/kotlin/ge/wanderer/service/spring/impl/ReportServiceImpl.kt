@@ -1,8 +1,8 @@
 package ge.wanderer.service.spring.impl
 
-import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.core.model.report.Report
-import ge.wanderer.core.repository.ReportRepository
+import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.persistence.repository.ReportRepository
 import ge.wanderer.service.protocol.interfaces.ReportsService
 import ge.wanderer.service.protocol.response.ServiceListingResponse
 import ge.wanderer.service.protocol.response.ServiceResponse

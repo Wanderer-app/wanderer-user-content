@@ -47,6 +47,5 @@ class RemovedTest {
         }
         assertTrue(removedStatus.activate(now(), jangula()) is Active)
         assertTrue(removedStatus.activate(now(), jambura()) is Active)
-
     }
 }

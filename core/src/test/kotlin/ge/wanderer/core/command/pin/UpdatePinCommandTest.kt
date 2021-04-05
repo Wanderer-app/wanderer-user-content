@@ -3,7 +3,7 @@ package ge.wanderer.core.command.pin
 import ge.wanderer.common.now
 import ge.wanderer.core.createTipPin
 import ge.wanderer.core.jambura
-import ge.wanderer.core.model.map.RouteElementContent
+import ge.wanderer.core.model.map.PinContent
 import ge.wanderer.core.patata
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
@@ -19,7 +19,7 @@ class UpdatePinCommandTest {
         val pin = createTipPin(1, jambura(), now(), mockk(), "123",  "Some text")
 
         val exception = assertThrows<IllegalStateException> {
-            UpdatePinCommand(pin, RouteElementContent("New title", "Updated text", null), patata()).execute()
+            UpdatePinCommand(pin, PinContent("New title", "Updated text", null), patata()).execute()
         }
         assertEquals("You can't update this pin", exception.message!!)
     }
@@ -30,7 +30,7 @@ class UpdatePinCommandTest {
 
         val result = UpdatePinCommand(
             pin,
-            RouteElementContent("New title", "Updated text", mockk()),
+            PinContent("New title", "Updated text", mockk()),
             jambura()
         ).execute()
 

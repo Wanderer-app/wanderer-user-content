@@ -1,6 +1,7 @@
 package ge.wanderer.persistence.inMemory.repository
 
-import ge.wanderer.common.enums.UserContentType.*
+import ge.wanderer.common.enums.UserContentType.POLL
+import ge.wanderer.common.enums.UserContentType.POST
 import ge.wanderer.persistence.inMemory.WandererInMemoryPersistenceApplication
 import io.mockk.mockk
 import org.junit.jupiter.api.Test

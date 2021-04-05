@@ -1,7 +1,7 @@
 package ge.wanderer.persistence.inMemory.repository
 
+import ge.wanderer.common.constants.TRANSIENT_ID
 import ge.wanderer.common.now
-import ge.wanderer.core.repository.TRANSIENT_ID
 import ge.wanderer.persistence.inMemory.WandererInMemoryPersistenceApplication
 import ge.wanderer.persistence.inMemory.support.createNewComment
 import ge.wanderer.persistence.inMemory.support.jambura
@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import java.lang.IllegalStateException
 import kotlin.test.assertEquals
 
 @SpringBootTest(classes = [WandererInMemoryPersistenceApplication::class])
@@ -27,12 +26,12 @@ class CommentRepositoryImplTest(
     @Test
     fun persistsComment() {
         val comment = createNewComment(TRANSIENT_ID, now(), "aaa", jambura())
-        commentRepositoryImpl.persist(comment)
+        val newCommentId = commentRepositoryImpl.persist(comment).id()
 
-        val persistedComment = commentRepositoryImpl.findById(15)
+        val persistedComment = commentRepositoryImpl.findById(newCommentId)
         assertEquals(jambura(), persistedComment.creator())
         assertEquals("aaa", persistedComment.text())
-        assertEquals(14, commentRepositoryImpl.list(mockk()).size)
+        assertEquals(newCommentId, persistedComment.id())
     }
 
     @Test

@@ -1,6 +1,6 @@
 package ge.wanderer.service.protocol.interfaces
 
-import ge.wanderer.common.listing.ListingParams
+import ge.wanderer.persistence.listing.ListingParams
 import ge.wanderer.service.protocol.data.PinData
 import ge.wanderer.service.protocol.data.PinMapData
 import ge.wanderer.service.protocol.interfaces.base.CommentableContentService

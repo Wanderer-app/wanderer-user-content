@@ -8,7 +8,6 @@ import ge.wanderer.core.model.UpdateDiscussionElementData
 import ge.wanderer.core.model.comment.IComment
 import ge.wanderer.core.model.content.status.ContentStatusType
 import ge.wanderer.core.model.content.status.UserAddedContentStatus
-import ge.wanderer.core.model.discussion.DiscussionElement
 import org.joda.time.LocalDateTime
 
 class Poll(
@@ -17,7 +16,7 @@ class Poll(
     private val createdAt: LocalDateTime,
     private var status: UserAddedContentStatus,
     private val routeCode: String,
-    private val question: String,
+    private var question: String,
     private val answers: MutableSet<IPollAnswer>,
     private val comments: MutableList<IComment>
 ): IPoll {
@@ -33,8 +32,10 @@ class Poll(
     override fun statusUpdatedAt(): LocalDateTime = status.createdAt()
     override fun contentType(): UserContentType = UserContentType.POLL
 
+    private fun activeAnswers() = answers.filter { it.isActive() }
+
     override fun addAnswer(answer: IPollAnswer) {
-        check(answers.none { it.text() == answer.text() }) { "Such answer already exists" }
+        check(activeAnswers().none { it.text() == answer.text() }) { "Such answer already exists" }
         answers.add(answer)
     }
 
@@ -48,15 +49,16 @@ class Poll(
             .filter { it.isActive() }
             .first { it.id() == answerId }
             .selectBy(user)
-
     }
 
     override fun answersData(): Set<PollAnswerData> {
-        val activeAnswers = answers.filter { it.isActive() }
+        val activeAnswers = activeAnswers()
 
         val totalAnswerers = activeAnswers.map { it.selectors().size }.sum()
         return activeAnswers.map { it.data(totalAnswerers) }.toSet()
     }
+
+    override fun answers(): List<IPollAnswer> = activeAnswers()
 
     override fun comments(): List<IComment> = comments.filter { it.isActive() }
     override fun addComment(comment: IComment) { comments.add(comment) }
@@ -68,16 +70,8 @@ class Poll(
         status = status.activate(onDate, activator)
     }
 
-    override fun update(updateData: UpdateDiscussionElementData): DiscussionElement =
-        Poll(
-            id,
-            creator,
-            createdAt,
-            status,
-            routeCode,
-            updateData.contentToUpdate,
-            answers,
-            comments
-        )
+    override fun update(updateData: UpdateDiscussionElementData) {
+        question = updateData.contentToUpdate
+    }
 
 }

@@ -1,10 +1,10 @@
 package ge.wanderer.service.spring.impl
 
 import ge.wanderer.common.dateTime
-import ge.wanderer.common.listing.ListingParams
+import ge.wanderer.common.enums.ReportReason
 import ge.wanderer.common.now
 import ge.wanderer.core.configuration.ReportingConfiguration
-import ge.wanderer.core.model.report.ReportReason
+import ge.wanderer.persistence.listing.ListingParams
 import ge.wanderer.service.protocol.request.AddCommentRequest
 import ge.wanderer.service.protocol.request.OperateOnContentRequest
 import ge.wanderer.service.protocol.request.ReportContentRequest
@@ -48,7 +48,7 @@ class CommentServiceImplTest {
 
         val commentData = response.data!!
         assertEquals(4, commentData.id)
-        assertEquals(kalduna(), commentData.author)
+        assertEquals(kalduna().id, commentData.author.id)
         assertEquals("sadaa chemi 1000 maneti?", commentData.text)
 
         verify(exactly = 1) { commentRepository.findById(4) }
@@ -71,7 +71,7 @@ class CommentServiceImplTest {
         assertTrue(response.isSuccessful)
         assertEquals("Successfully retrieved comment", response.message)
         assertEquals(3, response.data!!.id)
-        assertEquals(patata(), response.data!!.author)
+        assertEquals(patata().id, response.data!!.author.id)
         verify(exactly = 1) { commentRepository.findById(3) }
     }
 
@@ -86,7 +86,7 @@ class CommentServiceImplTest {
 
         val commentData = result.data!!
         assertEquals(1, commentData.id)
-        assertEquals(jambura(), commentData.author)
+        assertEquals(jambura().id, commentData.author.id)
         assertTrue(commentData.isActive)
         assertEquals(dateTime("2021-03-30"), commentData.updatedAt)
     }
@@ -112,7 +112,7 @@ class CommentServiceImplTest {
 
         val commentData = result.data!!
         assertEquals(4, commentData.id)
-        assertEquals(kalduna(), commentData.author)
+        assertEquals(kalduna().id, commentData.author.id)
         assertFalse(commentData.isActive)
         assertTrue(commentData.isRemoved)
         assertEquals(dateTime("2021-03-30"), commentData.updatedAt)
@@ -159,16 +159,14 @@ class CommentServiceImplTest {
 
         assertTrue(response.isSuccessful)
         assertEquals("Comment added", response.message)
-        assertEquals(1, response.data!!.responsesPreview.size)
-        assertEquals("lashas mamas hqonda", response.data!!.responsesPreview.first().text)
+        assertEquals("lashas mamas hqonda", response.data!!.text)
 
         request = AddCommentRequest(4, 5, "axla atrakeb", now())
         response = service.addComment(request)
 
         assertTrue(response.isSuccessful)
         assertEquals("Comment added", response.message)
-        assertEquals(2, response.data!!.responsesPreview.size)
-        assertEquals("axla atrakeb", response.data!!.responsesPreview.last().text)
+        assertEquals("axla atrakeb", response.data!!.text)
     }
 
     @Test

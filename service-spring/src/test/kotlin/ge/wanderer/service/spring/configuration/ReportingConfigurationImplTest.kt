@@ -1,10 +1,10 @@
 package ge.wanderer.service.spring.configuration
 
+import ge.wanderer.common.enums.ReportReason
 import ge.wanderer.common.enums.UserContentType.PIN
 import ge.wanderer.common.now
 import ge.wanderer.core.model.map.IPin
 import ge.wanderer.core.model.report.Report
-import ge.wanderer.core.model.report.ReportReason
 import ge.wanderer.service.spring.test_support.jambura
 import ge.wanderer.service.spring.test_support.jangula
 import ge.wanderer.service.spring.test_support.patata

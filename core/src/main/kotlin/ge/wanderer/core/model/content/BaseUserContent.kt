@@ -6,7 +6,6 @@ import ge.wanderer.core.model.content.status.ContentStatusType
 import ge.wanderer.core.model.content.status.UserAddedContentStatus
 import ge.wanderer.core.model.rating.IVote
 import ge.wanderer.core.model.report.Report
-import ge.wanderer.core.model.report.ReportReason
 import org.joda.time.LocalDateTime
 
 abstract class BaseUserContent(
@@ -65,7 +64,4 @@ abstract class BaseUserContent(
     }
 
     override fun reports(): Set<Report> = reports.toSet()
-
-    abstract fun acceptableReportReasons(): Set<ReportReason>
-
 }

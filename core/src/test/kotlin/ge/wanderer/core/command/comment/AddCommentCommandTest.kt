@@ -31,9 +31,8 @@ class AddCommentCommandTest {
         assertTrue(result.isSuccessful)
         assertEquals("Comment added", result.message)
 
-        val returnedContentComments = result.returnedModel.comments()
-        assertEquals(1, returnedContentComments.size)
-        assertEquals("Reply to some text", returnedContentComments.first().text())
+        val returnedComment = result.returnedModel
+        assertEquals("Reply to some text", returnedComment.text())
         verify(exactly = 1) { userService.notifyContentWasCommented(any(), any()) }
     }
 
@@ -47,9 +46,8 @@ class AddCommentCommandTest {
         assertTrue(result.isSuccessful)
         assertEquals("Comment added", result.message)
 
-        val returnedContentComments = result.returnedModel.comments()
-        assertEquals(1, returnedContentComments.size)
-        assertEquals("Some text", returnedContentComments.first().text())
+        val returnedContent = result.returnedModel
+        assertEquals("Some text", returnedContent.text())
         verify(exactly = 1) { userService.notifyContentWasCommented(any(), any()) }
     }
 
@@ -58,12 +56,11 @@ class AddCommentCommandTest {
 
         val userService = mockk<UserService> { every { notifyContentWasCommented(any(), any()) } returns Unit }
         val post = createNewPostWithoutFiles(1, mockk(), "Teeext", now())
-        val postResult = AddCommentCommand("Some text", mockk(), now(), post, userService).execute()
+        val result = AddCommentCommand("Some text", mockk(), now(), post, userService).execute()
 
-        assertTrue(postResult.isSuccessful)
-        assertEquals("Comment added", postResult.message)
-        assertEquals(1,postResult.returnedModel.comments().size)
-        assertEquals("Some text", postResult.returnedModel.comments().first().text())
+        assertTrue(result.isSuccessful)
+        assertEquals("Comment added", result.message)
+        assertEquals("Some text", result.returnedModel.text())
         verify(exactly = 1) { userService.notifyContentWasCommented(any(), any()) }
 
         val poll = createPoll(1, mockk(), now(), "123", "Some question", mutableSetOf())
@@ -72,9 +69,7 @@ class AddCommentCommandTest {
         assertTrue(pollResult.isSuccessful)
         assertEquals("Comment added", pollResult.message)
 
-        val returnedContentComments = pollResult.returnedModel.comments()
-        assertEquals(1, returnedContentComments.size)
-        assertEquals("Some text", returnedContentComments.first().text())
+        assertEquals("Some text", pollResult.returnedModel.text())
         verify(exactly = 2) { userService.notifyContentWasCommented(any(), any()) }
     }
 }

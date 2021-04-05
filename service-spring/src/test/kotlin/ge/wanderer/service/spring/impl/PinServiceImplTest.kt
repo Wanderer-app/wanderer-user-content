@@ -1,16 +1,14 @@
 package ge.wanderer.service.spring.impl
 
 import ge.wanderer.common.dateTime
-import ge.wanderer.common.listing.ListingParams
+import ge.wanderer.common.enums.PinType.*
+import ge.wanderer.common.enums.ReportReason
 import ge.wanderer.common.map.LatLng
 import ge.wanderer.common.now
 import ge.wanderer.core.configuration.ReportingConfiguration
-import ge.wanderer.core.data.file.AttachedFile
-import ge.wanderer.core.model.map.MarkerType.*
-import ge.wanderer.core.model.map.RouteElementContent
 import ge.wanderer.core.model.report.Report
-import ge.wanderer.core.model.report.ReportReason
-import ge.wanderer.core.repository.CommentRepository
+import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.persistence.repository.CommentRepository
 import ge.wanderer.service.protocol.request.*
 import ge.wanderer.service.spring.command.CommandProvider
 import ge.wanderer.service.spring.test_support.*
@@ -19,10 +17,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 class PinServiceImplTest {
 
@@ -46,9 +41,8 @@ class PinServiceImplTest {
 
         every { pinRepository.persist(any()) } answers { arg(0) }
 
-        val content = RouteElementContent("Dangerous place", "Be careful here", null)
         val createDate = dateTime("2021-03-26T10:21:11")
-        val request = CreatePinRequest(createDate, 5, WARNING, content, LatLng(20f, 10f), "12345")
+        val request = CreatePinRequest(createDate, 5, WARNING, "Dangerous place", "Be careful here", null, LatLng(20f, 10f), "12345")
 
         val response = service.createPin(request)
 
@@ -56,7 +50,7 @@ class PinServiceImplTest {
         assertEquals("Pin Created. New model persisted successfully", response.message)
 
         val newPin = response.data!!
-        assertEquals(kalduna(), newPin.creator)
+        assertEquals(kalduna().id, newPin.creator.id)
         assertEquals(createDate, newPin.createdAt)
         assertEquals(createDate, newPin.updatedAt)
         assertTrue(newPin.isActive)
@@ -66,9 +60,9 @@ class PinServiceImplTest {
         assertEquals(0, newPin.commentsNumber)
         assertTrue(newPin.commentsPreview.isEmpty())
         assertEquals("12345", newPin.routeCode)
-        assertEquals(content.title, newPin.content.title)
-        assertEquals(content.text, newPin.content.text)
-        assertNull(newPin.content.attachedFile)
+        assertEquals("Dangerous place", newPin.title)
+        assertEquals("Be careful here", newPin.text)
+        assertNull(newPin.attachedFile)
         assertEquals(WARNING, newPin.type)
 
         verify(exactly = 1) { userService.findUserById(5) }
@@ -79,10 +73,9 @@ class PinServiceImplTest {
     fun failsIfSomethingGoesWrongOnCommandExecution() {
 
         every { pinRepository.persist(any()) } throws IllegalStateException("Could not persist")
-        val content = RouteElementContent("Dangerous place", "Be careful here", null)
         val createDate = dateTime("2021-03-26T10:21:11")
 
-        val request = CreatePinRequest(createDate, 5, WARNING, content, LatLng(20f, 10f), "12345")
+        val request = CreatePinRequest(createDate, 5, WARNING, "Dangerous place", "Be careful here", null, LatLng(20f, 10f), "12345")
         val response = service.createPin(request)
 
         assertFalse(response.isSuccessful)
@@ -154,9 +147,7 @@ class PinServiceImplTest {
 
     @Test
     fun correctlyUpdatesPin() {
-        val attachedFile = mockk<AttachedFile>()
-        val newContent = RouteElementContent("aaaa", "aaaa", attachedFile)
-        val request = UpdatePinRequest(5, newContent, 4)
+        val request = UpdatePinRequest(5, "aaaa", "aaaa", mockk(), 4)
 
         val response = service.updatePin(request)
         assertTrue(response.isSuccessful)
@@ -164,9 +155,9 @@ class PinServiceImplTest {
 
         val updatedPin = response.data!!
         assertEquals(5, updatedPin.id)
-        assertEquals(attachedFile, updatedPin.content.attachedFile)
-        assertEquals("aaaa", updatedPin.content.text)
-        assertEquals("aaaa", updatedPin.content.title)
+        assertNotNull(updatedPin.attachedFile)
+        assertEquals("aaaa", updatedPin.text)
+        assertEquals("aaaa", updatedPin.title)
     }
 
     @Test
@@ -244,7 +235,7 @@ class PinServiceImplTest {
         assertTrue(response.isSuccessful)
         assertEquals("Comment added", response.message)
         assertEquals("maladeeec", response.data!!.text)
-        assertEquals(patata(), response.data!!.author)
+        assertEquals(patata().id, response.data!!.author.id)
         verify(exactly = 1) { userService.notifyContentWasCommented(pin1, any()) }
     }
 

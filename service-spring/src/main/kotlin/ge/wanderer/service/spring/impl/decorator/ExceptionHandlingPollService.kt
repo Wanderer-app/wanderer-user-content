@@ -1,6 +1,6 @@
 package ge.wanderer.service.spring.impl.decorator
 
-import ge.wanderer.common.listing.ListingParams
+import ge.wanderer.persistence.listing.ListingParams
 import ge.wanderer.service.protocol.data.CommentData
 import ge.wanderer.service.protocol.data.DiscussionElementData
 import ge.wanderer.service.protocol.interfaces.PollService
@@ -25,6 +25,9 @@ class ExceptionHandlingPollService(
 
     override fun addAnswer(request: AddAnswerToPollRequest): ServiceResponse<DiscussionElementData> =
         handle { pollServiceImpl.addAnswer(request) }
+
+    override fun removeAnswer(request: RemovePollAnswerRequest): ServiceResponse<DiscussionElementData> =
+        handle { pollServiceImpl.removeAnswer(request) }
 
     override fun selectAnswer(request: SelectPollAnswerRequest): ServiceResponse<DiscussionElementData> =
         handle { pollServiceImpl.selectAnswer(request) }

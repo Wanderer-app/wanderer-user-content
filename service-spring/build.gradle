@@ -6,6 +6,7 @@ project(":service-spring") {
     dependencies {
         implementation project(":core")
         implementation project(":service-protocol")
+        implementation project(":persistence")
         implementation project(":common")
 
         implementation 'org.springframework:spring-core:5.2.8.RELEASE'

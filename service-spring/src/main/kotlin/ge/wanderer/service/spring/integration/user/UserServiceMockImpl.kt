@@ -8,11 +8,9 @@ import ge.wanderer.core.model.content.RateableContent
 import ge.wanderer.core.model.content.ReportableContent
 import ge.wanderer.core.model.content.UserAddedContent
 import ge.wanderer.core.model.rating.IVote
-import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Component
 
 @Component
-@Primary
 class UserServiceMockImpl: UserService {
 
     override fun findUserById(userId: Long): User =
@@ -31,7 +29,7 @@ class UserServiceMockImpl: UserService {
     private val users = listOf(
         mainAdmin,
         User(2, "Nikoloz", "Patatishvili", 10, true),
-        User(3, "Nika", "Jangulashvili", 2, true),
+        User(3, "Nika", "Jangulashvili", 5, true),
         User(4, "Vipi", "Soxumski", 1, false),
         User(5, "Giji", "Temo", 1, false),
         User(6, "Ivane", "Bidzinashvili", 1, false),

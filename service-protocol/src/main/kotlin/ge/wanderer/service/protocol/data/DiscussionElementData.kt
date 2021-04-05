@@ -2,12 +2,11 @@ package ge.wanderer.service.protocol.data
 
 import ge.wanderer.common.enums.UserContentType
 import ge.wanderer.core.data.file.AttachedFile
-import ge.wanderer.core.integration.user.User
 import org.joda.time.LocalDateTime
 
 data class DiscussionElementData (
     val id: Long,
-    val creator: User,
+    val creator: UserData,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
     val isActive: Boolean,

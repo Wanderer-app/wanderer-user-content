@@ -1,6 +1,8 @@
 package ge.wanderer.persistence.inMemory.repository
 
-import ge.wanderer.common.listing.ListingParams
+import ge.wanderer.common.constants.TRANSIENT_ID
+import ge.wanderer.common.enums.PinType
+import ge.wanderer.common.enums.PinType.*
 import ge.wanderer.common.map.LatLng
 import ge.wanderer.common.now
 import ge.wanderer.core.data.file.AttachedFile
@@ -9,13 +11,12 @@ import ge.wanderer.core.model.comment.Comment
 import ge.wanderer.core.model.comment.IComment
 import ge.wanderer.core.model.content.status.Active
 import ge.wanderer.core.model.map.IPin
-import ge.wanderer.core.model.map.MarkerType
-import ge.wanderer.core.model.map.MarkerType.*
 import ge.wanderer.core.model.map.Pin
-import ge.wanderer.core.model.map.RouteElementContent
-import ge.wanderer.core.repository.CommentRepository
-import ge.wanderer.core.repository.PinRepository
-import ge.wanderer.core.repository.TRANSIENT_ID
+import ge.wanderer.core.model.map.PinContent
+import ge.wanderer.persistence.inMemory.model.InMemoryPin
+import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.persistence.repository.CommentRepository
+import ge.wanderer.persistence.repository.PinRepository
 import org.joda.time.LocalDateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -48,15 +49,18 @@ class PinRepositoryImpl(
         text: String,
         attachedFile: AttachedFile?,
         location: LatLng,
-        type: MarkerType,
+        type: PinType,
         commentsData: Set<Pair<Long, String>>
     ): Pair<Long, IPin> {
         val id = currentId.getAndIncrement()
         val user = userService.findUserById(userId)
         val comments = commentsData.map { createComment(it.first, it.second, createDate) }.toMutableList()
-        val content = RouteElementContent(title, text, attachedFile)
+        val content = PinContent(title, text, attachedFile)
 
-        return Pair(id, Pin(id, user, createDate, location, routeCode, type, content, Active(createDate, user), comments))
+        return Pair(
+            id,
+            InMemoryPin(id, Pin(id, user, createDate, location, routeCode, type, content, Active(createDate, user), comments), commentRepository)
+        )
     }
 
     private fun createComment(userId: Long, text: String, createDate: LocalDateTime): IComment {
@@ -64,5 +68,7 @@ class PinRepositoryImpl(
         val comment =  Comment(TRANSIENT_ID, user, createDate, text, Active(createDate, user))
         return commentRepository.persist(comment)
     }
+
+    override fun makePersistent(model: IPin, id: Long): IPin = InMemoryPin(id, model, commentRepository)
 
 }

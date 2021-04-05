@@ -1,6 +1,6 @@
 package ge.wanderer.service.spring.impl
 
-import ge.wanderer.common.listing.ListingParams
+import ge.wanderer.common.enums.ReportReason
 import ge.wanderer.core.command.Command
 import ge.wanderer.core.command.comment.AddCommentCommand
 import ge.wanderer.core.command.content.ActivateContentCommand
@@ -12,13 +12,15 @@ import ge.wanderer.core.command.pin.UpdatePinCommand
 import ge.wanderer.core.command.pin.VoteForPinCommand
 import ge.wanderer.core.command.rating.RemoveVoteCommand
 import ge.wanderer.core.configuration.ReportingConfiguration
+import ge.wanderer.core.data.file.AttachedFile
 import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.map.IPin
+import ge.wanderer.core.model.map.PinContent
 import ge.wanderer.core.model.rating.VoteType
 import ge.wanderer.core.model.report.Report
-import ge.wanderer.core.model.report.ReportReason
-import ge.wanderer.core.repository.CommentRepository
-import ge.wanderer.core.repository.PinRepository
+import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.persistence.repository.CommentRepository
+import ge.wanderer.persistence.repository.PinRepository
 import ge.wanderer.service.protocol.data.CommentData
 import ge.wanderer.service.protocol.data.PinData
 import ge.wanderer.service.protocol.data.PinMapData
@@ -33,6 +35,7 @@ import ge.wanderer.service.spring.data.data
 import ge.wanderer.service.spring.data.mapData
 import ge.wanderer.service.spring.data.noDataResponse
 import ge.wanderer.service.spring.data.ratingResponse
+import ge.wanderer.service.spring.model.NoComment
 import ge.wanderer.service.spring.model.NoPin
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -49,7 +52,8 @@ class PinServiceImpl(
 
     override fun createPin(request: CreatePinRequest): ServiceResponse<PinData> {
         val user = userService.findUserById(request.userId)
-        val command = CreatePinCommand(request.onDate, user, request.type, request.content, request.location, request.routeCode)
+        val content = PinContent(request.title, request.text, request.attachedFile?.let { AttachedFile() }?:let { null })
+        val command = CreatePinCommand(request.onDate, user, request.type, content, request.location, request.routeCode)
 
         return response(
             commandProvider.decoratePersistentCommand(command, NoPin(), pinRepository)
@@ -79,7 +83,7 @@ class PinServiceImpl(
     override fun updatePin(request: UpdatePinRequest): ServiceResponse<PinData> {
         val user = userService.findUserById(request.updaterId)
         val pin = pinRepository.findById(request.pinId)
-        val command = UpdatePinCommand(pin, request.newContent, user)
+        val command = UpdatePinCommand(pin, PinContent(request.newTitle, request.newText, request.newFile?.let { AttachedFile() }?:let { null }), user)
 
         return response(
             commandProvider.decorateCommand(command, pin)
@@ -146,8 +150,8 @@ class PinServiceImpl(
         val user = userService.findUserById(request.commenterId)
         val command = AddCommentCommand(request.commentContent, user, request.date, pin, userService)
 
-        val result = commandProvider.decorateCommand(command, pin).execute()
-        return ServiceResponse(result.isSuccessful, result.message, result.returnedModel.comments().last().data())
+        val result = commandProvider.decorateCommand(command, NoComment()).execute()
+        return ServiceResponse(result.isSuccessful, result.message, result.returnedModel.data())
     }
 
     override fun listComments(contentId: Long, listingParams: ListingParams): ServiceListingResponse<CommentData> {

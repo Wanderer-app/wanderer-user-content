@@ -14,7 +14,8 @@ class UpdateCommentCommand(
 ): Command<IComment> {
     override fun execute(): CommandExecutionResult<IComment> =
         if (comment.creator() == updater) {
-            success("Comment updated", comment.update(data))
+            comment.update(data)
+            success("Comment updated", comment)
         } else {
             throw IllegalStateException("You can't update this comment")
         }

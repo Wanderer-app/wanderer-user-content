@@ -1,6 +1,6 @@
 package ge.wanderer.persistence.inMemory.repository
 
-import ge.wanderer.common.listing.ListingParams
+import ge.wanderer.common.constants.TRANSIENT_ID
 import ge.wanderer.common.now
 import ge.wanderer.core.data.file.AttachedFile
 import ge.wanderer.core.integration.user.UserService
@@ -9,9 +9,9 @@ import ge.wanderer.core.model.comment.IComment
 import ge.wanderer.core.model.content.status.Active
 import ge.wanderer.core.model.discussion.post.IPost
 import ge.wanderer.core.model.discussion.post.Post
-import ge.wanderer.core.repository.CommentRepository
-import ge.wanderer.core.repository.PostRepository
-import ge.wanderer.core.repository.TRANSIENT_ID
+import ge.wanderer.persistence.inMemory.model.InMemoryPost
+import ge.wanderer.persistence.repository.CommentRepository
+import ge.wanderer.persistence.repository.PostRepository
 import org.joda.time.LocalDateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -47,7 +47,10 @@ class PostRepositoryImpl(
         val user = userService.findUserById(userId)
         val comments = commentsData.map { createComment(it.first, it.second, createDate) }.toMutableList()
 
-        return Pair(id, Post(id, user, createDate, text, routeCode, attachedFiles, Active(createDate, user), comments))
+        return Pair(
+            id,
+            InMemoryPost(id, Post(id, user, createDate, text, routeCode, attachedFiles, Active(createDate, user), comments), commentRepository)
+        )
     }
 
     private fun createComment(userId: Long, text: String, createDate: LocalDateTime): IComment {
@@ -55,5 +58,8 @@ class PostRepositoryImpl(
         val comment =  Comment(TRANSIENT_ID, user, createDate, text, Active(createDate, user), mutableListOf(), mutableListOf(), mutableSetOf())
         return commentRepository.persist(comment)
     }
+
+    override fun makePersistent(model: IPost, id: Long): IPost
+            = InMemoryPost(id, model, commentRepository)
 
 }

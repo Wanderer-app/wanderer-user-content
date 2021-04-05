@@ -1,8 +1,8 @@
 package ge.wanderer.core.model.report
 
+import ge.wanderer.common.enums.ReportReason
 import ge.wanderer.core.integration.user.User
 import org.joda.time.LocalDateTime
-
 
 data class Report(
     val id: Long,

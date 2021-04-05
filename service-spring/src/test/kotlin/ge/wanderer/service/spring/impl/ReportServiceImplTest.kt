@@ -1,11 +1,11 @@
 package ge.wanderer.service.spring.impl
 
-import ge.wanderer.common.listing.ListingParams
+import ge.wanderer.common.enums.ReportReason.INAPPROPRIATE_CONTENT
+import ge.wanderer.common.enums.ReportReason.OFFENSIVE_CONTENT
 import ge.wanderer.common.now
 import ge.wanderer.core.model.report.Report
-import ge.wanderer.core.model.report.ReportReason.INAPPROPRIATE_CONTENT
-import ge.wanderer.core.model.report.ReportReason.OFFENSIVE_CONTENT
-import ge.wanderer.core.repository.ReportRepository
+import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.persistence.repository.ReportRepository
 import ge.wanderer.service.spring.test_support.jambura
 import ge.wanderer.service.spring.test_support.jangula
 import ge.wanderer.service.spring.test_support.patata

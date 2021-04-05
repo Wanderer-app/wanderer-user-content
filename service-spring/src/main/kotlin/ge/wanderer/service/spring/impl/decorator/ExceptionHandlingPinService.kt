@@ -1,7 +1,7 @@
 package ge.wanderer.service.spring.impl.decorator
 
-import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.core.model.report.Report
+import ge.wanderer.persistence.listing.ListingParams
 import ge.wanderer.service.protocol.data.CommentData
 import ge.wanderer.service.protocol.data.PinData
 import ge.wanderer.service.protocol.data.PinMapData

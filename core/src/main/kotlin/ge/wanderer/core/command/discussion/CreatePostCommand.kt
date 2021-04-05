@@ -1,5 +1,6 @@
 package ge.wanderer.core.command.discussion
 
+import ge.wanderer.common.constants.TRANSIENT_ID
 import ge.wanderer.core.command.Command
 import ge.wanderer.core.command.CommandExecutionResult
 import ge.wanderer.core.command.success
@@ -8,7 +9,6 @@ import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.content.status.Active
 import ge.wanderer.core.model.discussion.post.IPost
 import ge.wanderer.core.model.discussion.post.Post
-import ge.wanderer.core.repository.TRANSIENT_ID
 import org.joda.time.LocalDateTime
 
 class CreatePostCommand(

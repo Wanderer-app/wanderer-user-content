@@ -1,10 +1,10 @@
 package ge.wanderer.core.model.map
 
+import ge.wanderer.common.enums.ReportReason.*
 import ge.wanderer.common.map.LatLng
 import ge.wanderer.common.now
 import ge.wanderer.core.*
 import ge.wanderer.core.model.report.Report
-import ge.wanderer.core.model.report.ReportReason.*
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -72,12 +72,12 @@ class  PinTest {
     fun canBeUpdated() {
         val pin = createTipPin(1L, mockk(), now(), LatLng(1f, 1f), "1234", "Rest here")
 
-        val newContent = RouteElementContent("Resting place", "Rest here before going further", mockk())
-        val updated = pin.update(newContent)
+        val newContent = PinContent("Resting place", "Rest here before going further", mockk())
+        pin.update(newContent)
 
-        assertEquals("Resting place", updated.content().title)
-        assertEquals("Rest here before going further", updated.content().text)
-        assertNotNull(updated.content().attachedFile)
+        assertEquals("Resting place", pin.content().title)
+        assertEquals("Rest here before going further", pin.content().text)
+        assertNotNull(pin.content().attachedFile)
     }
 
     @Test

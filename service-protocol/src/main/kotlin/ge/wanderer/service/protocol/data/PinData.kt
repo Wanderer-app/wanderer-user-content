@@ -1,14 +1,12 @@
 package ge.wanderer.service.protocol.data
 
+import ge.wanderer.common.enums.PinType
 import ge.wanderer.common.map.LatLng
-import ge.wanderer.core.integration.user.User
-import ge.wanderer.core.model.map.MarkerType
-import ge.wanderer.core.model.map.RouteElementContent
 import org.joda.time.LocalDateTime
 
 data class PinData (
     val id: Long,
-    val creator: User,
+    val creator: UserData,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
     val isActive: Boolean,
@@ -18,15 +16,18 @@ data class PinData (
     val commentsNumber: Int,
     val commentsPreview: List<CommentData>,
     val routeCode: String,
-    val content: RouteElementContent,
-    val type: MarkerType
+    val title: String,
+    val text: String,
+    val attachedFile: FileData?,
+    val type: PinType,
+    val location: LatLng
 )
 
 data class PinMapData(
     val id: Long,
     val routeCode: String,
     val location: LatLng,
-    val type: MarkerType,
+    val type: PinType,
     val createdAt: LocalDateTime,
     val title: String,
     val rating: Int

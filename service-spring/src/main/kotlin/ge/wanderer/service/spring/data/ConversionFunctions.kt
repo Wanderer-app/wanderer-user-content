@@ -1,24 +1,23 @@
 package ge.wanderer.service.spring.data
 
+import ge.wanderer.core.data.file.AttachedFile
+import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.comment.IComment
 import ge.wanderer.core.model.discussion.DiscussionElement
 import ge.wanderer.core.model.map.IPin
-import ge.wanderer.service.protocol.data.CommentData
-import ge.wanderer.service.protocol.data.DiscussionElementData
-import ge.wanderer.service.protocol.data.PinData
-import ge.wanderer.service.protocol.data.PinMapData
+import ge.wanderer.service.protocol.data.*
 
 fun IComment.data(
     repliesPreview: List<CommentData> = listOf()
 ): CommentData =
-    CommentData(id(), creator(), createdAt(), statusUpdatedAt(), text(), rating(), isActive(), isRemoved(), comments().size, repliesPreview)
+    CommentData(id(), creator().data(), createdAt(), statusUpdatedAt(), text(), rating(), isActive(), isRemoved(), comments().size, repliesPreview)
 
 fun DiscussionElement.data(
     commentsPreview: List<CommentData> = listOf()
 ): DiscussionElementData =
     DiscussionElementData(
         id(),
-        creator(),
+        creator().data(),
         createdAt(),
         statusUpdatedAt(),
         isActive(),
@@ -33,8 +32,11 @@ fun DiscussionElement.data(
     )
 
 fun IPin.data(commentsPreview: List<CommentData> = listOf()): PinData =
-    PinData(id(), creator(), createdAt(), statusUpdatedAt(),
+    PinData(id(), creator().data(), createdAt(), statusUpdatedAt(),
         isActive(), isRemoved(), isRelevant(), ratingData(),
-        comments().size, commentsPreview, routeCode(), content(), type())
+        comments().size, commentsPreview, routeCode(), content().title, content().text, content().attachedFile?.data() ?:let { null }, type(), location())
 
 fun IPin.mapData(): PinMapData = PinMapData(id(), routeCode(), location(), type(), createdAt(), content().title, rating())
+
+fun User.data(): UserData = UserData(id, "$firstName $lastName", isAdmin)
+fun AttachedFile.data(): FileData = FileData()

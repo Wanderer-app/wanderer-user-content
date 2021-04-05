@@ -1,11 +1,11 @@
 package ge.wanderer.core.command.content
 
+import ge.wanderer.common.enums.ReportReason.INAPPROPRIATE_CONTENT
+import ge.wanderer.common.enums.ReportReason.IRRELEVANT
 import ge.wanderer.common.now
 import ge.wanderer.core.*
 import ge.wanderer.core.configuration.ReportingConfiguration
 import ge.wanderer.core.integration.user.UserService
-import ge.wanderer.core.model.report.ReportReason.INAPPROPRIATE_CONTENT
-import ge.wanderer.core.model.report.ReportReason.IRRELEVANT
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

@@ -1,11 +1,11 @@
 package ge.wanderer.core.command.pin
 
+import ge.wanderer.common.enums.PinType
 import ge.wanderer.common.enums.UserContentType
 import ge.wanderer.common.map.LatLng
 import ge.wanderer.common.now
 import ge.wanderer.core.jambura
-import ge.wanderer.core.model.map.MarkerType
-import ge.wanderer.core.model.map.RouteElementContent
+import ge.wanderer.core.model.map.PinContent
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -19,8 +19,8 @@ class CreatePinCommandTest {
         val result = CreatePinCommand(
             now(),
             jambura(),
-            MarkerType.WARNING,
-            RouteElementContent("A title", "Some text", mockk()),
+            PinType.WARNING,
+            PinContent("A title", "Some text", mockk()),
             LatLng(1.25F, 5.21F),
             "123"
         ).execute()

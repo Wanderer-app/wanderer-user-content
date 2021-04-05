@@ -1,6 +1,5 @@
 package ge.wanderer.service.spring.impl
 
-import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.core.command.Command
 import ge.wanderer.core.command.comment.AddCommentCommand
 import ge.wanderer.core.command.comment.UpdateCommentCommand
@@ -15,7 +14,8 @@ import ge.wanderer.core.model.UpdateCommentData
 import ge.wanderer.core.model.comment.IComment
 import ge.wanderer.core.model.rating.VoteType
 import ge.wanderer.core.model.report.Report
-import ge.wanderer.core.repository.CommentRepository
+import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.persistence.repository.CommentRepository
 import ge.wanderer.service.protocol.data.CommentData
 import ge.wanderer.service.protocol.data.RatingData
 import ge.wanderer.service.protocol.interfaces.CommentService

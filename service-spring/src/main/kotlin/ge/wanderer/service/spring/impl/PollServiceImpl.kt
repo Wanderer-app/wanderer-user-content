@@ -1,19 +1,16 @@
 package ge.wanderer.service.spring.impl
 
-import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.core.command.Command
 import ge.wanderer.core.command.comment.AddCommentCommand
 import ge.wanderer.core.command.content.ActivateContentCommand
 import ge.wanderer.core.command.content.RemoveContentCommand
-import ge.wanderer.core.command.discussion.AddPollAnswerCommand
-import ge.wanderer.core.command.discussion.CreatePollCommand
-import ge.wanderer.core.command.discussion.SelectPollAnswerCommand
-import ge.wanderer.core.command.discussion.UpdateDiscussionElementCommand
+import ge.wanderer.core.command.discussion.*
 import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.UpdateDiscussionElementData
 import ge.wanderer.core.model.discussion.poll.IPoll
-import ge.wanderer.core.repository.CommentRepository
-import ge.wanderer.core.repository.PollRepository
+import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.persistence.repository.CommentRepository
+import ge.wanderer.persistence.repository.PollRepository
 import ge.wanderer.service.protocol.data.CommentData
 import ge.wanderer.service.protocol.data.DiscussionElementData
 import ge.wanderer.service.protocol.interfaces.PollService
@@ -23,6 +20,7 @@ import ge.wanderer.service.protocol.response.ServiceResponse
 import ge.wanderer.service.spring.CommentPreviewProvider
 import ge.wanderer.service.spring.command.CommandProvider
 import ge.wanderer.service.spring.data.data
+import ge.wanderer.service.spring.model.NoComment
 import ge.wanderer.service.spring.model.NoPoll
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -60,6 +58,16 @@ class PollServiceImpl(
         val user = userService.findUserById(request.userId)
         val poll = pollRepository.findById(request.pollId)
         val command = AddPollAnswerCommand(poll, request.answerText, request.date, user)
+
+        return response(
+            commandProvider.decorateCommand(command, poll)
+        )
+    }
+
+    override fun removeAnswer(request: RemovePollAnswerRequest): ServiceResponse<DiscussionElementData> {
+        val user = userService.findUserById(request.userId)
+        val poll = pollRepository.findById(request.pollId)
+        val command = RemovePollAnswerCommand(poll, user, request.answerId, request.date, userService)
 
         return response(
             commandProvider.decorateCommand(command, poll)
@@ -105,8 +113,8 @@ class PollServiceImpl(
         val user = userService.findUserById(request.commenterId)
         val command = AddCommentCommand(request.commentContent, user, request.date, poll, userService)
 
-        val result = commandProvider.decorateCommand(command, poll).execute()
-        return ServiceResponse(result.isSuccessful, result.message, result.returnedModel.comments().last().data())
+        val result = commandProvider.decorateCommand(command, NoComment()).execute()
+        return ServiceResponse(result.isSuccessful, result.message, result.returnedModel.data())
     }
 
     override fun listComments(contentId: Long, listingParams: ListingParams): ServiceListingResponse<CommentData> {
