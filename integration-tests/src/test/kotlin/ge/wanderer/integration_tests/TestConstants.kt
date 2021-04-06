@@ -2,6 +2,7 @@ package ge.wanderer.integration_tests
 
 import ge.wanderer.common.listing.ListingParams
 import org.springframework.http.MediaType
+import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.math.BigDecimal
@@ -20,8 +21,14 @@ data class AnswerInfo (
     val percentage: BigDecimal
 )
 
-fun postWithJson(url: String, content: String): MockHttpServletRequestBuilder =
-    MockMvcRequestBuilders.post(url)
-        .content(content)
-        .contentType(MediaType.APPLICATION_JSON)
-        .accept(MediaType.APPLICATION_JSON)
+fun MockMvc.post(url: String, jsonBody: String) =
+    this.perform(
+        MockMvcRequestBuilders.post(url)
+            .content(jsonBody)
+            .contentType(MediaType.APPLICATION_JSON)
+            .accept(MediaType.APPLICATION_JSON)
+    )
+
+fun MockMvc.get(url: String) =
+    this.perform(MockMvcRequestBuilders.get(url)
+        .accept(MediaType.APPLICATION_JSON))
