@@ -7,7 +7,7 @@ import ge.wanderer.common.map.LatLng
 import ge.wanderer.common.now
 import ge.wanderer.core.configuration.ReportingConfiguration
 import ge.wanderer.core.model.report.Report
-import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.persistence.repository.CommentRepository
 import ge.wanderer.service.protocol.request.*
 import ge.wanderer.service.spring.command.CommandProvider

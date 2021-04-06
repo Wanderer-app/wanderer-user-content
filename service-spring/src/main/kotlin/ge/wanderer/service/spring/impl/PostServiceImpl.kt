@@ -16,12 +16,13 @@ import ge.wanderer.core.model.UpdateDiscussionElementData
 import ge.wanderer.core.model.discussion.post.IPost
 import ge.wanderer.core.model.rating.VoteType
 import ge.wanderer.core.model.report.Report
-import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.persistence.repository.CommentRepository
 import ge.wanderer.persistence.repository.PostRepository
 import ge.wanderer.service.protocol.data.CommentData
 import ge.wanderer.service.protocol.data.DiscussionElementData
 import ge.wanderer.service.protocol.data.RatingData
+import ge.wanderer.service.protocol.data.ReportData
 import ge.wanderer.service.protocol.interfaces.PostService
 import ge.wanderer.service.protocol.request.*
 import ge.wanderer.service.protocol.response.ServiceListingResponse
@@ -135,7 +136,7 @@ class PostServiceImpl(
         return ServiceListingResponse(true, "Comments Retrieved!", comments.size, listingParams.batchNumber, comments.map { it.data() })
     }
 
-    override fun report(request: ReportContentRequest): ServiceResponse<Report> {
+    override fun report(request: ReportContentRequest): ServiceResponse<ReportData> {
         val post = postRepository.findById(request.contentId)
         val user = userService.findUserById(request.userId)
 
@@ -145,10 +146,10 @@ class PostServiceImpl(
         return noDataResponse(commandResult.isSuccessful, commandResult.message)
     }
 
-    override fun listReportsForContent(contentId: Long): ServiceListingResponse<Report> {
+    override fun listReportsForContent(contentId: Long): ServiceListingResponse<ReportData> {
         val post = postRepository.findById(contentId)
         val reports = post.reports()
-        return ServiceListingResponse(true, "Reports Retrieved!", reports.size, 1, reports.toList())
+        return ServiceListingResponse(true, "Reports Retrieved!", reports.size, 1, reports.map { it.data() })
     }
 
     private fun IPost.dataWithCommentsPreview(): DiscussionElementData {

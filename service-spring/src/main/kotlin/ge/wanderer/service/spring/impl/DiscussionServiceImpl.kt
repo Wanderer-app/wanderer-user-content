@@ -1,6 +1,6 @@
 package ge.wanderer.service.spring.impl
 
-import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.persistence.repository.DiscussionRepository
 import ge.wanderer.service.protocol.data.DiscussionElementData
 import ge.wanderer.service.protocol.interfaces.DiscussionService

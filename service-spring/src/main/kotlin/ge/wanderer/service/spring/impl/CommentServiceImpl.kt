@@ -14,10 +14,11 @@ import ge.wanderer.core.model.UpdateCommentData
 import ge.wanderer.core.model.comment.IComment
 import ge.wanderer.core.model.rating.VoteType
 import ge.wanderer.core.model.report.Report
-import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.persistence.repository.CommentRepository
 import ge.wanderer.service.protocol.data.CommentData
 import ge.wanderer.service.protocol.data.RatingData
+import ge.wanderer.service.protocol.data.ReportData
 import ge.wanderer.service.protocol.interfaces.CommentService
 import ge.wanderer.service.protocol.request.AddCommentRequest
 import ge.wanderer.service.protocol.request.OperateOnContentRequest
@@ -123,7 +124,7 @@ class CommentServiceImpl(
         return ServiceListingResponse(true, "Replies Retrieved!", replies.size, listingParams.batchNumber, replies.map { it.data() })
     }
 
-    override fun report(request: ReportContentRequest): ServiceResponse<Report> {
+    override fun report(request: ReportContentRequest): ServiceResponse<ReportData> {
         val comment = commentRepository.findById(request.contentId)
         val user = userService.findUserById(request.userId)
 
@@ -133,10 +134,10 @@ class CommentServiceImpl(
         return noDataResponse(commandResult.isSuccessful, commandResult.message)
     }
 
-    override fun listReportsForContent(contentId: Long): ServiceListingResponse<Report> {
+    override fun listReportsForContent(contentId: Long): ServiceListingResponse<ReportData> {
         val comment = commentRepository.findById(contentId)
         val reports = comment.reports()
-        return ServiceListingResponse(true, "Reports Retrieved!", reports.size, 1, reports.toList())
+        return ServiceListingResponse(true, "Reports Retrieved!", reports.size, 1, reports.map { it.data() })
     }
 
     private fun response(command: Command<IComment>): ServiceResponse<CommentData> {

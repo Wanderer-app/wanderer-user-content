@@ -6,6 +6,7 @@ import ge.wanderer.common.enums.PinType
 import ge.wanderer.common.enums.ReportReason
 import ge.wanderer.common.map.LatLng
 import ge.wanderer.common.now
+import ge.wanderer.integration_tests.DEFAULT_LISTING_PARAMS
 import ge.wanderer.integration_tests.SpringServiceWithInMemoryPersistenceApp
 import ge.wanderer.service.protocol.data.FileData
 import ge.wanderer.service.protocol.interfaces.PinService

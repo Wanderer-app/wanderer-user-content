@@ -4,7 +4,7 @@ import ge.wanderer.common.dateTime
 import ge.wanderer.common.enums.ReportReason
 import ge.wanderer.common.now
 import ge.wanderer.core.model.report.Report
-import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.persistence.repository.CommentRepository
 import ge.wanderer.persistence.repository.PostRepository
 import ge.wanderer.service.protocol.request.*

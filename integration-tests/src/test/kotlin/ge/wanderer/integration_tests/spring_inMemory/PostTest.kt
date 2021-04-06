@@ -4,6 +4,7 @@ import ge.wanderer.common.constants.TRANSIENT_ID
 import ge.wanderer.common.dateTime
 import ge.wanderer.common.enums.ReportReason
 import ge.wanderer.common.now
+import ge.wanderer.integration_tests.DEFAULT_LISTING_PARAMS
 import ge.wanderer.integration_tests.SpringServiceWithInMemoryPersistenceApp
 import ge.wanderer.service.protocol.data.FileData
 import ge.wanderer.service.protocol.interfaces.PostService

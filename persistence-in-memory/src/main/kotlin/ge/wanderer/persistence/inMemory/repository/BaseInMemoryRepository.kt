@@ -1,6 +1,6 @@
 package ge.wanderer.persistence.inMemory.repository
 
-import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.persistence.repository.BaseRepository
 
 abstract class BaseInMemoryRepository<T>: BaseRepository<T> {

@@ -1,6 +1,6 @@
 package ge.wanderer.persistence.repository
 
-import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.common.listing.ListingParams
 
 interface BaseRepository<T> {
     fun findById(id: Long): T

@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/persistence-in-memory" />
             <option value="$PROJECT_DIR$/service-protocol" />
             <option value="$PROJECT_DIR$/service-spring" />
+            <option value="$PROJECT_DIR$/web-api-spring" />
           </set>
         </option>
       </GradleProjectSettings>

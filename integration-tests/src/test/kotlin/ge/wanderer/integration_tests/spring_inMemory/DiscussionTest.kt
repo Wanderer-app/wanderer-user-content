@@ -2,6 +2,7 @@ package ge.wanderer.integration_tests.spring_inMemory
 
 import ge.wanderer.common.enums.UserContentType.POLL
 import ge.wanderer.common.enums.UserContentType.POST
+import ge.wanderer.integration_tests.DEFAULT_LISTING_PARAMS
 import ge.wanderer.integration_tests.SpringServiceWithInMemoryPersistenceApp
 import ge.wanderer.service.protocol.interfaces.DiscussionService
 import org.junit.jupiter.api.Test

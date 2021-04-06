@@ -1,7 +1,7 @@
 package ge.wanderer.persistence.repository
 
 import ge.wanderer.core.model.map.IPin
-import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.common.listing.ListingParams
 
 interface PinRepository: BaseRepository<IPin> {
 

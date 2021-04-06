@@ -6,4 +6,5 @@ include 'service-spring'
 include 'persistence-in-memory'
 include 'persistence'
 include 'integration-tests'
+include 'web-api-spring'
 

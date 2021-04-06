@@ -18,13 +18,10 @@ import ge.wanderer.core.model.map.IPin
 import ge.wanderer.core.model.map.PinContent
 import ge.wanderer.core.model.rating.VoteType
 import ge.wanderer.core.model.report.Report
-import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.persistence.repository.CommentRepository
 import ge.wanderer.persistence.repository.PinRepository
-import ge.wanderer.service.protocol.data.CommentData
-import ge.wanderer.service.protocol.data.PinData
-import ge.wanderer.service.protocol.data.PinMapData
-import ge.wanderer.service.protocol.data.RatingData
+import ge.wanderer.service.protocol.data.*
 import ge.wanderer.service.protocol.interfaces.PinService
 import ge.wanderer.service.protocol.request.*
 import ge.wanderer.service.protocol.response.ServiceListingResponse
@@ -162,7 +159,7 @@ class PinServiceImpl(
         return ServiceListingResponse(true, "Comments fetched!", commentsData.size, listingParams.batchNumber, commentsData)
     }
 
-    override fun report(request: ReportContentRequest): ServiceResponse<Report> {
+    override fun report(request: ReportContentRequest): ServiceResponse<ReportData> {
         check(request.reportReason != ReportReason.IRRELEVANT) { "Use reportIrrelevant() method for reporting a pin as irrelevant" }
 
         val pin = pinRepository.findById(request.contentId)
@@ -174,10 +171,10 @@ class PinServiceImpl(
         return noDataResponse(commandResult.isSuccessful, commandResult.message)
     }
 
-    override fun listReportsForContent(contentId: Long): ServiceListingResponse<Report> {
+    override fun listReportsForContent(contentId: Long): ServiceListingResponse<ReportData> {
         val pin = pinRepository.findById(contentId)
         val reports = pin.reports()
-        return ServiceListingResponse(true, "Reports Retrieved!", reports.size, 1, reports.toList())
+        return ServiceListingResponse(true, "Reports Retrieved!", reports.size, 1, reports.map { it.data() })
     }
 
     private fun IPin.dataWithCommentsPreview(): PinData {

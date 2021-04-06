@@ -1,11 +1,8 @@
 package ge.wanderer.service.spring.impl.decorator
 
 import ge.wanderer.core.model.report.Report
-import ge.wanderer.persistence.listing.ListingParams
-import ge.wanderer.service.protocol.data.CommentData
-import ge.wanderer.service.protocol.data.PinData
-import ge.wanderer.service.protocol.data.PinMapData
-import ge.wanderer.service.protocol.data.RatingData
+import ge.wanderer.common.listing.ListingParams
+import ge.wanderer.service.protocol.data.*
 import ge.wanderer.service.protocol.interfaces.PinService
 import ge.wanderer.service.protocol.request.*
 import ge.wanderer.service.protocol.response.ServiceListingResponse
@@ -58,9 +55,9 @@ class ExceptionHandlingPinService(
     override fun listComments(contentId: Long, listingParams: ListingParams): ServiceListingResponse<CommentData> =
         handleListing { pinServiceImpl.listComments(contentId, listingParams) }
 
-    override fun report(request: ReportContentRequest): ServiceResponse<Report> =
+    override fun report(request: ReportContentRequest): ServiceResponse<ReportData> =
         handle { pinServiceImpl.report(request) }
 
-    override fun listReportsForContent(contentId: Long): ServiceListingResponse<Report> =
+    override fun listReportsForContent(contentId: Long): ServiceListingResponse<ReportData> =
         handleListing { pinServiceImpl.listReportsForContent(contentId) }
 }

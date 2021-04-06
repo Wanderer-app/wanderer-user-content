@@ -6,7 +6,7 @@ import ge.wanderer.common.enums.UserContentType
 import ge.wanderer.common.now
 import ge.wanderer.core.model.content.status.Active
 import ge.wanderer.core.model.discussion.poll.PollAnswer
-import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.persistence.repository.CommentRepository
 import ge.wanderer.persistence.repository.PollRepository
 import ge.wanderer.service.protocol.request.*

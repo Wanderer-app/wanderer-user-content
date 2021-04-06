@@ -1,10 +1,11 @@
 package ge.wanderer.service.spring.impl.decorator
 
 import ge.wanderer.core.model.report.Report
-import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.service.protocol.data.CommentData
 import ge.wanderer.service.protocol.data.DiscussionElementData
 import ge.wanderer.service.protocol.data.RatingData
+import ge.wanderer.service.protocol.data.ReportData
 import ge.wanderer.service.protocol.interfaces.PostService
 import ge.wanderer.service.protocol.request.*
 import ge.wanderer.service.protocol.response.ServiceListingResponse
@@ -49,9 +50,9 @@ class ExceptionHandlingPostService(
     override fun listComments(contentId: Long, listingParams: ListingParams): ServiceListingResponse<CommentData> =
         handleListing { postServiceImpl.listComments(contentId, listingParams) }
 
-    override fun report(request: ReportContentRequest): ServiceResponse<Report> =
+    override fun report(request: ReportContentRequest): ServiceResponse<ReportData> =
         handle { postServiceImpl.report(request) }
 
-    override fun listReportsForContent(contentId: Long): ServiceListingResponse<Report> =
+    override fun listReportsForContent(contentId: Long): ServiceListingResponse<ReportData> =
         handleListing { postServiceImpl.listReportsForContent(contentId) }
 }

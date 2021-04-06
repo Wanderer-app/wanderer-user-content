@@ -2,6 +2,9 @@ package ge.wanderer.integration_tests.spring_inMemory
 
 import ge.wanderer.common.*
 import ge.wanderer.common.constants.TRANSIENT_ID
+import ge.wanderer.integration_tests.AnswerInfo
+import ge.wanderer.integration_tests.DEFAULT_LISTING_PARAMS
+import ge.wanderer.integration_tests.PollData
 import ge.wanderer.integration_tests.SpringServiceWithInMemoryPersistenceApp
 import ge.wanderer.service.protocol.data.DiscussionElementData
 import ge.wanderer.service.protocol.interfaces.PollService

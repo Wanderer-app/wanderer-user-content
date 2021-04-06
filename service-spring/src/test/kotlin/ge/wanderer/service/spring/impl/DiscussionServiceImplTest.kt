@@ -2,7 +2,7 @@ package ge.wanderer.service.spring.impl
 
 import ge.wanderer.common.enums.UserContentType
 import ge.wanderer.common.now
-import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.persistence.repository.DiscussionRepository
 import ge.wanderer.service.spring.test_support.*
 import io.mockk.every

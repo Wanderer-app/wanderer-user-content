@@ -1,4 +1,4 @@
-package ge.wanderer.persistence.listing
+package ge.wanderer.common.listing
 
 enum class SortingDirection {
     ASCENDING, DESCENDING

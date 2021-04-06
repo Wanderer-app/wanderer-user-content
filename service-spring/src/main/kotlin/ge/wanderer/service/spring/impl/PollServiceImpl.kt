@@ -8,7 +8,7 @@ import ge.wanderer.core.command.discussion.*
 import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.UpdateDiscussionElementData
 import ge.wanderer.core.model.discussion.poll.IPoll
-import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.persistence.repository.CommentRepository
 import ge.wanderer.persistence.repository.PollRepository
 import ge.wanderer.service.protocol.data.CommentData

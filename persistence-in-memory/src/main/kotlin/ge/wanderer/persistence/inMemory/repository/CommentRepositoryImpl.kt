@@ -3,7 +3,7 @@ package ge.wanderer.persistence.inMemory.repository
 import ge.wanderer.core.model.comment.IComment
 import ge.wanderer.core.model.content.CommentableContent
 import ge.wanderer.persistence.inMemory.model.InMemoryComment
-import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.persistence.repository.CommentRepository
 import org.springframework.stereotype.Component
 import java.util.concurrent.atomic.AtomicLong

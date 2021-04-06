@@ -14,7 +14,7 @@ import ge.wanderer.core.model.map.IPin
 import ge.wanderer.core.model.map.Pin
 import ge.wanderer.core.model.map.PinContent
 import ge.wanderer.persistence.inMemory.model.InMemoryPin
-import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.persistence.repository.CommentRepository
 import ge.wanderer.persistence.repository.PinRepository
 import org.joda.time.LocalDateTime

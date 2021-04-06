@@ -5,6 +5,7 @@ import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.comment.IComment
 import ge.wanderer.core.model.discussion.DiscussionElement
 import ge.wanderer.core.model.map.IPin
+import ge.wanderer.core.model.report.Report
 import ge.wanderer.service.protocol.data.*
 
 fun IComment.data(
@@ -40,3 +41,5 @@ fun IPin.mapData(): PinMapData = PinMapData(id(), routeCode(), location(), type(
 
 fun User.data(): UserData = UserData(id, "$firstName $lastName", isAdmin)
 fun AttachedFile.data(): FileData = FileData()
+
+fun Report.data() = ReportData(id, creator, reportTime, reason)

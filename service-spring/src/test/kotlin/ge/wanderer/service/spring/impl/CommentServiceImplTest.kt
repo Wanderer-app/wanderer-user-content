@@ -4,7 +4,7 @@ import ge.wanderer.common.dateTime
 import ge.wanderer.common.enums.ReportReason
 import ge.wanderer.common.now
 import ge.wanderer.core.configuration.ReportingConfiguration
-import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.service.protocol.request.AddCommentRequest
 import ge.wanderer.service.protocol.request.OperateOnContentRequest
 import ge.wanderer.service.protocol.request.ReportContentRequest

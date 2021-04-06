@@ -1,7 +1,7 @@
 package ge.wanderer.persistence.inMemory.repository
 
 import ge.wanderer.core.model.discussion.DiscussionElement
-import ge.wanderer.persistence.listing.ListingParams
+import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.persistence.repository.DiscussionRepository
 import ge.wanderer.persistence.repository.PollRepository
 import ge.wanderer.persistence.repository.PostRepository
