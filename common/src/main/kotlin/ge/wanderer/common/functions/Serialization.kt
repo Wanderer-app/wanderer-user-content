@@ -1,11 +1,13 @@
-package ge.wanderer.common
+package ge.wanderer.common.functions
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.readValue
 
-fun <T> toJson(obj: T) = ObjectMapper().writeValueAsString(obj)
+fun <T> toJson(obj: T): String = ObjectMapper().registerModule(JodaModule()).writeValueAsString(obj)
 
 inline fun <reified T> fromJson(jsonString: String): T =
     ObjectMapper()
-        .registerModule(KotlinModule())
-        .readValue(jsonString, T::class.java)
+        .registerModules(KotlinModule(), JodaModule())
+        .readValue(jsonString)

@@ -1,12 +1,15 @@
 package ge.wanderer.integration_tests.web_spring_inMemory
 
-import ge.wanderer.common.fromJson
-import ge.wanderer.common.toJson
+import ge.wanderer.common.functions.fromJson
+import ge.wanderer.common.functions.toJson
+import ge.wanderer.common.now
 import ge.wanderer.integration_tests.DEFAULT_LISTING_PARAMS
 import ge.wanderer.integration_tests.SpringWebAppWithInMemoryPersistence
 import ge.wanderer.integration_tests.get
 import ge.wanderer.integration_tests.post
 import ge.wanderer.service.protocol.data.PinData
+import ge.wanderer.service.protocol.data.PinMapData
+import ge.wanderer.service.protocol.request.OperateOnContentRequest
 import ge.wanderer.service.protocol.response.ServiceListingResponse
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -57,9 +60,36 @@ class PinWebTest(
             .andReturn()
             .response.contentAsString
 
-        val responseData: List<PinData> = fromJson<ServiceListingResponse<PinData>>(responseString).data
+        val responseData = fromJson<ServiceListingResponse<PinMapData>>(responseString).data
         assertTrue(responseData.isNotEmpty())
         assertTrue(responseData.all { it.routeCode == "123" })
+    }
+
+    @Test
+    fun reportsAsIrrelevant() {
+        val pinId = 1L
+
+        mockMvc.post(controllerPath + "report-irrelevant", toJson(OperateOnContentRequest(pinId, 2, now())))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.isSuccessful").value(true))
+            .andExpect(jsonPath("$.message").value("Content Reported!"))
+            .andExpect(jsonPath("$.data.id").value(pinId))
+            .andExpect(jsonPath("$.data.isRelevant").value(true))
+
+        mockMvc.post(controllerPath + "report-irrelevant", toJson(OperateOnContentRequest(pinId, 3, now())))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.data.isRelevant").value(true))
+
+        mockMvc.post(controllerPath + "report-irrelevant", toJson(OperateOnContentRequest(pinId, 3, now())))
+            .andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.message").value("You already reported this content"))
+
+        mockMvc.post(controllerPath + "report-irrelevant", toJson(OperateOnContentRequest(pinId, 4, now())))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.data.isRelevant").value(false))
+            .andExpect(jsonPath("$.data.isActive").value(false))
+            .andExpect(jsonPath("$.data.id").value(pinId))
+
     }
 
 }
