@@ -1,0 +1,1 @@
+Api Documentation: https://wanderer-app.github.io/public-resources/docs/user-content/

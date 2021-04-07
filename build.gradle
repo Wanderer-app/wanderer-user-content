@@ -17,13 +17,11 @@ repositories {
     mavenCentral()
 }
 
-//String[] environmentModules = project.properties["sudoku.project.run.environment"].split(',')
-
 dependencies {
 
-//    environmentModules.each {
-//        implementation project(it)
-//    }
+    implementation project(project.properties["app.service.layer"])
+    implementation project(project.properties["app.persistence.layer"])
+    implementation project(project.properties["app.presentation.layer"])
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
@@ -31,6 +29,8 @@ dependencies {
     implementation 'org.springframework:spring-context:5.2.8.RELEASE'
     implementation 'org.springframework.boot:spring-boot-starter:2.3.4.RELEASE'
     implementation "org.springframework.boot:spring-boot-starter-web:2.3.4.RELEASE"
+
+    implementation 'org.springdoc:springdoc-openapi-ui:1.5.6'
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
