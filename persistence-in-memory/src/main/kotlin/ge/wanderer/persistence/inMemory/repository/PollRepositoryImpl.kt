@@ -52,7 +52,10 @@ class PollRepositoryImpl(
             .map { PollAnswer(pollAnswerCurrentId.getAndIncrement(), it, createDate, user, Active(createDate, user)) }
             .toMutableSet()
 
-        return Pair(id, Poll(id, user, createDate, Active(createDate, user), routeCode, question, answers, comments))
+        return Pair(
+            id,
+            InMemoryPoll(id, Poll(id, user, createDate, Active(createDate, user), routeCode, question, answers, comments), this, commentRepository)
+        )
     }
 
     private fun createComment(userId: Long, text: String, createDate: LocalDateTime): IComment {
