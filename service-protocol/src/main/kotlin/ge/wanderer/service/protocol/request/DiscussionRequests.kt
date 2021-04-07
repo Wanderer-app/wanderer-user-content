@@ -29,7 +29,7 @@ data class UpdatePollRequest (
 data class UpdatePostRequest (
     val postId: Long,
     val newText: String,
-    val files: List<AttachedFile>,
+    val files: List<FileData>,
     val updaterId: Long
 )
 

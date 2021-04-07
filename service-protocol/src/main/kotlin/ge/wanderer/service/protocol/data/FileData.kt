@@ -1,3 +1,5 @@
 package ge.wanderer.service.protocol.data
 
-class FileData
+data class FileData(
+    val fileId: Long = 10L
+)

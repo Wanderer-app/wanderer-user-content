@@ -59,7 +59,7 @@ class PostServiceImpl(
     override fun updatePost(request: UpdatePostRequest): ServiceResponse<DiscussionElementData> {
         val post = postRepository.findById(request.postId)
         val user = userService.findUserById(request.updaterId)
-        val updateData = UpdateDiscussionElementData(request.newText, request.files)
+        val updateData = UpdateDiscussionElementData(request.newText, request.files.map { AttachedFile() })
         val command = UpdateDiscussionElementCommand(post, updateData, user)
 
         return response(
