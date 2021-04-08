@@ -31,6 +31,7 @@ import ge.wanderer.service.spring.command.CommandProvider
 import ge.wanderer.service.spring.data.data
 import ge.wanderer.service.spring.data.noDataResponse
 import ge.wanderer.service.spring.data.ratingResponse
+import ge.wanderer.service.spring.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -49,7 +50,7 @@ class CommentServiceImpl(
         val command = UpdateCommentCommand(comment, UpdateCommentData(request.text), user)
 
         return response(
-            commandProvider.decorateCommand(command, comment)
+            commandProvider.decorateCommand(command, comment, logger())
         )
     }
 
@@ -64,7 +65,7 @@ class CommentServiceImpl(
         val command = ActivateContentCommand(user, comment, request.date, userService)
 
         return response(
-            commandProvider.decorateCommand(command, comment)
+            commandProvider.decorateCommand(command, comment, logger())
         )
     }
 
@@ -74,7 +75,7 @@ class CommentServiceImpl(
         val command = RemoveContentCommand(user, comment, request.date, userService)
 
         return response(
-            commandProvider.decorateCommand(command, comment)
+            commandProvider.decorateCommand(command, comment, logger())
         )
     }
 
@@ -84,7 +85,7 @@ class CommentServiceImpl(
         val command = GiveOnePointCommand(VoteType.UP, user, request.date,comment, userService)
 
         return ratingResponse(
-            commandProvider.decorateCommand(command, comment)
+            commandProvider.decorateCommand(command, comment, logger())
         )
     }
 
@@ -94,7 +95,7 @@ class CommentServiceImpl(
         val command = GiveOnePointCommand(VoteType.DOWN, user, request.date, comment, userService)
 
         return ratingResponse(
-            commandProvider.decorateCommand(command, comment)
+            commandProvider.decorateCommand(command, comment, logger())
         )
     }
 
@@ -104,7 +105,7 @@ class CommentServiceImpl(
         val command = RemoveVoteCommand(user, request.date, comment)
 
         return ratingResponse(
-            commandProvider.decorateCommand(command, comment)
+            commandProvider.decorateCommand(command, comment, logger())
         )
     }
 
@@ -114,7 +115,7 @@ class CommentServiceImpl(
         val command = AddCommentCommand(request.commentContent, user, request.date, comment, userService)
 
         return response(
-            commandProvider.decorateCommand(command, comment)
+            commandProvider.decorateCommand(command, comment, logger())
         )
     }
 
@@ -128,8 +129,8 @@ class CommentServiceImpl(
         val comment = commentRepository.findById(request.contentId)
         val user = userService.findUserById(request.userId)
 
-        val commandResult = ReportContentCommand(user, request.date, request.reportReason, comment, userService, reportingConfiguration)
-            .execute()
+        val command = ReportContentCommand(user, request.date, request.reportReason, comment, userService, reportingConfiguration)
+        val commandResult = commandProvider.decorateCommand(command, comment, logger()).execute()
 
         return noDataResponse(commandResult.isSuccessful, commandResult.message)
     }

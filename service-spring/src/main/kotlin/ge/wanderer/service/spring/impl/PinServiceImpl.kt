@@ -32,6 +32,7 @@ import ge.wanderer.service.spring.data.data
 import ge.wanderer.service.spring.data.mapData
 import ge.wanderer.service.spring.data.noDataResponse
 import ge.wanderer.service.spring.data.ratingResponse
+import ge.wanderer.service.spring.logger
 import ge.wanderer.service.spring.model.NoComment
 import ge.wanderer.service.spring.model.NoPin
 import org.springframework.beans.factory.annotation.Autowired
@@ -53,7 +54,7 @@ class PinServiceImpl(
         val command = CreatePinCommand(request.onDate, user, request.type, content, request.location, request.routeCode)
 
         return response(
-            commandProvider.decoratePersistentCommand(command, NoPin(), pinRepository)
+            commandProvider.decoratePersistentCommand(command, NoPin(), pinRepository, logger())
         )
     }
 
@@ -73,7 +74,7 @@ class PinServiceImpl(
         val command = ReportIrrelevantPinCommand(user, request.date, pin, userService, reportingConfiguration)
 
         return response(
-            commandProvider.decorateCommand(command, pin)
+            commandProvider.decorateCommand(command, pin, logger())
         )
     }
 
@@ -83,7 +84,7 @@ class PinServiceImpl(
         val command = UpdatePinCommand(pin, PinContent(request.newTitle, request.newText, request.newFile?.let { AttachedFile() }?:let { null }), user)
 
         return response(
-            commandProvider.decorateCommand(command, pin)
+            commandProvider.decorateCommand(command, pin, logger())
         )
     }
 
@@ -98,7 +99,7 @@ class PinServiceImpl(
         val command = ActivateContentCommand(user, pin,  request.date, userService)
 
         return response(
-            commandProvider.decorateCommand(command, pin)
+            commandProvider.decorateCommand(command, pin, logger())
         )
     }
 
@@ -108,7 +109,7 @@ class PinServiceImpl(
         val command = RemoveContentCommand(user, pin, request.date, userService)
 
         return response(
-            commandProvider.decorateCommand(command, pin)
+            commandProvider.decorateCommand(command, pin, logger())
         )
     }
 
@@ -118,7 +119,7 @@ class PinServiceImpl(
         val command = VoteForPinCommand(VoteType.UP, user, request.date, pin, userService)
 
         return ratingResponse(
-            commandProvider.decorateCommand(command, pin)
+            commandProvider.decorateCommand(command, pin, logger())
         )
     }
 
@@ -128,7 +129,7 @@ class PinServiceImpl(
         val command = VoteForPinCommand(VoteType.DOWN, user, request.date, pin, userService)
 
         return ratingResponse(
-            commandProvider.decorateCommand(command, pin)
+            commandProvider.decorateCommand(command, pin, logger())
         )
     }
 
@@ -138,7 +139,7 @@ class PinServiceImpl(
         val command = RemoveVoteCommand(user, request.date, pin)
 
         return ratingResponse(
-            commandProvider.decorateCommand(command, pin)
+            commandProvider.decorateCommand(command, pin, logger())
         )
     }
 
@@ -147,7 +148,7 @@ class PinServiceImpl(
         val user = userService.findUserById(request.commenterId)
         val command = AddCommentCommand(request.commentContent, user, request.date, pin, userService)
 
-        val result = commandProvider.decorateCommand(command, NoComment()).execute()
+        val result = commandProvider.decorateCommand(command, NoComment(), logger()).execute()
         return ServiceResponse(result.isSuccessful, result.message, result.returnedModel.data())
     }
 
@@ -165,8 +166,8 @@ class PinServiceImpl(
         val pin = pinRepository.findById(request.contentId)
         val user = userService.findUserById(request.userId)
 
-        val commandResult = ReportContentCommand(user, request.date, request.reportReason, pin, userService, reportingConfiguration)
-            .execute()
+        val command = ReportContentCommand(user, request.date, request.reportReason, pin, userService, reportingConfiguration)
+        val commandResult = commandProvider.decorateCommand(command, pin, logger()).execute()
 
         return noDataResponse(commandResult.isSuccessful, commandResult.message)
     }

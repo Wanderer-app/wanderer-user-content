@@ -4,6 +4,7 @@ import ge.wanderer.common.functions.asStandardMessage
 import ge.wanderer.core.command.Command
 import ge.wanderer.core.command.CommandExecutionResult
 import ge.wanderer.core.command.fail
+import org.jetbrains.kotlin.util.Logger
 
 class ExceptionHandlingCommand<T>(
     private val command: Command<T>,
