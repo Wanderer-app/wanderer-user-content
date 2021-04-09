@@ -3,8 +3,6 @@ MAINTAINER wanderer.ge
 
 
 COPY gradlew .
-COPY .gradle .
-COPY build.gradle .
 COPY src src
 
 RUN ./gradlew import
