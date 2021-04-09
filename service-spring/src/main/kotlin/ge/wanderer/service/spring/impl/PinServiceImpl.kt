@@ -88,6 +88,7 @@ class PinServiceImpl(
     }
 
     override fun findById(id: Long): ServiceResponse<PinData> {
+        error("Error for testing")
         val pin = pinRepository.findById(id)
         return ServiceResponse(true, "Pin fetched!", pin.dataWithCommentsPreview())
     }
