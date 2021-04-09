@@ -8,6 +8,7 @@ COPY gradle.properties .
 COPY src src
 
 #RUN ./gradlew import
+RUN chmod +x ./gradlew
 RUN ./gradlew build
 
 #COPY build/libs/wanderer-user-content-1.0-SNAPSHOT.jar app.jar
