@@ -20,6 +20,7 @@ import ge.wanderer.service.protocol.response.ServiceResponse
 import ge.wanderer.service.spring.CommentPreviewProvider
 import ge.wanderer.service.spring.command.CommandProvider
 import ge.wanderer.service.spring.data.data
+import ge.wanderer.service.spring.logger
 import ge.wanderer.service.spring.model.NoComment
 import ge.wanderer.service.spring.model.NoPoll
 import org.springframework.beans.factory.annotation.Autowired
@@ -39,7 +40,7 @@ class PollServiceImpl(
         val command = CreatePollCommand(request.onDate, user, request.text, request.routeCode, request.answers)
 
         return response (
-            commandProvider.decoratePersistentCommand(command, NoPoll(), pollRepository)
+            commandProvider.decoratePersistentCommand(command, NoPoll(), pollRepository, logger())
         )
     }
 
@@ -50,7 +51,7 @@ class PollServiceImpl(
         val command = UpdateDiscussionElementCommand(poll, updateData, user)
 
         return response(
-            commandProvider.decorateCommand(command, poll)
+            commandProvider.decorateCommand(command, poll, logger())
         )
     }
 
@@ -60,7 +61,7 @@ class PollServiceImpl(
         val command = AddPollAnswerCommand(poll, request.answerText, request.date, user)
 
         return response(
-            commandProvider.decorateCommand(command, poll)
+            commandProvider.decorateCommand(command, poll, logger())
         )
     }
 
@@ -70,7 +71,7 @@ class PollServiceImpl(
         val command = RemovePollAnswerCommand(poll, user, request.answerId, request.date, userService)
 
         return response(
-            commandProvider.decorateCommand(command, poll)
+            commandProvider.decorateCommand(command, poll, logger())
         )
     }
 
@@ -80,7 +81,7 @@ class PollServiceImpl(
         val command = SelectPollAnswerCommand(poll, request.answerId, user)
 
         return response(
-            commandProvider.decorateCommand(command, poll)
+            commandProvider.decorateCommand(command, poll, logger())
         )
     }
 
@@ -94,7 +95,7 @@ class PollServiceImpl(
         val command = ActivateContentCommand(user, poll, request.date, userService)
 
         return response(
-            commandProvider.decorateCommand(command, poll)
+            commandProvider.decorateCommand(command, poll, logger())
         )
     }
 
@@ -104,7 +105,7 @@ class PollServiceImpl(
         val command = RemoveContentCommand(user, poll, request.date, userService)
 
         return response(
-            commandProvider.decorateCommand(command, poll)
+            commandProvider.decorateCommand(command, poll, logger())
         )
     }
 
@@ -113,7 +114,7 @@ class PollServiceImpl(
         val user = userService.findUserById(request.commenterId)
         val command = AddCommentCommand(request.commentContent, user, request.date, poll, userService)
 
-        val result = commandProvider.decorateCommand(command, NoComment()).execute()
+        val result = commandProvider.decorateCommand(command, NoComment(), logger()).execute()
         return ServiceResponse(result.isSuccessful, result.message, result.returnedModel.data())
     }
 

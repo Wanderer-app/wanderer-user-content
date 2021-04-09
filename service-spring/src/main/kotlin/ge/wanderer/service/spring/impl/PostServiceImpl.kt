@@ -15,7 +15,6 @@ import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.UpdateDiscussionElementData
 import ge.wanderer.core.model.discussion.post.IPost
 import ge.wanderer.core.model.rating.VoteType
-import ge.wanderer.core.model.report.Report
 import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.persistence.repository.CommentRepository
 import ge.wanderer.persistence.repository.PostRepository
@@ -32,6 +31,7 @@ import ge.wanderer.service.spring.command.CommandProvider
 import ge.wanderer.service.spring.data.data
 import ge.wanderer.service.spring.data.noDataResponse
 import ge.wanderer.service.spring.data.ratingResponse
+import ge.wanderer.service.spring.logger
 import ge.wanderer.service.spring.model.NoComment
 import ge.wanderer.service.spring.model.NoPost
 import org.springframework.beans.factory.annotation.Autowired
@@ -52,7 +52,7 @@ class PostServiceImpl(
         val command = CreatePostCommand(request.onDate, user, request.routeCode, request.text, request.attachedFiles.map { AttachedFile() })
 
         return response(
-            commandProvider.decoratePersistentCommand(command, NoPost(), postRepository)
+            commandProvider.decoratePersistentCommand(command, NoPost(), postRepository, logger())
         )
     }
 
@@ -63,7 +63,7 @@ class PostServiceImpl(
         val command = UpdateDiscussionElementCommand(post, updateData, user)
 
         return response(
-            commandProvider.decorateCommand(command, post)
+            commandProvider.decorateCommand(command, post, logger())
         )
     }
 
@@ -78,7 +78,7 @@ class PostServiceImpl(
         val command = ActivateContentCommand(user, post, request.date, userService)
 
         return response(
-            commandProvider.decorateCommand(command, post)
+            commandProvider.decorateCommand(command, post, logger())
         )
     }
 
@@ -88,7 +88,7 @@ class PostServiceImpl(
         val command = RemoveContentCommand(user, post, request.date, userService)
 
         return response(
-            commandProvider.decorateCommand(command, post)
+            commandProvider.decorateCommand(command, post, logger())
         )
     }
 
@@ -98,7 +98,7 @@ class PostServiceImpl(
         val command = GiveOnePointCommand(VoteType.UP, user, request.date, post, userService)
 
         return ratingResponse(
-            commandProvider.decorateCommand(command, post)
+            commandProvider.decorateCommand(command, post, logger())
         )
     }
 
@@ -108,7 +108,7 @@ class PostServiceImpl(
         val command = GiveOnePointCommand(VoteType.DOWN, user, request.date, post, userService)
 
         return ratingResponse(
-            commandProvider.decorateCommand(command, post)
+            commandProvider.decorateCommand(command, post, logger())
         )
     }
 
@@ -118,7 +118,7 @@ class PostServiceImpl(
         val command = RemoveVoteCommand(user, request.date, post)
 
         return ratingResponse(
-            commandProvider.decorateCommand(command, post)
+            commandProvider.decorateCommand(command, post, logger())
         )
     }
 
@@ -127,7 +127,7 @@ class PostServiceImpl(
         val user = userService.findUserById(request.commenterId)
         val command = AddCommentCommand(request.commentContent, user, request.date, post, userService)
 
-        val result = commandProvider.decorateCommand(command, NoComment()).execute()
+        val result = commandProvider.decorateCommand(command, NoComment(), logger()).execute()
         return ServiceResponse(result.isSuccessful, result.message, result.returnedModel.data())    }
 
     override fun listComments(contentId: Long, listingParams: ListingParams): ServiceListingResponse<CommentData> {
@@ -140,8 +140,8 @@ class PostServiceImpl(
         val post = postRepository.findById(request.contentId)
         val user = userService.findUserById(request.userId)
 
-        val commandResult = ReportContentCommand(user, request.date, request.reportReason, post, userService, reportingConfiguration)
-            .execute()
+        val command = ReportContentCommand(user, request.date, request.reportReason, post, userService, reportingConfiguration)
+        val commandResult = commandProvider.decorateCommand(command, post, logger()).execute()
 
         return noDataResponse(commandResult.isSuccessful, commandResult.message)
     }
