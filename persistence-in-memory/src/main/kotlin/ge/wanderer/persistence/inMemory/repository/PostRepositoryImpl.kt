@@ -55,7 +55,7 @@ class PostRepositoryImpl(
 
     private fun createComment(userId: Long, text: String, createDate: LocalDateTime): IComment {
         val user = userService.findUserById(userId)
-        val comment =  Comment(TRANSIENT_ID, user, createDate, text, Active(createDate, user), mutableListOf(), mutableListOf(), mutableSetOf())
+        val comment =  Comment(TRANSIENT_ID, user, createDate, text, Active(createDate, user))
         return commentRepository.persist(comment)
     }
 

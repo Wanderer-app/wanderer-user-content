@@ -13,7 +13,8 @@ class CommentRepositoryImpl: CommentRepository, BaseInMemoryRepository<IComment>
 
     override fun data(): HashMap<Long, IComment> = comments
     override fun nextId(): Long = currentId.getAndIncrement()
-    override fun makePersistent(model: IComment, id: Long): IComment = InMemoryComment(id, model, this)
+    override fun makePersistent(model: IComment, id: Long): IComment =
+        InMemoryComment(id, model, this)
     override fun listActiveFor(content: CommentableContent, listingParams: ListingParams): List<IComment> =
         content.comments()
             .filter { it.isActive() }

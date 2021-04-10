@@ -5,3 +5,4 @@
 </p>
 
 Api Documentation: https://wanderer-app.github.io/public-resources/docs/user-content/
+Google cloud link: https://wanderer-user-content-meghrxd6ma-ew.a.run.app
