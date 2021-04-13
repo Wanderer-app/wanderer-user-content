@@ -1,6 +1,8 @@
 package ge.wanderer.persistence.inMemory.repository
 
 import ge.wanderer.common.constants.TRANSIENT_ID
+import ge.wanderer.common.listing.SortingDirection
+import ge.wanderer.common.listing.SortingParams
 import ge.wanderer.common.now
 import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.comment.Comment
@@ -10,7 +12,9 @@ import ge.wanderer.core.model.discussion.poll.IPoll
 import ge.wanderer.core.model.discussion.poll.IPollAnswer
 import ge.wanderer.core.model.discussion.poll.Poll
 import ge.wanderer.core.model.discussion.poll.PollAnswer
+import ge.wanderer.core.model.map.IPin
 import ge.wanderer.persistence.inMemory.model.InMemoryPoll
+import ge.wanderer.persistence.inMemory.sorting.SequenceSorter
 import ge.wanderer.persistence.repository.CommentRepository
 import ge.wanderer.persistence.repository.PollRepository
 import org.joda.time.LocalDateTime
@@ -21,8 +25,9 @@ import java.util.concurrent.atomic.AtomicLong
 @Component
 class PollRepositoryImpl(
     @Autowired private val commentRepository: CommentRepository,
-    @Autowired private val userService: UserService
-): PollRepository, BaseInMemoryRepository<IPoll>() {
+    @Autowired private val userService: UserService,
+    @Autowired private val sorter: SequenceSorter<IPoll>
+): PollRepository, BaseInMemoryRepository<IPoll>(sorter) {
 
     override fun data(): HashMap<Long, IPoll> = polls
     override fun nextId(): Long = currentId.getAndIncrement()

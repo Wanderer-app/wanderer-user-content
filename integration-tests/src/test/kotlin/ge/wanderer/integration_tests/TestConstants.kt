@@ -7,7 +7,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.math.BigDecimal
 
-val DEFAULT_LISTING_PARAMS = ListingParams(30, 1, null, listOf())
+val DEFAULT_LISTING_PARAMS = ListingParams(100, 1, null, listOf())
 
 data class PollData(
     val question: String,

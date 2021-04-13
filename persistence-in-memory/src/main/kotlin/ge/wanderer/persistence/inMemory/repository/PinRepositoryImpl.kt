@@ -15,6 +15,7 @@ import ge.wanderer.core.model.map.Pin
 import ge.wanderer.core.model.map.PinContent
 import ge.wanderer.persistence.inMemory.model.InMemoryPin
 import ge.wanderer.common.listing.ListingParams
+import ge.wanderer.persistence.inMemory.sorting.PinSorter
 import ge.wanderer.persistence.repository.CommentRepository
 import ge.wanderer.persistence.repository.PinRepository
 import org.joda.time.LocalDateTime
@@ -25,11 +26,12 @@ import java.util.concurrent.atomic.AtomicLong
 @Component
 class PinRepositoryImpl(
     @Autowired private val userService: UserService,
-    @Autowired private val commentRepository: CommentRepository
-): PinRepository, BaseInMemoryRepository<IPin>() {
+    @Autowired private val commentRepository: CommentRepository,
+    @Autowired private val sorter: PinSorter
+): PinRepository, BaseInMemoryRepository<IPin>(sorter) {
 
     override fun listForRoute(routeCode: String, listingParams: ListingParams): List<IPin> =
-        pins.values
+        list(listingParams)
             .filter { it.isActive() }
             .filter { it.routeCode() == routeCode }
 

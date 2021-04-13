@@ -1,15 +1,18 @@
 package ge.wanderer.persistence.inMemory.repository
 
 import ge.wanderer.common.constants.TRANSIENT_ID
+import ge.wanderer.common.listing.SortingParams
 import ge.wanderer.common.now
 import ge.wanderer.core.data.file.AttachedFile
 import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.comment.Comment
 import ge.wanderer.core.model.comment.IComment
 import ge.wanderer.core.model.content.status.Active
+import ge.wanderer.core.model.discussion.poll.IPoll
 import ge.wanderer.core.model.discussion.post.IPost
 import ge.wanderer.core.model.discussion.post.Post
 import ge.wanderer.persistence.inMemory.model.InMemoryPost
+import ge.wanderer.persistence.inMemory.sorting.SequenceSorter
 import ge.wanderer.persistence.repository.CommentRepository
 import ge.wanderer.persistence.repository.PostRepository
 import org.joda.time.LocalDateTime
@@ -20,8 +23,9 @@ import java.util.concurrent.atomic.AtomicLong
 @Component
 class PostRepositoryImpl(
     @Autowired private val userService: UserService,
-    @Autowired private val commentRepository: CommentRepository
-): PostRepository, BaseInMemoryRepository<IPost>() {
+    @Autowired private val commentRepository: CommentRepository,
+    @Autowired private val sorter: SequenceSorter<IPost>
+): PostRepository, BaseInMemoryRepository<IPost>(sorter) {
 
     override fun data(): HashMap<Long, IPost> = posts
     override fun nextId(): Long = currentId.getAndIncrement()
@@ -61,5 +65,4 @@ class PostRepositoryImpl(
 
     override fun makePersistent(model: IPost, id: Long): IPost
             = InMemoryPost(id, model, commentRepository)
-
 }

@@ -3,6 +3,7 @@ package ge.wanderer.persistence.inMemory.repository
 import ge.wanderer.common.constants.TRANSIENT_ID
 import ge.wanderer.common.now
 import ge.wanderer.persistence.inMemory.WandererInMemoryPersistenceApplication
+import ge.wanderer.persistence.inMemory.support.DEFAULT_LISTING_PARAMS
 import ge.wanderer.persistence.inMemory.support.createNewComment
 import ge.wanderer.persistence.inMemory.support.jambura
 import io.mockk.mockk
@@ -20,7 +21,7 @@ class CommentRepositoryImplTest(
 
     @Test
     fun listsComments() {
-        val comments = commentRepositoryImpl.list(mockk())
+        val comments = commentRepositoryImpl.list(DEFAULT_LISTING_PARAMS)
         assertTrue(comments.isNotEmpty())
     }
 
