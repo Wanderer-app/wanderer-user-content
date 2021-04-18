@@ -1,6 +1,6 @@
 package ge.wanderer.service.spring.impl
 
-import ge.wanderer.common.amount
+import ge.wanderer.common.functions.amount
 import ge.wanderer.common.dateTime
 import ge.wanderer.common.enums.UserContentType
 import ge.wanderer.common.now

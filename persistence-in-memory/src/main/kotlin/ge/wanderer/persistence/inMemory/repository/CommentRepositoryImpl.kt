@@ -23,6 +23,7 @@ class CommentRepositoryImpl(
         InMemoryComment(id, model, this)
     override fun listActiveFor(content: CommentableContent, listingParams: ListingParams): List<IComment> =
         content.comments()
+            .asSequence()
             .filter { it.isActive() }
             .applyListingParams(listingParams)
 

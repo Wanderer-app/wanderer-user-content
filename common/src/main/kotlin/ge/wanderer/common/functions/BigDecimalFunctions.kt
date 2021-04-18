@@ -1,4 +1,4 @@
-package ge.wanderer.common
+package ge.wanderer.common.functions
 
 import java.math.BigDecimal
 import java.math.RoundingMode

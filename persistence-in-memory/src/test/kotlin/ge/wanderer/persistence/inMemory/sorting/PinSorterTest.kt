@@ -1,10 +1,9 @@
-package ge.wanderer.persistence.inMemory.sorter
+package ge.wanderer.persistence.inMemory.sorting
 
 import ge.wanderer.common.dateTime
 import ge.wanderer.common.listing.SortingDirection.*
 import ge.wanderer.common.listing.SortingParams
 import ge.wanderer.core.model.map.IPin
-import ge.wanderer.persistence.inMemory.sorting.PinSorter
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test

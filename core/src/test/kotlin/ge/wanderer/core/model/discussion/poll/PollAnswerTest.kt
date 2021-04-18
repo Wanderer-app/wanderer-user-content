@@ -1,6 +1,6 @@
 package ge.wanderer.core.model.discussion.poll
 
-import ge.wanderer.common.amount
+import ge.wanderer.common.functions.amount
 import ge.wanderer.common.now
 import ge.wanderer.core.jambura
 import ge.wanderer.core.jangula

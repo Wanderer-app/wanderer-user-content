@@ -1,6 +1,6 @@
 package ge.wanderer.integration_tests.web_spring_inMemory
 
-import ge.wanderer.common.amount
+import ge.wanderer.common.functions.amount
 import ge.wanderer.common.constants.TRANSIENT_ID
 import ge.wanderer.common.dateTime
 import ge.wanderer.common.functions.fromJson

@@ -1,8 +1,8 @@
 package ge.wanderer.core.model.discussion.poll
 
-import ge.wanderer.common.amount
+import ge.wanderer.common.functions.amount
 import ge.wanderer.common.enums.UserContentType
-import ge.wanderer.common.percentOf
+import ge.wanderer.common.functions.percentOf
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.content.status.ContentStatusType
 import ge.wanderer.core.model.content.status.UserAddedContentStatus

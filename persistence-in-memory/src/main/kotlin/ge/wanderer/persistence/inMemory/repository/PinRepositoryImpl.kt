@@ -31,9 +31,11 @@ class PinRepositoryImpl(
 ): PinRepository, BaseInMemoryRepository<IPin>(sorter) {
 
     override fun listForRoute(routeCode: String, listingParams: ListingParams): List<IPin> =
-        list(listingParams)
+        pins.values
+            .asSequence()
             .filter { it.isActive() }
             .filter { it.routeCode() == routeCode }
+            .applyListingParams(listingParams)
 
     override fun data(): HashMap<Long, IPin> = pins
     override fun nextId(): Long = currentId.getAndIncrement()
