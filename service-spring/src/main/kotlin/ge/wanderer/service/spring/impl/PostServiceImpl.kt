@@ -14,8 +14,8 @@ import ge.wanderer.core.data.file.AttachedFile
 import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.UpdateDiscussionElementData
 import ge.wanderer.core.model.discussion.post.IPost
-import ge.wanderer.core.model.rating.VoteType
-import ge.wanderer.common.listing.ListingParams
+import ge.wanderer.common.enums.VoteType
+import ge.wanderer.core.integration.user.User
 import ge.wanderer.persistence.repository.CommentRepository
 import ge.wanderer.persistence.repository.PostRepository
 import ge.wanderer.service.protocol.data.CommentData
@@ -52,7 +52,7 @@ class PostServiceImpl(
         val command = CreatePostCommand(request.onDate, user, request.routeCode, request.text, request.attachedFiles.map { AttachedFile() })
 
         return response(
-            commandProvider.decoratePersistentCommand(command, NoPost(), postRepository, logger())
+            commandProvider.decoratePersistentCommand(command, NoPost(), postRepository, logger()), user
         )
     }
 
@@ -63,13 +63,13 @@ class PostServiceImpl(
         val command = UpdateDiscussionElementCommand(post, updateData, user)
 
         return response(
-            commandProvider.decorateCommand(command, post, logger())
+            commandProvider.decorateCommand(command, post, logger()), user
         )
     }
 
-    override fun findById(id: Long): ServiceResponse<DiscussionElementData> {
+    override fun findById(id: Long, userId: Long): ServiceResponse<DiscussionElementData> {
         val post = postRepository.findById(id)
-        return ServiceResponse(true, "Post fetched", post.dataWithCommentsPreview())
+        return ServiceResponse(true, "Post fetched", post.dataWithCommentsPreview(userService.findUserById(userId)))
     }
 
     override fun activate(request: OperateOnContentRequest): ServiceResponse<DiscussionElementData> {
@@ -78,7 +78,7 @@ class PostServiceImpl(
         val command = ActivateContentCommand(user, post, request.date, userService)
 
         return response(
-            commandProvider.decorateCommand(command, post, logger())
+            commandProvider.decorateCommand(command, post, logger()), user
         )
     }
 
@@ -88,7 +88,7 @@ class PostServiceImpl(
         val command = RemoveContentCommand(user, post, request.date, userService)
 
         return response(
-            commandProvider.decorateCommand(command, post, logger())
+            commandProvider.decorateCommand(command, post, logger()), user
         )
     }
 
@@ -128,12 +128,13 @@ class PostServiceImpl(
         val command = AddCommentCommand(request.commentContent, user, request.date, post, userService)
 
         val result = commandProvider.decorateCommand(command, NoComment(), logger()).execute()
-        return ServiceResponse(result.isSuccessful, result.message, result.returnedModel.data())    }
+        return ServiceResponse(result.isSuccessful, result.message, result.returnedModel.data(user))    }
 
-    override fun listComments(contentId: Long, listingParams: ListingParams): ServiceListingResponse<CommentData> {
-        val post = postRepository.findById(contentId)
-        val comments = commentRepository.listActiveFor(post, listingParams)
-        return ServiceListingResponse(true, "Comments Retrieved!", comments.size, listingParams.batchNumber, comments.map { it.data() })
+    override fun listComments(request: ListCommentsRequest): ServiceListingResponse<CommentData> {
+        val post = postRepository.findById(request.contentId)
+        val user = userService.findUserById(request.userId)
+        val comments = commentRepository.listActiveFor(post, request.listingParams)
+        return ServiceListingResponse(true, "Comments Retrieved!", comments.size, request.listingParams.batchNumber, comments.map { it.data(user) })
     }
 
     override fun report(request: ReportContentRequest): ServiceResponse<ReportData> {
@@ -152,13 +153,13 @@ class PostServiceImpl(
         return ServiceListingResponse(true, "Reports Retrieved!", reports.size, 1, reports.map { it.data() })
     }
 
-    private fun IPost.dataWithCommentsPreview(): DiscussionElementData {
-        return this.data(commentPreviewProvider.getPreviewFor(this))
+    private fun IPost.dataWithCommentsPreview(user: User): DiscussionElementData {
+        return this.data(commentPreviewProvider.getPreviewFor(this, user), user)
     }
 
-    private fun response(command: Command<IPost>): ServiceResponse<DiscussionElementData> {
+    private fun response(command: Command<IPost>, user: User): ServiceResponse<DiscussionElementData> {
         val executionResult = command.execute()
-        val data = executionResult.returnedModel.dataWithCommentsPreview()
+        val data = executionResult.returnedModel.dataWithCommentsPreview(user)
         return ServiceResponse(executionResult.isSuccessful, executionResult.message, data)
     }
 }

@@ -39,4 +39,5 @@ class NoPin: IPin {
     override fun report(report: Report) {}
     override fun reports(): Set<Report> = setOf()
     override fun acceptableReportReasons(): Set<ReportReason> = setOf()
+    override fun getVoteBy(user: User): IVote? = null
 }

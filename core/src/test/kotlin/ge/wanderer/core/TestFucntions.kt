@@ -13,7 +13,7 @@ import ge.wanderer.core.model.discussion.post.Post
 import ge.wanderer.core.model.map.Pin
 import ge.wanderer.core.model.map.PinContent
 import ge.wanderer.core.model.rating.Vote
-import ge.wanderer.core.model.rating.VoteType
+import ge.wanderer.common.enums.VoteType
 import org.joda.time.LocalDateTime
 import java.net.URL
 

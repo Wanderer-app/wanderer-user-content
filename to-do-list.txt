@@ -1,0 +1,2 @@
+1. Adding a comment returns comment data with id = 0 DONE
+2. Make all rateable content data have a nullable field with users vote direction DONE

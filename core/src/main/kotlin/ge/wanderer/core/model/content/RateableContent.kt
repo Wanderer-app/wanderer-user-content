@@ -8,4 +8,5 @@ interface RateableContent: UserAddedContent {
     fun giveVote(vote: IVote)
     fun rating(): Int
     fun removeVotesBy(user: User, onDate: LocalDateTime)
+    fun getVoteBy(user: User): IVote?
 }

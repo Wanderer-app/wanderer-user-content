@@ -6,7 +6,9 @@ import ge.wanderer.common.enums.PinType
 import ge.wanderer.common.enums.ReportReason
 import ge.wanderer.common.map.LatLng
 import ge.wanderer.common.now
+import ge.wanderer.common.enums.VoteType
 import ge.wanderer.integration_tests.DEFAULT_LISTING_PARAMS
+import ge.wanderer.integration_tests.DEFAULT_LOGGED_IN_USER_ID
 import ge.wanderer.integration_tests.SpringServiceWithInMemoryPersistenceApp
 import ge.wanderer.service.protocol.data.FileData
 import ge.wanderer.service.protocol.interfaces.PinService
@@ -26,20 +28,20 @@ class PinTest(
 
     @Test
     fun canBeRetrievedById() {
-        var response = pinService.findById(1)
+        var response = pinService.findById(1, DEFAULT_LOGGED_IN_USER_ID)
         assertTrue(response.isSuccessful)
         assertEquals(1, response.data!!.id)
         assertEquals("Nika Jamburia",  response.data!!.creator.fullName)
 
 
-        response = pinService.findById(10000)
+        response = pinService.findById(10000, DEFAULT_LOGGED_IN_USER_ID)
         assertFalse(response.isSuccessful)
         assertEquals("Not found", response.message)
     }
 
     @Test
     fun canBeListed() {
-        val response = pinService.list(DEFAULT_LISTING_PARAMS)
+        val response = pinService.list(DEFAULT_LISTING_PARAMS, DEFAULT_LOGGED_IN_USER_ID)
         assertTrue(response.isSuccessful)
         assertEquals("Pins Fetched!", response.message)
         assertEquals(5, response.resultSize)
@@ -61,13 +63,13 @@ class PinTest(
 
         var response = pinService.remove(OperateOnContentRequest(pinId, 1, now()))
         assertTrue(response.isSuccessful)
-        var pin = pinService.findById(pinId)
+        var pin = pinService.findById(pinId, DEFAULT_LOGGED_IN_USER_ID)
         assertFalse(pin.data!!.isActive)
         assertTrue(pin.data!!.isRemoved)
 
         response = pinService.activate(OperateOnContentRequest(pinId, 1, dateTime("2021-04-03T12:00:00")))
         assertTrue(response.isSuccessful)
-        pin = pinService.findById(pinId)
+        pin = pinService.findById(pinId, DEFAULT_LOGGED_IN_USER_ID)
         assertTrue(pin.data!!.isActive)
         assertFalse(pin.data!!.isRemoved)
         assertEquals(dateTime("2021-04-03T12:00:00"), pin.data!!.updatedAt)
@@ -94,7 +96,7 @@ class PinTest(
         assertFalse(pin.isRelevant)
         assertFalse(pin.isActive)
 
-        assertFalse(pinService.findById(pinId).data!!.isRelevant)
+        assertFalse(pinService.findById(pinId, DEFAULT_LOGGED_IN_USER_ID).data!!.isRelevant)
     }
 
     @Test
@@ -102,7 +104,7 @@ class PinTest(
         val response = pinService.updatePin(UpdatePinRequest(1, "New title", "New text", mockk(), 1))
         assertTrue(response.isSuccessful)
 
-        val pinData = pinService.findById(1).data!!
+        val pinData = pinService.findById(1, DEFAULT_LOGGED_IN_USER_ID).data!!
 
         assertEquals("New title", pinData.title)
         assertEquals("New text", pinData.text)
@@ -111,7 +113,7 @@ class PinTest(
 
     @Test
     fun canBeCreated() {
-        val pinsNumberBefore = pinService.list(DEFAULT_LISTING_PARAMS).resultSize
+        val pinsNumberBefore = pinService.list(DEFAULT_LISTING_PARAMS, DEFAULT_LOGGED_IN_USER_ID).resultSize
         val request = CreatePinRequest(now(), 7, PinType.TIP, "aq plania datesili", "xis ukanaa da morwyet xolme", FileData(), LatLng(10f, 10f), "1488")
 
         val response = pinService.createPin(request)
@@ -122,13 +124,14 @@ class PinTest(
         assertEquals(LatLng(10f, 10f), response.data!!.location)
         assertEquals("1488", response.data!!.routeCode)
 
-        assertEquals(pinsNumberBefore + 1, pinService.list(DEFAULT_LISTING_PARAMS).resultSize)
+        assertEquals(pinsNumberBefore + 1, pinService.list(DEFAULT_LISTING_PARAMS, DEFAULT_LOGGED_IN_USER_ID).resultSize)
     }
 
     @Test
     fun canBeRated() {
-        var pin = pinService.findById(1).data!!
+        var pin = pinService.findById(1, DEFAULT_LOGGED_IN_USER_ID).data!!
         assertEquals(0, pin.rating.totalRating)
+        assertNull(pin.userVoteDirection)
 
         var response = pinService.giveUpVote(OperateOnContentRequest(1, 2, now()))
         assertEquals(10, response.data!!.totalRating)
@@ -140,17 +143,18 @@ class PinTest(
         assertFalse(response.isSuccessful)
         assertEquals("Cant vote for your own content!", response.message)
 
-        pin = pinService.findById(1).data!!
+        pin = pinService.findById(1, 2).data!!
         assertEquals(5, pin.rating.totalRating)
+        assertEquals(VoteType.UP, pin.userVoteDirection)
     }
 
     @Test
     fun canBeCommented() {
-        val commentsBefore = pinService.findById(1).data!!.commentsPreview.size
+        val commentsBefore = pinService.findById(1, DEFAULT_LOGGED_IN_USER_ID).data!!.commentsPreview.size
         pinService.addComment(AddCommentRequest(1, 2, "maladec sheen", now()))
         pinService.addComment(AddCommentRequest(1, 6, "madloba", now()))
 
-        val pin = pinService.findById(1).data!!
+        val pin = pinService.findById(1, DEFAULT_LOGGED_IN_USER_ID).data!!
         assertEquals(commentsBefore + 2, pin.commentsPreview.size)
         assertTrue(pin.commentsPreview.none { it.id == TRANSIENT_ID })
     }
@@ -160,14 +164,14 @@ class PinTest(
         pinService.report(ReportContentRequest(2, 2, now(), ReportReason.INAPPROPRIATE_CONTENT))
         pinService.report(ReportContentRequest(2, 3, now(), ReportReason.INAPPROPRIATE_CONTENT))
 
-        assertTrue(pinService.findById(2).data!!.isActive)
+        assertTrue(pinService.findById(2, DEFAULT_LOGGED_IN_USER_ID).data!!.isActive)
 
         val response = pinService.report(ReportContentRequest(2, 3, now(), ReportReason.INAPPROPRIATE_CONTENT))
         assertFalse(response.isSuccessful)
         assertEquals("You already reported this content", response.message)
 
         pinService.report(ReportContentRequest(2, 5, now(), ReportReason.OFFENSIVE_CONTENT))
-        val pinData = pinService.findById(2).data!!
+        val pinData = pinService.findById(2, DEFAULT_LOGGED_IN_USER_ID).data!!
 
         assertFalse(pinData.isActive)
         assertTrue(pinData.isRemoved)

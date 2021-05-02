@@ -2,6 +2,7 @@ package ge.wanderer.service.protocol.data
 
 import ge.wanderer.common.enums.PinType
 import ge.wanderer.common.map.LatLng
+import ge.wanderer.common.enums.VoteType
 import org.joda.time.LocalDateTime
 
 data class PinData (
@@ -20,7 +21,8 @@ data class PinData (
     val text: String,
     val attachedFile: FileData?,
     val type: PinType,
-    val location: LatLng
+    val location: LatLng,
+    val userVoteDirection: VoteType?
 )
 
 data class PinMapData(

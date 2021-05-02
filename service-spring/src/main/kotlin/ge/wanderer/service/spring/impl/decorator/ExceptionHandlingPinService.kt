@@ -22,8 +22,8 @@ class ExceptionHandlingPinService(
     override fun listForRoute(routeCode: String, listingParams: ListingParams): ServiceListingResponse<PinMapData> =
         handleListing { pinServiceImpl.listForRoute(routeCode, listingParams) }
 
-    override fun list(listingParams: ListingParams): ServiceListingResponse<PinData> =
-        handleListing { pinServiceImpl.list(listingParams) }
+    override fun list(listingParams: ListingParams, userId: Long): ServiceListingResponse<PinData> =
+        handleListing { pinServiceImpl.list(listingParams, userId) }
 
     override fun reportIrrelevant(request: OperateOnContentRequest): ServiceResponse<PinData> =
         handle { pinServiceImpl.reportIrrelevant(request) }
@@ -31,8 +31,8 @@ class ExceptionHandlingPinService(
     override fun updatePin(request: UpdatePinRequest): ServiceResponse<PinData> =
         handle { pinServiceImpl.updatePin(request) }
 
-    override fun findById(id: Long): ServiceResponse<PinData> =
-        handle { pinServiceImpl.findById(id) }
+    override fun findById(id: Long, userId: Long): ServiceResponse<PinData> =
+        handle { pinServiceImpl.findById(id, userId) }
 
     override fun activate(request: OperateOnContentRequest): ServiceResponse<PinData> =
         handle { pinServiceImpl.activate(request) }
@@ -52,8 +52,8 @@ class ExceptionHandlingPinService(
     override fun addComment(request: AddCommentRequest): ServiceResponse<CommentData> =
         handle { pinServiceImpl.addComment(request) }
 
-    override fun listComments(contentId: Long, listingParams: ListingParams): ServiceListingResponse<CommentData> =
-        handleListing { pinServiceImpl.listComments(contentId, listingParams) }
+    override fun listComments(request: ListCommentsRequest): ServiceListingResponse<CommentData> =
+        handleListing { pinServiceImpl.listComments(request) }
 
     override fun report(request: ReportContentRequest): ServiceResponse<ReportData> =
         handle { pinServiceImpl.report(request) }

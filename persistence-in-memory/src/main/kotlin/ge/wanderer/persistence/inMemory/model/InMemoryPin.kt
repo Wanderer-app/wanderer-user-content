@@ -82,4 +82,6 @@ class InMemoryPin(
     }
 
     override fun contentType(): UserContentType = pin.contentType()
+
+    override fun getVoteBy(user: User): IVote? = pin.getVoteBy(user)
 }

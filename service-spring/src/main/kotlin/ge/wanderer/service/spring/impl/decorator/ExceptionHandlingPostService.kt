@@ -26,8 +26,8 @@ class ExceptionHandlingPostService(
     override fun updatePost(request: UpdatePostRequest): ServiceResponse<DiscussionElementData> =
         handle { postServiceImpl.updatePost(request) }
 
-    override fun findById(id: Long): ServiceResponse<DiscussionElementData> =
-        handle { postServiceImpl.findById(id) }
+    override fun findById(id: Long, userId: Long): ServiceResponse<DiscussionElementData> =
+        handle { postServiceImpl.findById(id, userId) }
 
     override fun activate(request: OperateOnContentRequest): ServiceResponse<DiscussionElementData> =
         handle { postServiceImpl.activate(request) }
@@ -47,8 +47,8 @@ class ExceptionHandlingPostService(
     override fun addComment(request: AddCommentRequest): ServiceResponse<CommentData> =
         handle { postServiceImpl.addComment(request) }
 
-    override fun listComments(contentId: Long, listingParams: ListingParams): ServiceListingResponse<CommentData> =
-        handleListing { postServiceImpl.listComments(contentId, listingParams) }
+    override fun listComments(request: ListCommentsRequest): ServiceListingResponse<CommentData> =
+        handleListing { postServiceImpl.listComments(request) }
 
     override fun report(request: ReportContentRequest): ServiceResponse<ReportData> =
         handle { postServiceImpl.report(request) }

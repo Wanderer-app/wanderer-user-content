@@ -6,10 +6,7 @@ import ge.wanderer.service.protocol.data.CommentData
 import ge.wanderer.service.protocol.data.RatingData
 import ge.wanderer.service.protocol.data.ReportData
 import ge.wanderer.service.protocol.interfaces.CommentService
-import ge.wanderer.service.protocol.request.AddCommentRequest
-import ge.wanderer.service.protocol.request.OperateOnContentRequest
-import ge.wanderer.service.protocol.request.ReportContentRequest
-import ge.wanderer.service.protocol.request.UpdateCommentRequest
+import ge.wanderer.service.protocol.request.*
 import ge.wanderer.service.protocol.response.ServiceListingResponse
 import ge.wanderer.service.protocol.response.ServiceResponse
 import ge.wanderer.service.spring.impl.CommentServiceImpl
@@ -26,8 +23,8 @@ class ExceptionHandlingCommentService(
     override fun updateComment(request: UpdateCommentRequest): ServiceResponse<CommentData> =
         handle { commentServiceImpl.updateComment(request) }
 
-    override fun findById(id: Long): ServiceResponse<CommentData> =
-        handle { commentServiceImpl.findById(id) }
+    override fun findById(id: Long, userId: Long): ServiceResponse<CommentData> =
+        handle { commentServiceImpl.findById(id, userId) }
 
     override fun activate(request: OperateOnContentRequest): ServiceResponse<CommentData> =
         handle { commentServiceImpl.activate(request) }
@@ -47,8 +44,8 @@ class ExceptionHandlingCommentService(
     override fun addComment(request: AddCommentRequest): ServiceResponse<CommentData> =
         handle { commentServiceImpl.addComment(request) }
 
-    override fun listComments(contentId: Long, listingParams: ListingParams): ServiceListingResponse<CommentData> =
-        handleListing { commentServiceImpl.listComments(contentId, listingParams) }
+    override fun listComments(request: ListCommentsRequest): ServiceListingResponse<CommentData> =
+        handleListing { commentServiceImpl.listComments(request) }
 
     override fun report(request: ReportContentRequest): ServiceResponse<ReportData> =
         handle { commentServiceImpl.report(request) }

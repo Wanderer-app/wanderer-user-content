@@ -13,9 +13,14 @@ import ge.wanderer.core.model.discussion.post.Post
 import ge.wanderer.core.model.map.Pin
 import ge.wanderer.core.model.map.PinContent
 import ge.wanderer.core.model.rating.Vote
-import ge.wanderer.core.model.rating.VoteType
+import ge.wanderer.common.enums.VoteType
+import io.mockk.every
+import io.mockk.mockk
 import org.joda.time.LocalDateTime
 import java.net.URL
+
+val DEFAULT_LOGGED_IN_USER_ID = 1L
+val DEFAULT_LOGGED_IN_USER = mockk<User> { every { id } returns DEFAULT_LOGGED_IN_USER_ID }
 
 fun createNewComment(id: Long, createDate: LocalDateTime, text: String, author: User): Comment =
     Comment(

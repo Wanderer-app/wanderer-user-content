@@ -39,8 +39,8 @@ class PollController(
         httpResponse(pollService.selectAnswer(request))
 
     @GetMapping("/{id}")
-    fun getPoll(@PathVariable id: Long): ResponseEntity<ServiceResponse<DiscussionElementData>> =
-        httpResponse(pollService.findById(id))
+    fun getPoll(@PathVariable id: Long, @RequestHeader(name = "loggedInUserId", required = true) loggedInUserId: Long): ResponseEntity<ServiceResponse<DiscussionElementData>> =
+        httpResponse(pollService.findById(id, loggedInUserId))
 
     @PostMapping("/activate")
     fun activatePoll(@RequestBody request: OperateOnContentRequest): ResponseEntity<ServiceResponse<DiscussionElementData>> =
@@ -54,8 +54,12 @@ class PollController(
     fun addComment(@RequestBody request: AddCommentRequest): ResponseEntity<ServiceResponse<CommentData>> =
         httpResponse(pollService.addComment(request))
 
-    @PostMapping("/{id}/comments")
-    fun listComments(@RequestBody listingParams: ListingParams, @PathVariable id: Long): ResponseEntity<ServiceListingResponse<CommentData>> =
-        httpResponse(pollService.listComments(id, listingParams))
+    @PostMapping("/{contentId}/comments")
+    fun listComments(
+        @RequestBody listingParams: ListingParams,
+        @PathVariable contentId: Long,
+        @RequestHeader(name = "loggedInUserId", required = true) loggedInUserId: Long
+    ): ResponseEntity<ServiceListingResponse<CommentData>> =
+        httpResponse(pollService.listComments(ListCommentsRequest(contentId, loggedInUserId, listingParams)))
 
 }

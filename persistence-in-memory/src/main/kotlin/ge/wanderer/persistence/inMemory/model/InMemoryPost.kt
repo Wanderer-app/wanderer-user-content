@@ -74,4 +74,6 @@ class InMemoryPost(
 
     override fun acceptableReportReasons(): Set<ReportReason> = post.acceptableReportReasons()
 
+    override fun getVoteBy(user: User): IVote? = post.getVoteBy(user)
+
 }

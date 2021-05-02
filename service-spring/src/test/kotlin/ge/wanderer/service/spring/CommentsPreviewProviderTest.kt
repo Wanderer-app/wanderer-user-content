@@ -32,19 +32,19 @@ class CommentsPreviewProviderTest {
     @Test
     fun returnsPreviewWithCorrectSize() {
         every { content.contentType() } returns PIN
-        assertEquals(3, provider.getPreviewFor(content).size)
+        assertEquals(3, provider.getPreviewFor(content, DEFAULT_LOGGED_IN_USER).size)
 
         every { content.contentType() } returns POST
-        assertEquals(5, provider.getPreviewFor(content).size)
+        assertEquals(5, provider.getPreviewFor(content, DEFAULT_LOGGED_IN_USER).size)
 
         every { content.contentType() } returns POLL
-        assertEquals(2, provider.getPreviewFor(content).size)
+        assertEquals(2, provider.getPreviewFor(content, DEFAULT_LOGGED_IN_USER).size)
     }
 
     @Test
     fun throwsExceptionIfContentTypeNotFoundInPropertiesMap() {
         every { content.contentType() } returns COMMENT
-        val ex = assertThrows<IllegalStateException> { provider.getPreviewFor(content).size }
+        val ex = assertThrows<IllegalStateException> { provider.getPreviewFor(content, DEFAULT_LOGGED_IN_USER).size }
         assertEquals("Comments preview not available for COMMENT", ex.message!!)
     }
 

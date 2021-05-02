@@ -1,1 +1,0 @@
-1. Adding a comment returns comment data with id = 0

@@ -5,10 +5,7 @@ import ge.wanderer.common.constants.TRANSIENT_ID
 import ge.wanderer.common.functions.amount
 import ge.wanderer.common.functions.fromJson
 import ge.wanderer.common.functions.zeroAmount
-import ge.wanderer.integration_tests.AnswerInfo
-import ge.wanderer.integration_tests.DEFAULT_LISTING_PARAMS
-import ge.wanderer.integration_tests.PollData
-import ge.wanderer.integration_tests.SpringServiceWithInMemoryPersistenceApp
+import ge.wanderer.integration_tests.*
 import ge.wanderer.service.protocol.data.DiscussionElementData
 import ge.wanderer.service.protocol.interfaces.PollService
 import ge.wanderer.service.protocol.request.*
@@ -28,7 +25,7 @@ class PollTest(
 ) {
     @Test
     fun findsById() {
-        val response = pollService.findById(1)
+        val response = pollService.findById(1, DEFAULT_LOGGED_IN_USER_ID)
 
         assertTrue(response.isSuccessful)
         assertEquals("Poll fetched", response.message)
@@ -47,7 +44,7 @@ class PollTest(
         assertTrue(data.content.contains("What is the best video game?"))
         assertNotEquals(TRANSIENT_ID, data.id)
 
-        val poll = pollService.findById(data.id).data!!
+        val poll = pollService.findById(data.id, DEFAULT_LOGGED_IN_USER_ID).data!!
         assertTrue(poll.content.contains("What is the best video game?"))
         assertTrue(poll.content.contains("Rdr"))
         assertTrue(poll.content.contains("Gta"))
@@ -77,13 +74,13 @@ class PollTest(
         assertTrue(response.isSuccessful)
         assertEquals("Answer Removed!", response.message)
         assertFalse(response.data!!.content.contains("Witcher"))
-        assertFalse(pollService.findById(poll.id).data!!.content.contains("Witcher"))
+        assertFalse(pollService.findById(poll.id, DEFAULT_LOGGED_IN_USER_ID).data!!.content.contains("Witcher"))
     }
 
     @Test
     fun selectsAnswer() {
         val pollId = 1L
-        val poll = pollService.findById(pollId).data!!
+        val poll = pollService.findById(pollId, DEFAULT_LOGGED_IN_USER_ID).data!!
         var answerInfo = poll.answerInfo()
 
         assertEquals(2, answerInfo.size)
@@ -100,7 +97,7 @@ class PollTest(
         pollService.selectAnswer(SelectPollAnswerRequest(pollId, 2, answer1Id))
         pollService.selectAnswer(SelectPollAnswerRequest(pollId, 3, answer1Id))
         pollService.selectAnswer(SelectPollAnswerRequest(pollId, 4, answer1Id))
-        answerInfo = pollService.findById(pollId).data!!.answerInfo()
+        answerInfo = pollService.findById(pollId, DEFAULT_LOGGED_IN_USER_ID).data!!.answerInfo()
 
         assertEquals(3, answerInfo.byId(answer1Id).answererIds.size)
         assertEquals(amount(100.00), answerInfo.byId(answer1Id).percentage)
@@ -108,7 +105,7 @@ class PollTest(
         assertEquals(zeroAmount(), answerInfo.byId(answer2Id).percentage)
 
         pollService.selectAnswer(SelectPollAnswerRequest(pollId, 5, answer2Id))
-        answerInfo = pollService.findById(pollId).data!!.answerInfo()
+        answerInfo = pollService.findById(pollId, DEFAULT_LOGGED_IN_USER_ID).data!!.answerInfo()
 
         assertEquals(3, answerInfo.byId(answer1Id).answererIds.size)
         assertEquals(amount(75.00), answerInfo.byId(answer1Id).percentage)
@@ -116,7 +113,7 @@ class PollTest(
         assertEquals(amount(25.00), answerInfo.byId(answer2Id).percentage)
 
         pollService.selectAnswer(SelectPollAnswerRequest(pollId, 2, answer2Id))
-        answerInfo = pollService.findById(pollId).data!!.answerInfo()
+        answerInfo = pollService.findById(pollId, DEFAULT_LOGGED_IN_USER_ID).data!!.answerInfo()
 
         assertEquals(2, answerInfo.byId(answer1Id).answererIds.size)
         assertEquals(amount(50.00), answerInfo.byId(answer1Id).percentage)
@@ -124,7 +121,7 @@ class PollTest(
         assertEquals(amount(50.00), answerInfo.byId(answer2Id).percentage)
 
         pollService.selectAnswer(SelectPollAnswerRequest(pollId, 4, answer1Id))
-        answerInfo = pollService.findById(pollId).data!!.answerInfo()
+        answerInfo = pollService.findById(pollId, DEFAULT_LOGGED_IN_USER_ID).data!!.answerInfo()
 
         assertEquals(1, answerInfo.byId(answer1Id).answererIds.size)
         assertEquals(amount(33.33), answerInfo.byId(answer1Id).percentage)
@@ -145,17 +142,17 @@ class PollTest(
 
         val successResponse = pollService.updatePoll(UpdatePollRequest(poll.id, "What is the best video game?", 1))
         assertTrue(successResponse.isSuccessful)
-        assertTrue(pollService.findById(poll.id).data!!.content.contains("What is the best video game?"))
+        assertTrue(pollService.findById(poll.id, DEFAULT_LOGGED_IN_USER_ID).data!!.content.contains("What is the best video game?"))
     }
 
     @Test
     fun removesAndActivatesPoll() {
         pollService.remove(OperateOnContentRequest(1, 1, now()))
-        assertTrue(pollService.findById(1).data!!.isRemoved)
-        assertFalse(pollService.findById(1).data!!.isActive)
+        assertTrue(pollService.findById(1, DEFAULT_LOGGED_IN_USER_ID).data!!.isRemoved)
+        assertFalse(pollService.findById(1, DEFAULT_LOGGED_IN_USER_ID).data!!.isActive)
 
         pollService.activate(OperateOnContentRequest(1, 1, dateTime("20201-04-05T12:00:00")))
-        val poll = pollService.findById(1).data!!
+        val poll = pollService.findById(1, DEFAULT_LOGGED_IN_USER_ID).data!!
         assertFalse(poll.isRemoved)
         assertTrue(poll.isActive)
         assertEquals(dateTime("20201-04-05T12:00:00"), poll.updatedAt)
@@ -172,11 +169,11 @@ class PollTest(
         pollService.addComment(AddCommentRequest(pollId, 2, "Comment 1", now()))
         pollService.addComment(AddCommentRequest(pollId, 2, "Comment 1", now())).data!!
 
-        val listCommentsResponse = pollService.listComments(pollId, DEFAULT_LISTING_PARAMS)
+        val listCommentsResponse = pollService.listComments(ListCommentsRequest(pollId, DEFAULT_LOGGED_IN_USER_ID, DEFAULT_LISTING_PARAMS))
         assertEquals(5, listCommentsResponse.resultSize)
         assertTrue(listCommentsResponse.data.none { it.id == TRANSIENT_ID })
 
-        val poll = pollService.findById(pollId).data!!
+        val poll = pollService.findById(pollId, DEFAULT_LOGGED_IN_USER_ID).data!!
         assertEquals(5, poll.commentsAmount)
         assertEquals(3, poll.commentsPreview.size)
     }

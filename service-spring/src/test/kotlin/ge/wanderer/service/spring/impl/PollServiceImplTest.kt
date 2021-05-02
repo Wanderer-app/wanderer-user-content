@@ -140,7 +140,7 @@ class PollServiceImplTest {
     fun correctlyFindsPollById() {
         every { pollRepository.findById(1) } returns pollWithAnswers(1, jangula(), now(), "123", "Some question", mutableSetOf("Answer 1", "Answer 2"))
 
-        val response = service.findById(1)
+        val response = service.findById(1, DEFAULT_LOGGED_IN_USER_ID)
         assertTrue(response.isSuccessful)
         assertEquals("Poll fetched", response.message)
 
@@ -207,7 +207,7 @@ class PollServiceImplTest {
             createNewComment(1, now(), "gvipasuxe sabaka", vipiSoxumski())
         )
 
-        val response = service.listComments(1, ListingParams(4, 1, null, listOf()))
+        val response = service.listComments(ListCommentsRequest(1, DEFAULT_LOGGED_IN_USER_ID, ListingParams(4, 1, null, listOf())))
         assertTrue(response.isSuccessful)
         assertEquals("Comments fetched!", response.message)
         assertEquals(4, response.resultSize)

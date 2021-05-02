@@ -16,9 +16,9 @@ import ge.wanderer.core.data.file.AttachedFile
 import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.map.IPin
 import ge.wanderer.core.model.map.PinContent
-import ge.wanderer.core.model.rating.VoteType
-import ge.wanderer.core.model.report.Report
+import ge.wanderer.common.enums.VoteType
 import ge.wanderer.common.listing.ListingParams
+import ge.wanderer.core.integration.user.User
 import ge.wanderer.persistence.repository.CommentRepository
 import ge.wanderer.persistence.repository.PinRepository
 import ge.wanderer.service.protocol.data.*
@@ -54,7 +54,7 @@ class PinServiceImpl(
         val command = CreatePinCommand(request.onDate, user, request.type, content, request.location, request.routeCode)
 
         return response(
-            commandProvider.decoratePersistentCommand(command, NoPin(), pinRepository, logger())
+            commandProvider.decoratePersistentCommand(command, NoPin(), pinRepository, logger()), user
         )
     }
 
@@ -63,9 +63,9 @@ class PinServiceImpl(
         return ServiceListingResponse(true, "Pins Fetched!", pins.size, listingParams.batchNumber, pins.map { it.mapData() })
     }
 
-    override fun list(listingParams: ListingParams): ServiceListingResponse<PinData> {
+    override fun list(listingParams: ListingParams, userId: Long): ServiceListingResponse<PinData> {
         val pins = pinRepository.list(listingParams)
-        return ServiceListingResponse(true, "Pins Fetched!", pins.size, listingParams.batchNumber, pins.map { it.dataWithCommentsPreview() })
+        return ServiceListingResponse(true, "Pins Fetched!", pins.size, listingParams.batchNumber, pins.map { it.dataWithCommentsPreview(userService.findUserById(userId)) })
     }
 
     override fun reportIrrelevant(request: OperateOnContentRequest): ServiceResponse<PinData> {
@@ -74,7 +74,7 @@ class PinServiceImpl(
         val command = ReportIrrelevantPinCommand(user, request.date, pin, userService, reportingConfiguration)
 
         return response(
-            commandProvider.decorateCommand(command, pin, logger())
+            commandProvider.decorateCommand(command, pin, logger()), user
         )
     }
 
@@ -84,13 +84,13 @@ class PinServiceImpl(
         val command = UpdatePinCommand(pin, PinContent(request.newTitle, request.newText, request.newFile?.let { AttachedFile() }?:let { null }), user)
 
         return response(
-            commandProvider.decorateCommand(command, pin, logger())
+            commandProvider.decorateCommand(command, pin, logger()), user
         )
     }
 
-    override fun findById(id: Long): ServiceResponse<PinData> {
+    override fun findById(id: Long, userId: Long): ServiceResponse<PinData> {
         val pin = pinRepository.findById(id)
-        return ServiceResponse(true, "Pin fetched!", pin.dataWithCommentsPreview())
+        return ServiceResponse(true, "Pin fetched!", pin.dataWithCommentsPreview(userService.findUserById(userId)))
     }
 
     override fun activate(request: OperateOnContentRequest): ServiceResponse<PinData> {
@@ -99,7 +99,7 @@ class PinServiceImpl(
         val command = ActivateContentCommand(user, pin,  request.date, userService)
 
         return response(
-            commandProvider.decorateCommand(command, pin, logger())
+            commandProvider.decorateCommand(command, pin, logger()), user
         )
     }
 
@@ -109,7 +109,7 @@ class PinServiceImpl(
         val command = RemoveContentCommand(user, pin, request.date, userService)
 
         return response(
-            commandProvider.decorateCommand(command, pin, logger())
+            commandProvider.decorateCommand(command, pin, logger()), user
         )
     }
 
@@ -149,15 +149,16 @@ class PinServiceImpl(
         val command = AddCommentCommand(request.commentContent, user, request.date, pin, userService)
 
         val result = commandProvider.decorateCommand(command, NoComment(), logger()).execute()
-        return ServiceResponse(result.isSuccessful, result.message, result.returnedModel.data())
+        return ServiceResponse(result.isSuccessful, result.message, result.returnedModel.data(user))
     }
 
-    override fun listComments(contentId: Long, listingParams: ListingParams): ServiceListingResponse<CommentData> {
-        val pin = pinRepository.findById(contentId)
-        val commentsData = commentRepository.listActiveFor(pin, listingParams)
-            .map { it.data(commentPreviewProvider.getPreviewFor(it)) }
+    override fun listComments(request: ListCommentsRequest): ServiceListingResponse<CommentData> {
+        val pin = pinRepository.findById(request.contentId)
+        val user = userService.findUserById(request.userId)
+        val commentsData = commentRepository.listActiveFor(pin, request.listingParams)
+            .map { it.data(user, commentPreviewProvider.getPreviewFor(it, user)) }
 
-        return ServiceListingResponse(true, "Comments fetched!", commentsData.size, listingParams.batchNumber, commentsData)
+        return ServiceListingResponse(true, "Comments fetched!", commentsData.size, request.listingParams.batchNumber, commentsData)
     }
 
     override fun report(request: ReportContentRequest): ServiceResponse<ReportData> {
@@ -178,13 +179,13 @@ class PinServiceImpl(
         return ServiceListingResponse(true, "Reports Retrieved!", reports.size, 1, reports.map { it.data() })
     }
 
-    private fun IPin.dataWithCommentsPreview(): PinData {
-        return this.data(commentPreviewProvider.getPreviewFor(this))
+    private fun IPin.dataWithCommentsPreview(user: User): PinData {
+        return this.data(commentPreviewProvider.getPreviewFor(this, user), user)
     }
 
-    private fun response(command: Command<IPin>): ServiceResponse<PinData> {
+    private fun response(command: Command<IPin>, user: User): ServiceResponse<PinData> {
         val executionResult = command.execute()
-        val data = executionResult.returnedModel.dataWithCommentsPreview()
+        val data = executionResult.returnedModel.dataWithCommentsPreview(user)
         return ServiceResponse(executionResult.isSuccessful, executionResult.message, data)
     }
 }

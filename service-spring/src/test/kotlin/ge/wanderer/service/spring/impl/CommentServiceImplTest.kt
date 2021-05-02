@@ -5,10 +5,7 @@ import ge.wanderer.common.enums.ReportReason
 import ge.wanderer.common.now
 import ge.wanderer.core.configuration.ReportingConfiguration
 import ge.wanderer.common.listing.ListingParams
-import ge.wanderer.service.protocol.request.AddCommentRequest
-import ge.wanderer.service.protocol.request.OperateOnContentRequest
-import ge.wanderer.service.protocol.request.ReportContentRequest
-import ge.wanderer.service.protocol.request.UpdateCommentRequest
+import ge.wanderer.service.protocol.request.*
 import ge.wanderer.service.spring.command.CommandProvider
 import ge.wanderer.service.spring.test_support.*
 import io.mockk.every
@@ -67,7 +64,7 @@ class CommentServiceImplTest {
 
     @Test
     fun correctlyFindsById() {
-        val response = service.findById(3)
+        val response = service.findById(3, DEFAULT_LOGGED_IN_USER_ID)
         assertTrue(response.isSuccessful)
         assertEquals("Successfully retrieved comment", response.message)
         assertEquals(3, response.data!!.id)
@@ -176,7 +173,7 @@ class CommentServiceImplTest {
         comment1.addComment(createNewComment(7, now(), "sd", jangula()))
 
         every { commentRepository.listActiveFor(comment1, any()) } returns comment1.comments()
-        val response = service.listComments(1, ListingParams(5, 1, null, listOf()))
+        val response = service.listComments(ListCommentsRequest(1, DEFAULT_LOGGED_IN_USER_ID, ListingParams(5, 1, null, listOf())))
         assertTrue(response.isSuccessful)
 
         val replies = response.data

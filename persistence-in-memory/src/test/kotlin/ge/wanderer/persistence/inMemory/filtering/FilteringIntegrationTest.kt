@@ -10,7 +10,7 @@ import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.content.RateableContent
 import ge.wanderer.core.model.content.status.Active
 import ge.wanderer.core.model.rating.Vote
-import ge.wanderer.core.model.rating.VoteType
+import ge.wanderer.common.enums.VoteType
 import ge.wanderer.persistence.inMemory.WandererInMemoryPersistenceApplication
 import ge.wanderer.persistence.inMemory.support.createNewPostWithoutFiles
 import ge.wanderer.persistence.repository.PinRepository

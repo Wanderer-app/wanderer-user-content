@@ -2,6 +2,7 @@ package ge.wanderer.service.protocol.data
 
 import ge.wanderer.common.enums.UserContentType
 import ge.wanderer.core.data.file.AttachedFile
+import ge.wanderer.common.enums.VoteType
 import org.joda.time.LocalDateTime
 
 data class DiscussionElementData (
@@ -17,5 +18,6 @@ data class DiscussionElementData (
     val routeCode: String,
     val content: String,
     val attachedFiles: List<AttachedFile>,
-    val type: UserContentType
+    val type: UserContentType,
+    val userVoteDirection: VoteType?
 )

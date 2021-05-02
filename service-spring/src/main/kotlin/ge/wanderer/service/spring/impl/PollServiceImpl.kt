@@ -9,6 +9,7 @@ import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.UpdateDiscussionElementData
 import ge.wanderer.core.model.discussion.poll.IPoll
 import ge.wanderer.common.listing.ListingParams
+import ge.wanderer.core.integration.user.User
 import ge.wanderer.persistence.repository.CommentRepository
 import ge.wanderer.persistence.repository.PollRepository
 import ge.wanderer.service.protocol.data.CommentData
@@ -40,7 +41,7 @@ class PollServiceImpl(
         val command = CreatePollCommand(request.onDate, user, request.text, request.routeCode, request.answers)
 
         return response (
-            commandProvider.decoratePersistentCommand(command, NoPoll(), pollRepository, logger())
+            commandProvider.decoratePersistentCommand(command, NoPoll(), pollRepository, logger()), user
         )
     }
 
@@ -51,7 +52,7 @@ class PollServiceImpl(
         val command = UpdateDiscussionElementCommand(poll, updateData, user)
 
         return response(
-            commandProvider.decorateCommand(command, poll, logger())
+            commandProvider.decorateCommand(command, poll, logger()), user
         )
     }
 
@@ -61,7 +62,7 @@ class PollServiceImpl(
         val command = AddPollAnswerCommand(poll, request.answerText, request.date, user)
 
         return response(
-            commandProvider.decorateCommand(command, poll, logger())
+            commandProvider.decorateCommand(command, poll, logger()), user
         )
     }
 
@@ -71,7 +72,7 @@ class PollServiceImpl(
         val command = RemovePollAnswerCommand(poll, user, request.answerId, request.date, userService)
 
         return response(
-            commandProvider.decorateCommand(command, poll, logger())
+            commandProvider.decorateCommand(command, poll, logger()), user
         )
     }
 
@@ -81,12 +82,12 @@ class PollServiceImpl(
         val command = SelectPollAnswerCommand(poll, request.answerId, user)
 
         return response(
-            commandProvider.decorateCommand(command, poll, logger())
+            commandProvider.decorateCommand(command, poll, logger()), user
         )
     }
 
-    override fun findById(id: Long): ServiceResponse<DiscussionElementData> =
-        ServiceResponse(true, "Poll fetched", pollRepository.findById(id).dataWithCommentsPreview())
+    override fun findById(id: Long, userId: Long): ServiceResponse<DiscussionElementData> =
+        ServiceResponse(true, "Poll fetched", pollRepository.findById(id).dataWithCommentsPreview(userService.findUserById(userId)))
 
 
     override fun activate(request: OperateOnContentRequest): ServiceResponse<DiscussionElementData> {
@@ -95,7 +96,7 @@ class PollServiceImpl(
         val command = ActivateContentCommand(user, poll, request.date, userService)
 
         return response(
-            commandProvider.decorateCommand(command, poll, logger())
+            commandProvider.decorateCommand(command, poll, logger()), user
         )
     }
 
@@ -105,7 +106,7 @@ class PollServiceImpl(
         val command = RemoveContentCommand(user, poll, request.date, userService)
 
         return response(
-            commandProvider.decorateCommand(command, poll, logger())
+            commandProvider.decorateCommand(command, poll, logger()), user
         )
     }
 
@@ -115,24 +116,25 @@ class PollServiceImpl(
         val command = AddCommentCommand(request.commentContent, user, request.date, poll, userService)
 
         val result = commandProvider.decorateCommand(command, NoComment(), logger()).execute()
-        return ServiceResponse(result.isSuccessful, result.message, result.returnedModel.data())
+        return ServiceResponse(result.isSuccessful, result.message, result.returnedModel.data(user))
     }
 
-    override fun listComments(contentId: Long, listingParams: ListingParams): ServiceListingResponse<CommentData> {
-        val poll = pollRepository.findById(contentId)
-        val commentsData = commentRepository.listActiveFor(poll, listingParams)
-            .map { it.data(commentPreviewProvider.getPreviewFor(it)) }
+    override fun listComments(request: ListCommentsRequest): ServiceListingResponse<CommentData> {
+        val poll = pollRepository.findById(request.contentId)
+        val user = userService.findUserById(request.userId)
+        val commentsData = commentRepository.listActiveFor(poll, request.listingParams)
+            .map { it.data(user, commentPreviewProvider.getPreviewFor(it, user)) }
 
-        return ServiceListingResponse(true, "Comments fetched!", commentsData.size, listingParams.batchNumber, commentsData)
+        return ServiceListingResponse(true, "Comments fetched!", commentsData.size, request.listingParams.batchNumber, commentsData)
     }
 
-    private fun IPoll.dataWithCommentsPreview(): DiscussionElementData {
-        return this.data(commentPreviewProvider.getPreviewFor(this))
+    private fun IPoll.dataWithCommentsPreview(user: User): DiscussionElementData {
+        return this.data(commentPreviewProvider.getPreviewFor(this, user), user)
     }
 
-    private fun response(command: Command<IPoll>): ServiceResponse<DiscussionElementData> {
+    private fun response(command: Command<IPoll>, user: User): ServiceResponse<DiscussionElementData> {
         val executionResult = command.execute()
-        val data = executionResult.returnedModel.dataWithCommentsPreview()
+        val data = executionResult.returnedModel.dataWithCommentsPreview(user)
         return ServiceResponse(executionResult.isSuccessful, executionResult.message, data)
     }
 

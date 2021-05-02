@@ -15,6 +15,6 @@ class ExceptionHandlingDiscussionService(
     @Autowired private val discussionServiceImpl: DiscussionServiceImpl
 ): DiscussionService {
 
-    override fun getDiscussionForRoute(routeCode: String, listingParams: ListingParams): ServiceListingResponse<DiscussionElementData> =
-        handleListing { discussionServiceImpl.getDiscussionForRoute(routeCode, listingParams) }
+    override fun getDiscussionForRoute(routeCode: String, userId: Long, listingParams: ListingParams): ServiceListingResponse<DiscussionElementData> =
+        handleListing { discussionServiceImpl.getDiscussionForRoute(routeCode, userId, listingParams) }
 }

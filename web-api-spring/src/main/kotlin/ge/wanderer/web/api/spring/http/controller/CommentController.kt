@@ -22,8 +22,11 @@ class CommentController(
         httpResponse(commentService.updateComment(request))
 
     @GetMapping("/{id}")
-    fun getComment(@PathVariable id: Long): ResponseEntity<ServiceResponse<CommentData>> =
-        httpResponse(commentService.findById(id))
+    fun getComment(
+        @PathVariable id: Long,
+        @RequestHeader(name = "loggedInUserId", required = true) loggedInUserId: Long
+    ): ResponseEntity<ServiceResponse<CommentData>> =
+        httpResponse(commentService.findById(id, loggedInUserId))
 
     @PostMapping("/activate")
     fun activateComment(@RequestBody request: OperateOnContentRequest): ResponseEntity<ServiceResponse<CommentData>> =
@@ -49,9 +52,13 @@ class CommentController(
     fun addComment(@RequestBody request: AddCommentRequest): ResponseEntity<ServiceResponse<CommentData>> =
         httpResponse(commentService.addComment(request))
 
-    @PostMapping("/{id}/replies")
-    fun listComments(@RequestBody listingParams: ListingParams, @PathVariable id: Long): ResponseEntity<ServiceListingResponse<CommentData>> =
-        httpResponse(commentService.listComments(id, listingParams))
+    @PostMapping("/{contentId}/replies")
+    fun listComments(
+        @RequestBody listingParams: ListingParams,
+        @PathVariable contentId: Long,
+        @RequestHeader(name = "loggedInUserId", required = true) loggedInUserId: Long
+    ): ResponseEntity<ServiceListingResponse<CommentData>> =
+        httpResponse(commentService.listComments(ListCommentsRequest(contentId, loggedInUserId, listingParams)))
 
     @PostMapping("/report")
     fun report(@RequestBody request: ReportContentRequest): ResponseEntity<ServiceResponse<ReportData>> =

@@ -5,6 +5,7 @@ import ge.wanderer.common.dateTime
 import ge.wanderer.common.enums.ReportReason
 import ge.wanderer.common.now
 import ge.wanderer.integration_tests.DEFAULT_LISTING_PARAMS
+import ge.wanderer.integration_tests.DEFAULT_LOGGED_IN_USER_ID
 import ge.wanderer.integration_tests.SpringServiceWithInMemoryPersistenceApp
 import ge.wanderer.service.protocol.data.FileData
 import ge.wanderer.service.protocol.interfaces.PostService
@@ -33,7 +34,7 @@ class PostTest(
         val post = response.data!!
         assertEquals("Some teeext", post.content)
         assertEquals(2, post.attachedFiles.size)
-        assertEquals("Some teeext", postService.findById(post.id).data!!.content)
+        assertEquals("Some teeext", postService.findById(post.id, DEFAULT_LOGGED_IN_USER_ID).data!!.content)
     }
 
     @Test
@@ -53,7 +54,7 @@ class PostTest(
 
     @Test
     fun canBeRated() {
-        var post = postService.findById(1).data!!
+        var post = postService.findById(1, DEFAULT_LOGGED_IN_USER_ID).data!!
         assertEquals(0, post.ratingData!!.totalRating)
 
         var response = postService.giveUpVote(OperateOnContentRequest(post.id, 2, now()))
@@ -69,17 +70,17 @@ class PostTest(
         response = postService.removeVote(OperateOnContentRequest(post.id, 2, now()))
         assertTrue(response.isSuccessful)
 
-        post = postService.findById(1).data!!
+        post = postService.findById(1, DEFAULT_LOGGED_IN_USER_ID).data!!
         assertEquals(-1, post.ratingData!!.totalRating)
     }
 
     @Test
     fun canBeCommented() {
-        val commentsBefore = postService.findById(1).data!!.commentsAmount
+        val commentsBefore = postService.findById(1, DEFAULT_LOGGED_IN_USER_ID).data!!.commentsAmount
         postService.addComment(AddCommentRequest(1, 2, "maladec sheen", now()))
         postService.addComment(AddCommentRequest(1, 6, "madloba", now()))
 
-        val comments = postService.listComments(1, DEFAULT_LISTING_PARAMS).data
+        val comments = postService.listComments(ListCommentsRequest(1, DEFAULT_LOGGED_IN_USER_ID, DEFAULT_LISTING_PARAMS)).data
         assertEquals(commentsBefore + 2, comments.size)
         assertTrue(comments.none { it.id == TRANSIENT_ID })
     }
@@ -89,7 +90,7 @@ class PostTest(
         postService.report(ReportContentRequest(2, 2, now(), ReportReason.INAPPROPRIATE_CONTENT))
         postService.report(ReportContentRequest(2, 3, now(), ReportReason.INAPPROPRIATE_CONTENT))
 
-        assertTrue(postService.findById(2).data!!.isActive)
+        assertTrue(postService.findById(2, DEFAULT_LOGGED_IN_USER_ID).data!!.isActive)
         assertEquals(2, postService.listReportsForContent(2).data.size)
 
         val response = postService.report(ReportContentRequest(2, 3, now(), ReportReason.INAPPROPRIATE_CONTENT))
@@ -97,7 +98,7 @@ class PostTest(
         assertEquals("You already reported this content", response.message)
 
         postService.report(ReportContentRequest(2, 5, now(), ReportReason.OFFENSIVE_CONTENT))
-        val post = postService.findById(2).data!!
+        val post = postService.findById(2, DEFAULT_LOGGED_IN_USER_ID).data!!
 
         assertFalse(post.isActive)
         assertTrue(post.isRemoved)

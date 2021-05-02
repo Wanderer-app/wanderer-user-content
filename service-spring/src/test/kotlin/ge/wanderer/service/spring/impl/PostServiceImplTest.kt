@@ -66,7 +66,7 @@ class PostServiceImplTest {
     fun findById() {
         every { postRepository.findById(1) } returns createNewPostWithoutFiles(1, jambura(), "Some text", now())
 
-        val response = service.findById(1)
+        val response = service.findById(1, DEFAULT_LOGGED_IN_USER_ID)
         assertTrue(response.isSuccessful)
         assertEquals("Post fetched", response.message)
         assertNotNull(response.data)
@@ -155,7 +155,7 @@ class PostServiceImplTest {
             createNewComment(4, now(), "some text", vipiSoxumski())
         )
 
-        val response = service.listComments(1, ListingParams(5, 1, null, listOf()))
+        val response = service.listComments(ListCommentsRequest(1, DEFAULT_LOGGED_IN_USER_ID, ListingParams(5, 1, null, listOf())))
 
         assertTrue(response.isSuccessful)
         assertEquals("Comments Retrieved!", response.message)

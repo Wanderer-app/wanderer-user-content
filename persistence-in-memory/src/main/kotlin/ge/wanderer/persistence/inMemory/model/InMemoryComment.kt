@@ -47,6 +47,8 @@ class InMemoryComment(
         comment.removeVotesBy(user, onDate)
     }
 
+    override fun getVoteBy(user: User): IVote? = comment.getVoteBy(user)
+
     override fun id(): Long = id
 
     override fun creator(): User = comment.creator()

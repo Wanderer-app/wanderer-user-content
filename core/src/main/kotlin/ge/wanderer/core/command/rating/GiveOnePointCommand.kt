@@ -7,7 +7,7 @@ import ge.wanderer.core.model.content.RateableContent
 import ge.wanderer.core.model.content.status.Active
 import ge.wanderer.core.model.rating.IVote
 import ge.wanderer.core.model.rating.Vote
-import ge.wanderer.core.model.rating.VoteType
+import ge.wanderer.common.enums.VoteType
 import org.joda.time.LocalDateTime
 
 class GiveOnePointCommand(

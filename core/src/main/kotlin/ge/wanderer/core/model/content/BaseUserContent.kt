@@ -63,5 +63,10 @@ abstract class BaseUserContent(
         reports.add(report)
     }
 
+    override fun getVoteBy(user: User): IVote? =
+        votes
+            .filter { it.isActive() }
+            .firstOrNull() { it.creator() == user }
+
     override fun reports(): Set<Report> = reports.toSet()
 }

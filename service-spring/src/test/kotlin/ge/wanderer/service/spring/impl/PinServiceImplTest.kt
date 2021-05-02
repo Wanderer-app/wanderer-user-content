@@ -100,7 +100,7 @@ class PinServiceImplTest {
     @Test
     fun correctlyListsPins() {
         val listingParams = ListingParams(5, 1, null, listOf())
-        val response = service.list(listingParams)
+        val response = service.list(listingParams, DEFAULT_LOGGED_IN_USER_ID)
 
         assertTrue(response.isSuccessful)
         assertEquals("Pins Fetched!", response.message)
@@ -162,7 +162,7 @@ class PinServiceImplTest {
 
     @Test
     fun findsById() {
-        val response = service.findById(1)
+        val response = service.findById(1, DEFAULT_LOGGED_IN_USER_ID)
         assertTrue(response.isSuccessful)
         assertEquals("Pin fetched!", response.message)
         assertEquals(1, response.data!!.id)
@@ -247,7 +247,7 @@ class PinServiceImplTest {
         every { commentRepository.listActiveFor(pin2, any()) } returns pin2.comments()
 
         val listingParams = ListingParams(4, 1, null, listOf())
-        val response = service.listComments(2, listingParams)
+        val response = service.listComments(ListCommentsRequest(2, DEFAULT_LOGGED_IN_USER_ID, listingParams))
 
         assertTrue(response.isSuccessful)
         assertEquals("Comments fetched!", response.message)

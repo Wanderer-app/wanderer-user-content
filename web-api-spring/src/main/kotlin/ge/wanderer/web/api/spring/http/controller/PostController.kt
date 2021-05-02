@@ -26,8 +26,11 @@ class PostController(
         httpResponse(postService.updatePost(request))
 
     @GetMapping("/{id}")
-    fun getPost(@PathVariable id: Long): ResponseEntity<ServiceResponse<DiscussionElementData>> =
-        httpResponse(postService.findById(id))
+    fun getPost(
+        @PathVariable id: Long,
+        @RequestHeader(name = "loggedInUserId", required = true) loggedInUserId: Long
+    ): ResponseEntity<ServiceResponse<DiscussionElementData>> =
+        httpResponse(postService.findById(id, loggedInUserId))
 
     @PostMapping("/activate")
     fun activatePost(@RequestBody request: OperateOnContentRequest): ResponseEntity<ServiceResponse<DiscussionElementData>> =
@@ -54,8 +57,12 @@ class PostController(
         httpResponse(postService.addComment(request))
 
     @PostMapping("/{id}/comments")
-    fun listComments(@RequestBody listingParams: ListingParams, @PathVariable id: Long): ResponseEntity<ServiceListingResponse<CommentData>> =
-        httpResponse(postService.listComments(id, listingParams))
+    fun listComments(
+        @RequestBody listingParams: ListingParams,
+        @PathVariable id: Long,
+        @RequestHeader(name = "loggedInUserId", required = true) loggedInUserId: Long
+    ): ResponseEntity<ServiceListingResponse<CommentData>> =
+        httpResponse(postService.listComments(ListCommentsRequest(id, loggedInUserId, listingParams)))
 
     @PostMapping("/report")
     fun report(@RequestBody request: ReportContentRequest): ResponseEntity<ServiceResponse<ReportData>> =

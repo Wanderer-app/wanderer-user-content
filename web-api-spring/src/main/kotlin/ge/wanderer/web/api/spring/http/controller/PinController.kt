@@ -26,8 +26,11 @@ class PinController(
         httpResponse(pinService.listForRoute(routeCode, listingParams))
 
     @PostMapping("/list")
-    fun list(@RequestBody listingParams: ListingParams): ResponseEntity<ServiceListingResponse<PinData>> =
-        httpResponse(pinService.list(listingParams))
+    fun list(
+        @RequestBody listingParams: ListingParams,
+        @RequestHeader(name = "loggedInUserId", required = true) loggedInUserId: Long
+    ): ResponseEntity<ServiceListingResponse<PinData>> =
+        httpResponse(pinService.list(listingParams, loggedInUserId))
 
     @PostMapping("/report-irrelevant")
     fun reportIrrelevant(@RequestBody request: OperateOnContentRequest): ResponseEntity<ServiceResponse<PinData>> =
@@ -38,8 +41,8 @@ class PinController(
         httpResponse(pinService.updatePin(request))
 
     @GetMapping("/{id}")
-    fun getPin(@PathVariable id: Long): ResponseEntity<ServiceResponse<PinData>> =
-        httpResponse(pinService.findById(id))
+    fun getPin(@PathVariable id: Long, @RequestHeader(name = "loggedInUserId", required = true) loggedInUserId: Long): ResponseEntity<ServiceResponse<PinData>> =
+        httpResponse(pinService.findById(id, loggedInUserId))
 
     @PostMapping("/activate")
     fun activatePin(@RequestBody request: OperateOnContentRequest): ResponseEntity<ServiceResponse<PinData>> =
@@ -65,9 +68,13 @@ class PinController(
     fun addComment(@RequestBody request: AddCommentRequest): ResponseEntity<ServiceResponse<CommentData>> =
         httpResponse(pinService.addComment(request))
 
-    @PostMapping("/{id}/comments")
-    fun listComments(@RequestBody listingParams: ListingParams, @PathVariable id: Long): ResponseEntity<ServiceListingResponse<CommentData>> =
-        httpResponse(pinService.listComments(id, listingParams))
+    @PostMapping("/{contentId}/comments")
+    fun listComments(
+        @RequestBody listingParams: ListingParams,
+        @PathVariable contentId: Long,
+        @RequestHeader(name = "loggedInUserId", required = true) loggedInUserId: Long
+    ): ResponseEntity<ServiceListingResponse<CommentData>> =
+        httpResponse(pinService.listComments(ListCommentsRequest(contentId, loggedInUserId, listingParams)))
 
     @PostMapping("/report")
     fun report(@RequestBody request: ReportContentRequest): ResponseEntity<ServiceResponse<ReportData>> =

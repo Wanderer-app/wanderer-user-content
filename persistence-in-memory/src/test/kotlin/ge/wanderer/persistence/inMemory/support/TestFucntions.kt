@@ -3,8 +3,6 @@ package ge.wanderer.persistence.inMemory.support
 import ge.wanderer.common.constants.TRANSIENT_ID
 import ge.wanderer.common.enums.PinType
 import ge.wanderer.common.listing.ListingParams
-import ge.wanderer.common.listing.SortingDirection
-import ge.wanderer.common.listing.SortingParams
 import ge.wanderer.common.map.LatLng
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.comment.Comment
@@ -15,10 +13,7 @@ import ge.wanderer.core.model.discussion.poll.PollAnswer
 import ge.wanderer.core.model.discussion.post.Post
 import ge.wanderer.core.model.map.Pin
 import ge.wanderer.core.model.map.PinContent
-import ge.wanderer.core.model.rating.Vote
-import ge.wanderer.core.model.rating.VoteType
 import org.joda.time.LocalDateTime
-import java.net.URL
 
 fun createNewComment(id: Long, createDate: LocalDateTime, text: String, author: User): Comment =
     Comment(

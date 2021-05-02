@@ -26,10 +26,10 @@ class DiscussionServiceImplTest {
             )
         }
 
-        val service = DiscussionServiceImpl(repository, testCommentPreviewProvider())
+        val service = DiscussionServiceImpl(repository, testCommentPreviewProvider(), mockedUserService())
         val listingParams = ListingParams(5, 1, null, listOf())
 
-        val response = service.getDiscussionForRoute("123", listingParams)
+        val response = service.getDiscussionForRoute("123", DEFAULT_LOGGED_IN_USER_ID, listingParams)
         assertTrue(response.isSuccessful)
         assertEquals("Discussions fetched", response.message)
         assertEquals(3, response.resultSize)
@@ -64,9 +64,9 @@ class DiscussionServiceImplTest {
         val repository = mockk<DiscussionRepository> {
             every { listForRoute("123", any()) } throws IllegalStateException("Route does not exist")
         }
-        val service = DiscussionServiceImpl(repository, testCommentPreviewProvider())
+        val service = DiscussionServiceImpl(repository, testCommentPreviewProvider(), mockedUserService())
 
-        val exception = assertThrows<IllegalStateException> { service.getDiscussionForRoute("123", mockk()) }
+        val exception = assertThrows<IllegalStateException> { service.getDiscussionForRoute("123", 1L, mockk()) }
         assertEquals("Route does not exist", exception.message!!)
     }
 }

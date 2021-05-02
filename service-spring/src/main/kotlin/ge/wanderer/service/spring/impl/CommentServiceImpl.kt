@@ -12,18 +12,14 @@ import ge.wanderer.core.configuration.ReportingConfiguration
 import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.UpdateCommentData
 import ge.wanderer.core.model.comment.IComment
-import ge.wanderer.core.model.rating.VoteType
-import ge.wanderer.core.model.report.Report
-import ge.wanderer.common.listing.ListingParams
+import ge.wanderer.common.enums.VoteType
+import ge.wanderer.core.integration.user.User
 import ge.wanderer.persistence.repository.CommentRepository
 import ge.wanderer.service.protocol.data.CommentData
 import ge.wanderer.service.protocol.data.RatingData
 import ge.wanderer.service.protocol.data.ReportData
 import ge.wanderer.service.protocol.interfaces.CommentService
-import ge.wanderer.service.protocol.request.AddCommentRequest
-import ge.wanderer.service.protocol.request.OperateOnContentRequest
-import ge.wanderer.service.protocol.request.ReportContentRequest
-import ge.wanderer.service.protocol.request.UpdateCommentRequest
+import ge.wanderer.service.protocol.request.*
 import ge.wanderer.service.protocol.response.ServiceListingResponse
 import ge.wanderer.service.protocol.response.ServiceResponse
 import ge.wanderer.service.spring.CommentPreviewProvider
@@ -50,13 +46,13 @@ class CommentServiceImpl(
         val command = UpdateCommentCommand(comment, UpdateCommentData(request.text), user)
 
         return response(
-            commandProvider.decorateCommand(command, comment, logger())
+            commandProvider.decorateCommand(command, comment, logger()), user
         )
     }
 
-    override fun findById(id: Long): ServiceResponse<CommentData> {
+    override fun findById(id: Long, userId: Long): ServiceResponse<CommentData> {
         val comment = commentRepository.findById(id)
-        return ServiceResponse(true, "Successfully retrieved comment", comment.dataWithRepliesPreview())
+        return ServiceResponse(true, "Successfully retrieved comment", comment.dataWithRepliesPreview(userService.findUserById(userId)))
     }
 
     override fun activate(request: OperateOnContentRequest): ServiceResponse<CommentData> {
@@ -65,7 +61,7 @@ class CommentServiceImpl(
         val command = ActivateContentCommand(user, comment, request.date, userService)
 
         return response(
-            commandProvider.decorateCommand(command, comment, logger())
+            commandProvider.decorateCommand(command, comment, logger()), user
         )
     }
 
@@ -75,7 +71,7 @@ class CommentServiceImpl(
         val command = RemoveContentCommand(user, comment, request.date, userService)
 
         return response(
-            commandProvider.decorateCommand(command, comment, logger())
+            commandProvider.decorateCommand(command, comment, logger()), user
         )
     }
 
@@ -115,14 +111,14 @@ class CommentServiceImpl(
         val command = AddCommentCommand(request.commentContent, user, request.date, comment, userService)
 
         return response(
-            commandProvider.decorateCommand(command, comment, logger())
+            commandProvider.decorateCommand(command, comment, logger()), user
         )
     }
 
-    override fun listComments(contentId: Long, listingParams: ListingParams): ServiceListingResponse<CommentData> {
-        val comment = commentRepository.findById(contentId)
-        val replies = commentRepository.listActiveFor(comment, listingParams)
-        return ServiceListingResponse(true, "Replies Retrieved!", replies.size, listingParams.batchNumber, replies.map { it.data() })
+    override fun listComments(request: ListCommentsRequest): ServiceListingResponse<CommentData> {
+        val comment = commentRepository.findById(request.contentId)
+        val replies = commentRepository.listActiveFor(comment, request.listingParams)
+        return ServiceListingResponse(true, "Replies Retrieved!", replies.size, request.listingParams.batchNumber, replies.map { it.data(userService.findUserById(request.userId)) })
     }
 
     override fun report(request: ReportContentRequest): ServiceResponse<ReportData> {
@@ -141,14 +137,14 @@ class CommentServiceImpl(
         return ServiceListingResponse(true, "Reports Retrieved!", reports.size, 1, reports.map { it.data() })
     }
 
-    private fun response(command: Command<IComment>): ServiceResponse<CommentData> {
+    private fun response(command: Command<IComment>, user: User): ServiceResponse<CommentData> {
         val executionResult = command.execute()
-        val data = executionResult.returnedModel.dataWithRepliesPreview()
+        val data = executionResult.returnedModel.dataWithRepliesPreview(user)
         return ServiceResponse(executionResult.isSuccessful, executionResult.message, data)
     }
 
-    private fun IComment.dataWithRepliesPreview() =
-       this.data(commentPreviewProvider.getPreviewFor(this))
+    private fun IComment.dataWithRepliesPreview(user: User) =
+       this.data(user, commentPreviewProvider.getPreviewFor(this, user))
 
 
 }

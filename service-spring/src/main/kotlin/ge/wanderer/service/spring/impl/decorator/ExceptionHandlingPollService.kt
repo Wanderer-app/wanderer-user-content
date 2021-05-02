@@ -32,8 +32,8 @@ class ExceptionHandlingPollService(
     override fun selectAnswer(request: SelectPollAnswerRequest): ServiceResponse<DiscussionElementData> =
         handle { pollServiceImpl.selectAnswer(request) }
 
-    override fun findById(id: Long): ServiceResponse<DiscussionElementData> =
-        handle { pollServiceImpl.findById(id) }
+    override fun findById(id: Long, userId: Long): ServiceResponse<DiscussionElementData> =
+        handle { pollServiceImpl.findById(id, userId) }
 
     override fun activate(request: OperateOnContentRequest): ServiceResponse<DiscussionElementData> =
         handle { pollServiceImpl.activate(request) }
@@ -44,6 +44,6 @@ class ExceptionHandlingPollService(
     override fun addComment(request: AddCommentRequest): ServiceResponse<CommentData> =
         handle { pollServiceImpl.addComment(request) }
 
-    override fun listComments(contentId: Long, listingParams: ListingParams): ServiceListingResponse<CommentData> =
-        handleListing { pollServiceImpl.listComments(contentId, listingParams) }
+    override fun listComments(request: ListCommentsRequest): ServiceListingResponse<CommentData> =
+        handleListing { pollServiceImpl.listComments(request) }
 }

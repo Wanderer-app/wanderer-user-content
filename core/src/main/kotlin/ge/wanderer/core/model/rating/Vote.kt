@@ -1,6 +1,7 @@
 package ge.wanderer.core.model.rating
 
 import ge.wanderer.common.enums.UserContentType
+import ge.wanderer.common.enums.VoteType
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.content.status.ContentStatusType
 import ge.wanderer.core.model.content.status.UserAddedContentStatus
