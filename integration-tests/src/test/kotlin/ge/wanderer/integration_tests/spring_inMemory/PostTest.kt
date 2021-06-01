@@ -4,6 +4,7 @@ import ge.wanderer.common.constants.TRANSIENT_ID
 import ge.wanderer.common.dateTime
 import ge.wanderer.common.enums.ReportReason
 import ge.wanderer.common.now
+import ge.wanderer.common.enums.FileType
 import ge.wanderer.integration_tests.DEFAULT_LISTING_PARAMS
 import ge.wanderer.integration_tests.DEFAULT_LOGGED_IN_USER_ID
 import ge.wanderer.integration_tests.SpringServiceWithInMemoryPersistenceApp
@@ -26,7 +27,7 @@ class PostTest(
 
     @Test
     fun postCanBeCreated() {
-        val request = CreatePostRequest(now(), 1, "123", "Some teeext", listOf(FileData(), FileData()))
+        val request = CreatePostRequest(now(), 1, "123", "Some teeext", listOf(FileData("1", FileType.IMAGE), FileData("2", FileType.IMAGE)))
         val response = postService.createPost(request)
         assertTrue(response.isSuccessful)
         assertEquals("Post created!. New model persisted successfully", response.message)
@@ -40,7 +41,7 @@ class PostTest(
     @Test
     fun canBeUpdated() {
         val post = postService.createPost(
-            CreatePostRequest(now(), 1, "123", "Some teeext", listOf(FileData(), FileData()))
+            CreatePostRequest(now(), 1, "123", "Some teeext", listOf(FileData("1", FileType.IMAGE), FileData("1", FileType.IMAGE)))
         ).data!!
 
         val request = UpdatePostRequest(post.id, "Updated text", listOf(), post.creator.id)
@@ -107,7 +108,7 @@ class PostTest(
     @Test
     fun canBeRemovedAndActivated() {
         val post = postService.createPost(
-            CreatePostRequest(now(), 1, "123", "Some teeext", listOf(FileData(), FileData()))
+            CreatePostRequest(now(), 1, "123", "Some teeext", listOf(FileData("1", FileType.IMAGE), FileData("1", FileType.IMAGE)))
         ).data!!
 
         val removeResponse = postService.remove(OperateOnContentRequest(post.id, post.creator.id, now()))

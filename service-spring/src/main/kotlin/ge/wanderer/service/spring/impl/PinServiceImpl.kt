@@ -12,7 +12,7 @@ import ge.wanderer.core.command.pin.UpdatePinCommand
 import ge.wanderer.core.command.pin.VoteForPinCommand
 import ge.wanderer.core.command.rating.RemoveVoteCommand
 import ge.wanderer.core.configuration.ReportingConfiguration
-import ge.wanderer.core.data.file.AttachedFile
+import ge.wanderer.core.integration.file.AttachedFile
 import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.map.IPin
 import ge.wanderer.core.model.map.PinContent
@@ -50,7 +50,7 @@ class PinServiceImpl(
 
     override fun createPin(request: CreatePinRequest): ServiceResponse<PinData> {
         val user = userService.findUserById(request.userId)
-        val content = PinContent(request.title, request.text, request.attachedFile?.let { AttachedFile() }?:let { null })
+        val content = PinContent(request.title, request.text, request.attachedFile?.let { AttachedFile(it.externalId, it.fileType) }?:let { null })
         val command = CreatePinCommand(request.onDate, user, request.type, content, request.location, request.routeCode)
 
         return response(
@@ -81,7 +81,7 @@ class PinServiceImpl(
     override fun updatePin(request: UpdatePinRequest): ServiceResponse<PinData> {
         val user = userService.findUserById(request.updaterId)
         val pin = pinRepository.findById(request.pinId)
-        val command = UpdatePinCommand(pin, PinContent(request.newTitle, request.newText, request.newFile?.let { AttachedFile() }?:let { null }), user)
+        val command = UpdatePinCommand(pin, PinContent(request.newTitle, request.newText, request.newFile?.let { AttachedFile(it.externalId, it.fileType) }?:let { null }), user)
 
         return response(
             commandProvider.decorateCommand(command, pin, logger()), user

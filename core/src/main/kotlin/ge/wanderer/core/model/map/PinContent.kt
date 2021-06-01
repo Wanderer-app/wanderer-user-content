@@ -1,6 +1,6 @@
 package ge.wanderer.core.model.map
 
-import ge.wanderer.core.data.file.AttachedFile
+import ge.wanderer.core.integration.file.AttachedFile
 
 data class PinContent (
     val title: String,

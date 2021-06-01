@@ -1,7 +1,7 @@
 package ge.wanderer.service.protocol.data
 
 import ge.wanderer.common.enums.UserContentType
-import ge.wanderer.core.data.file.AttachedFile
+import ge.wanderer.core.integration.file.AttachedFile
 import ge.wanderer.common.enums.VoteType
 import org.joda.time.LocalDateTime
 

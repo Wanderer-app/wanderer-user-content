@@ -7,6 +7,7 @@ import ge.wanderer.common.enums.ReportReason
 import ge.wanderer.common.map.LatLng
 import ge.wanderer.common.now
 import ge.wanderer.common.enums.VoteType
+import ge.wanderer.common.enums.FileType
 import ge.wanderer.integration_tests.DEFAULT_LISTING_PARAMS
 import ge.wanderer.integration_tests.DEFAULT_LOGGED_IN_USER_ID
 import ge.wanderer.integration_tests.SpringServiceWithInMemoryPersistenceApp
@@ -102,7 +103,7 @@ class PinTest(
 
     @Test
     fun canBeUpdated() {
-        val response = pinService.updatePin(UpdatePinRequest(1, "New title", "New text", mockk(), 1))
+        val response = pinService.updatePin(UpdatePinRequest(1, "New title", "New text", FileData("1", FileType.IMAGE), 1))
         assertTrue(response.isSuccessful)
 
         val pinData = pinService.findById(1, DEFAULT_LOGGED_IN_USER_ID).data!!
@@ -115,7 +116,7 @@ class PinTest(
     @Test
     fun canBeCreated() {
         val pinsNumberBefore = pinService.list(DEFAULT_LISTING_PARAMS, DEFAULT_LOGGED_IN_USER_ID).resultSize
-        val request = CreatePinRequest(now(), 7, PinType.TIP, "aq plania datesili", "xis ukanaa da morwyet xolme", FileData(), LatLng(10f, 10f), "1488")
+        val request = CreatePinRequest(now(), 7, PinType.TIP, "aq plania datesili", "xis ukanaa da morwyet xolme", FileData("1", FileType.IMAGE), LatLng(10f, 10f), "1488")
 
         val response = pinService.createPin(request)
         assertTrue(response.isSuccessful)

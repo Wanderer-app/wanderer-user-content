@@ -2,7 +2,7 @@ package ge.wanderer.service.spring.model
 
 import ge.wanderer.common.enums.UserContentType
 import ge.wanderer.common.now
-import ge.wanderer.core.data.file.AttachedFile
+import ge.wanderer.core.integration.file.AttachedFile
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.UpdateDiscussionElementData
 import ge.wanderer.core.model.comment.IComment

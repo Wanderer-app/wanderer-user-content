@@ -1,6 +1,7 @@
 package ge.wanderer.integration_tests.web_spring_inMemory
 
 import ge.wanderer.common.constants.TRANSIENT_ID
+import ge.wanderer.common.enums.FileType
 import ge.wanderer.common.enums.PinType
 import ge.wanderer.common.enums.ReportReason
 import ge.wanderer.common.functions.fromJson
@@ -111,7 +112,7 @@ class PinControllerTest(
             .response.contentAsString
         val newPinId = fromJson<ServiceResponse<PinData>>(responseString).data!!.id
 
-        val updateRequest = UpdatePinRequest(newPinId, "Some title", "Some text", FileData(), 1)
+        val updateRequest = UpdatePinRequest(newPinId, "Some title", "Some text", FileData("1", FileType.IMAGE), 1)
         mockMvc.post(controllerPath + "update", toJson(updateRequest))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.isSuccessful").value(true))

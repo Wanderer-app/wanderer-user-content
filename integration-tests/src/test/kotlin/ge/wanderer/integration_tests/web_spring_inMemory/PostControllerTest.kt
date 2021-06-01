@@ -1,6 +1,7 @@
 package ge.wanderer.integration_tests.web_spring_inMemory
 
 import ge.wanderer.common.constants.TRANSIENT_ID
+import ge.wanderer.common.enums.FileType
 import ge.wanderer.common.enums.ReportReason
 import ge.wanderer.common.functions.fromJson
 import ge.wanderer.common.functions.toJson
@@ -47,7 +48,7 @@ class PostControllerTest(
     @Test
     fun updatesPost() {
         val postId = 1L
-        val request = UpdatePostRequest(1, "New text", listOf(FileData(), FileData()), 1)
+        val request = UpdatePostRequest(1, "New text", listOf(FileData("1", FileType.IMAGE), FileData("1", FileType.IMAGE)), 1)
 
         mockMvc.post(controllerPath + "update", toJson(request))
             .andExpect(status().isOk)
@@ -60,7 +61,7 @@ class PostControllerTest(
 
     @Test
     fun createsPost() {
-        val request = CreatePostRequest(now(), 1, "1234", "Some text", listOf(FileData()))
+        val request = CreatePostRequest(now(), 1, "1234", "Some text", listOf(FileData("1", FileType.IMAGE)))
 
         mockMvc.post(controllerPath + "create", toJson(request))
             .andExpect(status().isOk)

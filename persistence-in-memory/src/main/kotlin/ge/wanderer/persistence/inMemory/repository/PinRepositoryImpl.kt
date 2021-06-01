@@ -5,7 +5,7 @@ import ge.wanderer.common.enums.PinType
 import ge.wanderer.common.enums.PinType.*
 import ge.wanderer.common.map.LatLng
 import ge.wanderer.common.now
-import ge.wanderer.core.data.file.AttachedFile
+import ge.wanderer.core.integration.file.AttachedFile
 import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.comment.Comment
 import ge.wanderer.core.model.comment.IComment
@@ -45,7 +45,7 @@ class PinRepositoryImpl(
         create(1, now(), "TB201301", "aqa prtxilad", "volkebi dadian", null, LatLng(41.81309452631177f, 44.84830571006798f), WARNING, setOf(Pair(2L, "ragacas atrakeb"))),
         create(2, now(), "TB201301", "mewyeri chamowva", "ver gaivlit", null, LatLng(41.80877688066833f, 44.858985100557675f), TIP, setOf(Pair(1L, "dges vnaxe da agaraa"))),
         create(1, now(), "TB201301", "dasasvenebeli adgili", "banakistvis kai adgilia", null, LatLng(41.801802130108065f, 44.87436234552735f), RESTING_PLACE, setOf(Pair(1L, "martalia es kaci"))),
-        create(4, now(), "TB201301", "tesli adgili", "kai xedia aqedan", AttachedFile(), LatLng(41.8055665996977f, 44.86248552819858f), SIGHT, setOf(Pair(6L, "diax diax"))),
+        create(4, now(), "TB201301", "tesli adgili", "kai xedia aqedan", AttachedFile("123456"), LatLng(41.8055665996977f, 44.86248552819858f), SIGHT, setOf(Pair(6L, "diax diax"))),
         create(5, now(), "TB201301", "aqa prtxilad", "datvebi dadian", null, LatLng(41.81216881837967f, 44.853783440245074f), TIP, setOf(Pair(2L, "ragacas atrakeb")))
     )
 

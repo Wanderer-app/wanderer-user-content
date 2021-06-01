@@ -4,7 +4,7 @@ import ge.wanderer.common.enums.ReportReason
 import ge.wanderer.common.enums.ReportReason.INAPPROPRIATE_CONTENT
 import ge.wanderer.common.enums.ReportReason.OFFENSIVE_CONTENT
 import ge.wanderer.common.enums.UserContentType
-import ge.wanderer.core.data.file.AttachedFile
+import ge.wanderer.core.integration.file.AttachedFile
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.UpdateDiscussionElementData
 import ge.wanderer.core.model.comment.IComment

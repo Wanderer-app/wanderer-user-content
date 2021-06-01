@@ -1,6 +1,7 @@
 package ge.wanderer.service.spring.impl
 
 import ge.wanderer.common.dateTime
+import ge.wanderer.common.enums.FileType
 import ge.wanderer.common.enums.PinType.*
 import ge.wanderer.common.enums.ReportReason
 import ge.wanderer.common.map.LatLng
@@ -9,6 +10,7 @@ import ge.wanderer.core.configuration.ReportingConfiguration
 import ge.wanderer.core.model.report.Report
 import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.persistence.repository.CommentRepository
+import ge.wanderer.service.protocol.data.FileData
 import ge.wanderer.service.protocol.request.*
 import ge.wanderer.service.spring.command.CommandProvider
 import ge.wanderer.service.spring.test_support.*
@@ -147,7 +149,7 @@ class PinServiceImplTest {
 
     @Test
     fun correctlyUpdatesPin() {
-        val request = UpdatePinRequest(5, "aaaa", "aaaa", mockk(), 4)
+        val request = UpdatePinRequest(5, "aaaa", "aaaa", FileData("1", FileType.IMAGE), 4)
 
         val response = service.updatePin(request)
         assertTrue(response.isSuccessful)

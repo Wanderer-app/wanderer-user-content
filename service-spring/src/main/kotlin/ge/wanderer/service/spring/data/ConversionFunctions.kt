@@ -1,6 +1,6 @@
 package ge.wanderer.service.spring.data
 
-import ge.wanderer.core.data.file.AttachedFile
+import ge.wanderer.core.integration.file.AttachedFile
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.comment.IComment
 import ge.wanderer.core.model.content.RateableContent
@@ -55,6 +55,6 @@ fun IPin.data(commentsPreview: List<CommentData> = listOf(), user: User): PinDat
 fun IPin.mapData(): PinMapData = PinMapData(id(), routeCode(), location(), type(), createdAt(), content().title, rating())
 
 fun User.data(): UserData = UserData(id, firstName, lastName, isAdmin)
-fun AttachedFile.data(): FileData = FileData()
+fun AttachedFile.data(): FileData = FileData(externalId, fileType)
 
 fun Report.data() = ReportData(id, creator, reportTime, reason)

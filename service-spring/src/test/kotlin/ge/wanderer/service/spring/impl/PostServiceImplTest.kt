@@ -1,12 +1,14 @@
 package ge.wanderer.service.spring.impl
 
 import ge.wanderer.common.dateTime
+import ge.wanderer.common.enums.FileType
 import ge.wanderer.common.enums.ReportReason
 import ge.wanderer.common.now
 import ge.wanderer.core.model.report.Report
 import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.persistence.repository.CommentRepository
 import ge.wanderer.persistence.repository.PostRepository
+import ge.wanderer.service.protocol.data.FileData
 import ge.wanderer.service.protocol.request.*
 import ge.wanderer.service.spring.command.CommandProvider
 import ge.wanderer.service.spring.test_support.*
@@ -27,7 +29,7 @@ class PostServiceImplTest {
     fun correctlyCreatesPost() {
         every { postRepository.persist(any()) } answers { arg(0) }
 
-        val request = CreatePostRequest(now(), 1, "123", "Some text", listOf(mockk(), mockk()))
+        val request = CreatePostRequest(now(), 1, "123", "Some text", listOf(FileData("1", FileType.IMAGE), FileData("2", FileType.IMAGE)))
         val response = service.createPost(request)
 
         assertTrue(response.isSuccessful)
@@ -48,7 +50,7 @@ class PostServiceImplTest {
     @Test
     fun correctlyUpdatesPost() {
         every { postRepository.findById(1) } returns createNewPostWithoutFiles(1, jambura(), "Some text", now())
-        val request = UpdatePostRequest(1, "Updated text", listOf(mockk()), 1)
+        val request = UpdatePostRequest(1, "Updated text", listOf(FileData("1", FileType.IMAGE)), 1)
         val response = service.updatePost(request)
 
         assertTrue(response.isSuccessful)

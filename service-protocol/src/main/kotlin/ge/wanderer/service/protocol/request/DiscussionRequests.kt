@@ -1,6 +1,5 @@
 package ge.wanderer.service.protocol.request
 
-import ge.wanderer.core.data.file.AttachedFile
 import ge.wanderer.service.protocol.data.FileData
 import org.joda.time.LocalDateTime
 

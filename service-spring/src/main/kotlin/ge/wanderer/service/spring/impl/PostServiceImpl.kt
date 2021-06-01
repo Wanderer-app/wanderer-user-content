@@ -10,7 +10,7 @@ import ge.wanderer.core.command.discussion.UpdateDiscussionElementCommand
 import ge.wanderer.core.command.rating.GiveOnePointCommand
 import ge.wanderer.core.command.rating.RemoveVoteCommand
 import ge.wanderer.core.configuration.ReportingConfiguration
-import ge.wanderer.core.data.file.AttachedFile
+import ge.wanderer.core.integration.file.AttachedFile
 import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.UpdateDiscussionElementData
 import ge.wanderer.core.model.discussion.post.IPost
@@ -49,7 +49,7 @@ class PostServiceImpl(
 
     override fun createPost(request: CreatePostRequest): ServiceResponse<DiscussionElementData> {
         val user = userService.findUserById(request.userId)
-        val command = CreatePostCommand(request.onDate, user, request.routeCode, request.text, request.attachedFiles.map { AttachedFile() })
+        val command = CreatePostCommand(request.onDate, user, request.routeCode, request.text, request.attachedFiles.map { AttachedFile(it.externalId, it.fileType) })
 
         return response(
             commandProvider.decoratePersistentCommand(command, NoPost(), postRepository, logger()), user
@@ -59,7 +59,7 @@ class PostServiceImpl(
     override fun updatePost(request: UpdatePostRequest): ServiceResponse<DiscussionElementData> {
         val post = postRepository.findById(request.postId)
         val user = userService.findUserById(request.updaterId)
-        val updateData = UpdateDiscussionElementData(request.newText, request.files.map { AttachedFile() })
+        val updateData = UpdateDiscussionElementData(request.newText, request.files.map { AttachedFile(it.externalId, it.fileType) })
         val command = UpdateDiscussionElementCommand(post, updateData, user)
 
         return response(

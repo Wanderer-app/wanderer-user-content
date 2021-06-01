@@ -4,7 +4,7 @@ import ge.wanderer.common.constants.TRANSIENT_ID
 import ge.wanderer.core.command.Command
 import ge.wanderer.core.command.CommandExecutionResult
 import ge.wanderer.core.command.success
-import ge.wanderer.core.data.file.AttachedFile
+import ge.wanderer.core.integration.file.AttachedFile
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.core.model.content.status.Active
 import ge.wanderer.core.model.discussion.post.IPost
