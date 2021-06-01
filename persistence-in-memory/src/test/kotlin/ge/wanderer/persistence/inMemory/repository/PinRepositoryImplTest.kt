@@ -62,9 +62,8 @@ class PinRepositoryImplTest(
 
     @Test
     fun listsPinsByRoute() {
-        val pins = pinRepositoryImpl.listForRoute("123", DEFAULT_LISTING_PARAMS)
-        assertEquals(2, pins.size)
-        assertTrue(pins.all { it.routeCode() == "123" })
-        assertTrue(pinRepositoryImpl.listForRoute("1234", DEFAULT_LISTING_PARAMS).all { it.routeCode() == "1234" })
+        val pins = pinRepositoryImpl.listForRoute("TB201301", DEFAULT_LISTING_PARAMS)
+        assertEquals(5, pins.size)
+        assertTrue(pins.all { it.routeCode() == "TB201301" })
     }
 }

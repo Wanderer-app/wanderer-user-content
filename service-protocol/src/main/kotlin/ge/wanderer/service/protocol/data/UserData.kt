@@ -2,6 +2,7 @@ package ge.wanderer.service.protocol.data
 
 data class UserData (
     val id: Long,
-    val fullName: String,
+    val firstName: String,
+    val lastName: String,
     val isAdmin: Boolean
 )

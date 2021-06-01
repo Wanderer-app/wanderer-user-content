@@ -36,9 +36,9 @@ class PollRepositoryImpl(
     private val pollAnswerCurrentId = AtomicLong(1)
 
     private val polls = hashMapOf(
-        create(1, now(), "123", "Some question 1", setOf("answer 1", "answer 2"), setOf(Pair(2L, "Nice"))),
-        create(2, now(), "123", "Some question 2", setOf("answer 1", "answer 2"), setOf(Pair(3L, "Absolutely disgusting"))),
-        create(3, now(), "1234", "Some question 3", setOf("answer 1", "answer 2"), setOf(Pair(1L, "gamo iagaze bijo")))
+        create(1, now(), "TB201301", "Some question 1", setOf("answer 1", "answer 2"), setOf(Pair(2L, "Nice"))),
+        create(2, now(), "TB201301", "Some question 2", setOf("answer 1", "answer 2"), setOf(Pair(3L, "Absolutely disgusting"))),
+        create(3, now(), "TB201301", "Some question 3", setOf("answer 1", "answer 2"), setOf(Pair(1L, "gamo iagaze bijo")))
     )
 
     private fun create(

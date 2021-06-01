@@ -58,7 +58,7 @@ class PinControllerTest(
 
     @Test
     fun listsPinsForGivenRoute() {
-        val responseString = mockMvc.post(controllerPath + "for-route/123", toJson(DEFAULT_LISTING_PARAMS))
+        val responseString = mockMvc.post(controllerPath + "for-route/TB201301", toJson(DEFAULT_LISTING_PARAMS))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.isSuccessful").value(true))
             .andExpect(jsonPath("$.message").value("Pins Fetched!"))
@@ -67,7 +67,7 @@ class PinControllerTest(
 
         val responseData = fromJson<ServiceListingResponse<PinMapData>>(responseString).data
         assertTrue(responseData.isNotEmpty())
-        assertTrue(responseData.all { it.routeCode == "123" })
+        assertTrue(responseData.all { it.routeCode == "TB201301" })
     }
 
     @Test
@@ -86,7 +86,7 @@ class PinControllerTest(
             .andExpect(jsonPath("$.data.isRelevant").value(true))
 
         mockMvc.post(controllerPath + "report-irrelevant", toJson(OperateOnContentRequest(pinId, 3, now())))
-            .andExpect(status().isBadRequest)
+            .andExpect(status().isOk)
             .andExpect(jsonPath("$.message").value("You already reported this content"))
 
         mockMvc.post(controllerPath + "report-irrelevant", toJson(OperateOnContentRequest(pinId, 4, now())))

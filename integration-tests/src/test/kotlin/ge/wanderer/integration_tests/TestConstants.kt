@@ -25,7 +25,7 @@ data class AnswerInfo (
 fun MockMvc.post(url: String, jsonBody: String) =
     this.perform(
         MockMvcRequestBuilders.post(url)
-            .header("loggedInUserId", DEFAULT_LOGGED_IN_USER_ID)
+            .header("user-token", DEFAULT_LOGGED_IN_USER_ID)
             .content(jsonBody)
             .contentType(MediaType.APPLICATION_JSON)
             .accept(MediaType.APPLICATION_JSON)
@@ -33,5 +33,5 @@ fun MockMvc.post(url: String, jsonBody: String) =
 
 fun MockMvc.get(url: String) =
     this.perform(MockMvcRequestBuilders.get(url)
-        .header("loggedInUserId", DEFAULT_LOGGED_IN_USER_ID)
+        .header("user-token", DEFAULT_LOGGED_IN_USER_ID)
         .accept(MediaType.APPLICATION_JSON))

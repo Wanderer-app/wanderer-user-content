@@ -54,7 +54,7 @@ fun IPin.data(commentsPreview: List<CommentData> = listOf(), user: User): PinDat
 
 fun IPin.mapData(): PinMapData = PinMapData(id(), routeCode(), location(), type(), createdAt(), content().title, rating())
 
-fun User.data(): UserData = UserData(id, "$firstName $lastName", isAdmin)
+fun User.data(): UserData = UserData(id, firstName, lastName, isAdmin)
 fun AttachedFile.data(): FileData = FileData()
 
 fun Report.data() = ReportData(id, creator, reportTime, reason)

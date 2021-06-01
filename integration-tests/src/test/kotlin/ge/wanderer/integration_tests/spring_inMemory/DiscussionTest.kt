@@ -20,11 +20,11 @@ class DiscussionTest(
 ) {
     @Test
     fun listsDiscussionsForRoute() {
-        val response = discussionService.getDiscussionForRoute("123", DEFAULT_LOGGED_IN_USER_ID, DEFAULT_LISTING_PARAMS)
+        val response = discussionService.getDiscussionForRoute("TB201301", DEFAULT_LOGGED_IN_USER_ID, DEFAULT_LISTING_PARAMS)
         assertTrue(response.isSuccessful)
         assertTrue(response.resultSize > 0)
         assertTrue(response.data.all { it.type == POLL || it.type == POST })
-        assertTrue(response.data.all { it.routeCode == "123" })
+        assertTrue(response.data.all { it.routeCode == "TB201301" })
 
         val emptyResponse = discussionService.getDiscussionForRoute("55555", DEFAULT_LOGGED_IN_USER_ID, DEFAULT_LISTING_PARAMS)
         assertTrue(emptyResponse.isSuccessful)

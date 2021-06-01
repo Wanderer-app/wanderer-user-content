@@ -24,7 +24,7 @@ class CommentController(
     @GetMapping("/{id}")
     fun getComment(
         @PathVariable id: Long,
-        @RequestHeader(name = "loggedInUserId", required = true) loggedInUserId: Long
+        @RequestHeader(name = "user-token", required = true) loggedInUserId: Long
     ): ResponseEntity<ServiceResponse<CommentData>> =
         httpResponse(commentService.findById(id, loggedInUserId))
 
@@ -56,7 +56,7 @@ class CommentController(
     fun listComments(
         @RequestBody listingParams: ListingParams,
         @PathVariable contentId: Long,
-        @RequestHeader(name = "loggedInUserId", required = true) loggedInUserId: Long
+        @RequestHeader(name = "user-token", required = true) loggedInUserId: Long
     ): ResponseEntity<ServiceListingResponse<CommentData>> =
         httpResponse(commentService.listComments(ListCommentsRequest(contentId, loggedInUserId, listingParams)))
 

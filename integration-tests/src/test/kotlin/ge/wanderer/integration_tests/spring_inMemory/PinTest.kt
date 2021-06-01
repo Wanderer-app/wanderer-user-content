@@ -31,7 +31,8 @@ class PinTest(
         var response = pinService.findById(1, DEFAULT_LOGGED_IN_USER_ID)
         assertTrue(response.isSuccessful)
         assertEquals(1, response.data!!.id)
-        assertEquals("Nika Jamburia",  response.data!!.creator.fullName)
+        assertEquals("Nika",  response.data!!.creator.firstName)
+        assertEquals("Jamburia",  response.data!!.creator.lastName)
 
 
         response = pinService.findById(10000, DEFAULT_LOGGED_IN_USER_ID)
@@ -50,11 +51,11 @@ class PinTest(
 
     @Test
     fun canBeListedForRoute() {
-        val response = pinService.listForRoute("123", DEFAULT_LISTING_PARAMS)
+        val response = pinService.listForRoute("TB201301", DEFAULT_LISTING_PARAMS)
         assertTrue(response.isSuccessful)
         assertEquals("Pins Fetched!", response.message)
         assertTrue(response.data.isNotEmpty())
-        assertTrue(response.data.all { it.routeCode == "123" })
+        assertTrue(response.data.all { it.routeCode == "TB201301" })
     }
 
     @Test

@@ -18,7 +18,7 @@ class DiscussionController(
     fun listForRoute(
         @PathVariable routeCode: String,
         @RequestBody listingParams: ListingParams,
-        @RequestHeader(name = "loggedInUserId", required = true) loggedInUserId: Long
+        @RequestHeader(name = "user-token", required = true) loggedInUserId: Long
     ): ResponseEntity<ServiceListingResponse<DiscussionElementData>> =
         httpResponse(discussionService.getDiscussionForRoute(routeCode, loggedInUserId, listingParams))
 }

@@ -3,6 +3,7 @@ package ge.wanderer.persistence.inMemory.filtering
 import ge.wanderer.common.listing.FilterParam
 import ge.wanderer.core.model.content.RateableContent
 import ge.wanderer.core.model.content.UserAddedContent
+import ge.wanderer.core.model.map.IPin
 import org.joda.time.LocalDateTime
 
 class FilterParameterEvaluator<T>(
@@ -18,9 +19,17 @@ class FilterParameterEvaluator<T>(
 
     private fun getFieldValue(element: T, filterParam: FilterParam): Filter<*> {
         return when (element) {
+            is IPin -> getFieldValueForPin(element, filterParam)
             is RateableContent -> getFieldValueForRateableContent(element, filterParam)
             is UserAddedContent -> getFieldValueForUserContent(element, filterParam)
             else -> error("Cant filter this model!")
+        }
+    }
+
+    private fun <T : IPin> getFieldValueForPin(element: T, filterParam: FilterParam): Filter<*> {
+        return when(filterParam.fieldName) {
+            "pinType" -> stringFilter(element.type().toString(), filterParam)
+            else -> getFieldValueForRateableContent(element, filterParam)
         }
     }
 
