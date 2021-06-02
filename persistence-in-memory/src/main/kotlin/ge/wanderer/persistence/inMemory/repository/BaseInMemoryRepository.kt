@@ -32,19 +32,15 @@ abstract class BaseInMemoryRepository<T>(
     private fun Collection<T>.applyListingParams(params: ListingParams): List<T> {
         return this
             .asSequence()
-            .applyFilters(params.filters)
-            .sortWith(params.sortingParams)
-            .toList()
-            .paginate(params)
+            .applyListingParams(params)
     }
-
 
     protected fun Sequence<T>.applyListingParams(params: ListingParams): List<T> =
         this
             .applyFilters(params.filters)
             .sortWith(params.sortingParams)
-            .take(params.batchSize)
             .toList()
+            .paginate(params)
 
     private fun Sequence<T>.sortWith(params: SortingParams?): Sequence<T> =
         params?.let { sorter.sort(this, params) } ?:let { this }

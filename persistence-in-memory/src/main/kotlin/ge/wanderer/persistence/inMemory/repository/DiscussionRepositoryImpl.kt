@@ -15,7 +15,8 @@ class DiscussionRepositoryImpl(
     @Autowired private val postRepository: PostRepository,
     @Autowired private val pollRepository: PollRepository,
     @Autowired private val sorter: SequenceSorter<DiscussionElement>
-): DiscussionRepository {
+): DiscussionRepository, BaseInMemoryRepository<DiscussionElement>(sorter) {
+
     override fun listForRoute(routeCode: String, listingParams: ListingParams): List<DiscussionElement> {
         val polls = pollRepository.list(listingParams.withoutSorting()).filter { it.routeCode() == routeCode }
         val posts = postRepository.list(listingParams.withoutSorting()).filter { it.routeCode() == routeCode }
@@ -23,13 +24,15 @@ class DiscussionRepositoryImpl(
         return listOf(polls, posts)
             .flatten()
             .asSequence()
-            .sort(listingParams.sortingParams)
-            .take(listingParams.batchSize)
-            .toList()
+            .applyListingParams(listingParams)
 
     }
 
-    private fun ListingParams.withoutSorting() = ListingParams(batchSize, batchNumber, null, filters)
-    private fun Sequence<DiscussionElement>.sort(sortingParams: SortingParams?) =
-        sortingParams ?.let { sorter.sort(this, sortingParams) } ?: let { this }
+    override fun data(): HashMap<Long, DiscussionElement> = hashMapOf()
+    override fun nextId(): Long = 0L
+    override fun makePersistent(model: DiscussionElement, id: Long): DiscussionElement = model
+
+    private fun ListingParams.withoutSorting() = ListingParams(1000, 1, null, filters)
+
+
 }

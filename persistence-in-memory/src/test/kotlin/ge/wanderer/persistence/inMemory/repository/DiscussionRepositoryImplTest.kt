@@ -14,7 +14,7 @@ class DiscussionRepositoryImplTest(
 
     @Test
     fun listsBothPostsAndPollsForRoute() {
-        val discussion = discussionRepositoryImpl.listForRoute("123", DEFAULT_LISTING_PARAMS)
+        val discussion = discussionRepositoryImpl.listForRoute("TB201301", DEFAULT_LISTING_PARAMS)
 
         assertTrue(discussion.isNotEmpty())
     }
