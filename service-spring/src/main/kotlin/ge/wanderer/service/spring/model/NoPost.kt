@@ -18,7 +18,7 @@ class NoPost: IPost {
     override fun attachedFiles(): List<AttachedFile> = listOf()
     override fun routeCode(): String = ""
     override fun comments(): List<IComment> = listOf()
-    override fun addComment(comment: IComment) { }
+    override fun addComment(comment: IComment): IComment = comment
     override fun id(): Long = 0
     override fun creator(): User = User(0, "No", "User", 0, false)
     override fun createdAt(): LocalDateTime = now()

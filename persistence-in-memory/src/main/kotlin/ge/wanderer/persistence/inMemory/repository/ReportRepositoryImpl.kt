@@ -15,6 +15,6 @@ class ReportRepositoryImpl(
 
     override fun data(): HashMap<Long, Report> = hashMapOf()
     override fun nextId(): Long = id.getAndIncrement()
-    override fun makePersistent(model: Report, id: Long): Report = model
+    override fun makePersistent(model: Report, id: Long): Report = Report(id, model.creator, model.reportTime, model.reason)
 
 }

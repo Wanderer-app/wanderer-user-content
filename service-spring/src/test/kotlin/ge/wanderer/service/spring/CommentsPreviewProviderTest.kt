@@ -15,7 +15,8 @@ class CommentsPreviewProviderTest {
     private val provider = CommentPreviewProvider(mapOf(
         Pair(PIN, 3),
         Pair(POST, 5),
-        Pair(POLL, 2)
+        Pair(POLL, 2),
+        Pair(COMMENT, 3)
     ))
 
     private val comment1 = createNewComment(1, now(), "aaa", jambura())
@@ -39,10 +40,14 @@ class CommentsPreviewProviderTest {
 
         every { content.contentType() } returns POLL
         assertEquals(2, provider.getPreviewFor(content, DEFAULT_LOGGED_IN_USER).size)
+
+        every { content.contentType() } returns COMMENT
+        assertEquals(3, provider.getPreviewFor(content, DEFAULT_LOGGED_IN_USER).size)
     }
 
     @Test
     fun throwsExceptionIfContentTypeNotFoundInPropertiesMap() {
+        val provider = CommentPreviewProvider(mapOf(Pair(PIN, 3)))
         every { content.contentType() } returns COMMENT
         val ex = assertThrows<IllegalStateException> { provider.getPreviewFor(content, DEFAULT_LOGGED_IN_USER).size }
         assertEquals("Comments preview not available for COMMENT", ex.message!!)

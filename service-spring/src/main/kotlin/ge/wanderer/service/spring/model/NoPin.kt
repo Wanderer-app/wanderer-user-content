@@ -35,7 +35,7 @@ class NoPin: IPin {
     override fun activate(onDate: LocalDateTime, activator: User) {}
     override fun contentType(): UserContentType = UserContentType.PIN
     override fun comments(): List<IComment> = listOf()
-    override fun addComment(comment: IComment) {}
+    override fun addComment(comment: IComment): IComment = comment
     override fun report(report: Report) {}
     override fun reports(): Set<Report> = setOf()
     override fun acceptableReportReasons(): Set<ReportReason> = setOf()

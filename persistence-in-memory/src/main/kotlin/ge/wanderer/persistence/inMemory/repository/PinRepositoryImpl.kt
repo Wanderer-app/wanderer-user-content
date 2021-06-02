@@ -18,6 +18,7 @@ import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.persistence.inMemory.sorting.PinSorter
 import ge.wanderer.persistence.repository.CommentRepository
 import ge.wanderer.persistence.repository.PinRepository
+import ge.wanderer.persistence.repository.ReportRepository
 import org.joda.time.LocalDateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -27,6 +28,7 @@ import java.util.concurrent.atomic.AtomicLong
 class PinRepositoryImpl(
     @Autowired private val userService: UserService,
     @Autowired private val commentRepository: CommentRepository,
+    @Autowired private val reportRepository: ReportRepository,
     @Autowired private val sorter: PinSorter
 ): PinRepository, BaseInMemoryRepository<IPin>(sorter) {
 
@@ -67,7 +69,7 @@ class PinRepositoryImpl(
 
         return Pair(
             id,
-            InMemoryPin(id, Pin(id, user, createDate, location, routeCode, type, content, Active(createDate, user), comments), commentRepository)
+            InMemoryPin(id, Pin(id, user, createDate, location, routeCode, type, content, Active(createDate, user), comments), commentRepository, reportRepository)
         )
     }
 
@@ -77,6 +79,6 @@ class PinRepositoryImpl(
         return commentRepository.persist(comment)
     }
 
-    override fun makePersistent(model: IPin, id: Long): IPin = InMemoryPin(id, model, commentRepository)
+    override fun makePersistent(model: IPin, id: Long): IPin = InMemoryPin(id, model, commentRepository, reportRepository)
 
 }

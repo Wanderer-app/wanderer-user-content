@@ -22,8 +22,8 @@ class AddCommentCommand<T: CommentableContent>(
 
     override fun execute(): CommandExecutionResult<IComment> {
         val comment = Comment(TRANSIENT_ID, commentor, onDateTime, commentText, Active(onDateTime, commentor))
-        commentableContent.addComment(comment)
-        userService.notifyContentWasCommented(commentableContent, comment)
-        return success("Comment added", comment);
+        val addedComment = commentableContent.addComment(comment)
+        userService.notifyContentWasCommented(commentableContent, addedComment)
+        return success("Comment added", addedComment)
     }
 }

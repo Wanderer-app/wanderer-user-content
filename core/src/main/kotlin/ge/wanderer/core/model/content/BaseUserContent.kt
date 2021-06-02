@@ -34,8 +34,9 @@ abstract class BaseUserContent(
         status = status.activate(onDate, activator)
     }
 
-    override fun addComment(comment: IComment) {
+    override fun addComment(comment: IComment): IComment {
         comments.add(comment)
+        return comment
     }
 
     override fun giveVote(vote: IVote) {

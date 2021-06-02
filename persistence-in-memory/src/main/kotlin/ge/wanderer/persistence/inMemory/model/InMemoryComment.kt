@@ -19,8 +19,9 @@ class InMemoryComment(
 
     override fun comments(): List<IComment> = comment.comments()
 
-    override fun addComment(comment: IComment) {
-        this.comment.addComment(commentRepository.persist(comment))
+    override fun addComment(comment: IComment): IComment {
+        val persistedComment = commentRepository.persist(comment)
+        return this.comment.addComment(persistedComment)
     }
 
     override fun report(report: Report) {

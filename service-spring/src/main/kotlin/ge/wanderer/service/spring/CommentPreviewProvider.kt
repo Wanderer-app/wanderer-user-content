@@ -2,6 +2,7 @@ package ge.wanderer.service.spring
 
 import ge.wanderer.common.enums.UserContentType
 import ge.wanderer.core.integration.user.User
+import ge.wanderer.core.model.comment.IComment
 import ge.wanderer.core.model.content.CommentableContent
 import ge.wanderer.service.protocol.data.CommentData
 import ge.wanderer.service.spring.data.data
@@ -18,7 +19,7 @@ class CommentPreviewProvider(
         content.comments()
             .asSequence()
             .sortedByDescending { it.rating() }
-            .map { it.data(user) }
+            .map { it.data(user, getPreviewFor(it, user)) }
             .take(getPreviewSize(content))
             .toList()
 

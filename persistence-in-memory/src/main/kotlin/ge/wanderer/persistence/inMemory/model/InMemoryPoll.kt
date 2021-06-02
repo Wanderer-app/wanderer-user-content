@@ -43,8 +43,9 @@ class InMemoryPoll(
 
     override fun comments(): List<IComment> = poll.comments()
 
-    override fun addComment(comment: IComment) {
-        poll.addComment(commentRepository.persist(comment))
+    override fun addComment(comment: IComment): IComment {
+        val persistedComment = commentRepository.persist(comment)
+        return poll.addComment(persistedComment)
     }
 
     override fun id(): Long = id

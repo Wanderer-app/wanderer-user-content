@@ -61,7 +61,10 @@ class Poll(
     override fun answers(): List<IPollAnswer> = activeAnswers()
 
     override fun comments(): List<IComment> = comments.filter { it.isActive() }
-    override fun addComment(comment: IComment) { comments.add(comment) }
+    override fun addComment(comment: IComment): IComment {
+        comments.add(comment)
+        return comment
+    }
 
     override fun remove(onDate: LocalDateTime, remover: User) {
         status = status.remove(onDate, remover)

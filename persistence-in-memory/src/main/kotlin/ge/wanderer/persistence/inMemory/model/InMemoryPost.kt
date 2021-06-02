@@ -30,8 +30,8 @@ class InMemoryPost(
 
     override fun comments(): List<IComment> = post.comments()
 
-    override fun addComment(comment: IComment) {
-        post.addComment(commentRepository.persist(comment))
+    override fun addComment(comment: IComment): IComment {
+       return post.addComment(commentRepository.persist(comment))
     }
 
     override fun id(): Long = id

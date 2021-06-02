@@ -11,22 +11,25 @@ import ge.wanderer.core.model.map.PinContent
 import ge.wanderer.core.model.rating.IVote
 import ge.wanderer.core.model.report.Report
 import ge.wanderer.persistence.repository.CommentRepository
+import ge.wanderer.persistence.repository.ReportRepository
 import org.joda.time.LocalDateTime
 
 class InMemoryPin(
     private val id: Long,
     private val pin: IPin,
-    private val commentRepository: CommentRepository
+    private val commentRepository: CommentRepository,
+    private val reportRepository: ReportRepository
 ): IPin {
 
     override fun comments(): List<IComment> = pin.comments()
 
-    override fun addComment(comment: IComment) {
-        pin.addComment(commentRepository.persist(comment))
+    override fun addComment(comment: IComment): IComment {
+        val persistedComment = commentRepository.persist(comment)
+        return pin.addComment(persistedComment)
     }
 
     override fun report(report: Report) {
-        pin.report(report)
+        pin.report(reportRepository.persist(report))
     }
 
     override fun reports(): Set<Report> = pin.reports()

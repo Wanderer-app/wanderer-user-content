@@ -4,6 +4,7 @@ import ge.wanderer.common.listing.FilterParam
 import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.common.listing.SortingParams
 import ge.wanderer.persistence.inMemory.filtering.FilterParameterEvaluator
+import ge.wanderer.persistence.inMemory.pagination.paginate
 import ge.wanderer.persistence.inMemory.sorting.SequenceSorter
 import ge.wanderer.persistence.repository.BaseRepository
 
@@ -28,13 +29,15 @@ abstract class BaseInMemoryRepository<T>(
         data().remove(id)
     }
 
-    protected fun Collection<T>.applyListingParams(params: ListingParams): List<T> =
-        this
+    private fun Collection<T>.applyListingParams(params: ListingParams): List<T> {
+        return this
             .asSequence()
             .applyFilters(params.filters)
             .sortWith(params.sortingParams)
-            .take(params.batchSize)
             .toList()
+            .paginate(params)
+    }
+
 
     protected fun Sequence<T>.applyListingParams(params: ListingParams): List<T> =
         this
