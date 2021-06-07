@@ -24,9 +24,7 @@ import ge.wanderer.service.protocol.response.ServiceListingResponse
 import ge.wanderer.service.protocol.response.ServiceResponse
 import ge.wanderer.service.spring.CommentPreviewProvider
 import ge.wanderer.service.spring.command.CommandProvider
-import ge.wanderer.service.spring.data.data
-import ge.wanderer.service.spring.data.noDataResponse
-import ge.wanderer.service.spring.data.ratingResponse
+import ge.wanderer.service.spring.data.*
 import ge.wanderer.service.spring.logger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -50,9 +48,10 @@ class CommentServiceImpl(
         )
     }
 
-    override fun findById(id: Long, userId: Long): ServiceResponse<CommentData> {
+    override fun findById(id: Long, requestingUserId: Long?): ServiceResponse<CommentData> {
         val comment = commentRepository.findById(id)
-        return ServiceResponse(true, "Successfully retrieved comment", comment.dataWithRepliesPreview(userService.findUserById(userId)))
+        val loggedInUser = getRequestingUser(requestingUserId, userService)
+        return ServiceResponse(true, "Successfully retrieved comment", comment.dataWithRepliesPreview(loggedInUser))
     }
 
     override fun activate(request: OperateOnContentRequest): ServiceResponse<CommentData> {
@@ -118,7 +117,7 @@ class CommentServiceImpl(
     override fun listComments(request: ListCommentsRequest): ServiceListingResponse<CommentData> {
         val comment = commentRepository.findById(request.contentId)
         val replies = commentRepository.listActiveFor(comment, request.listingParams)
-        return ServiceListingResponse(true, "Replies Retrieved!", replies.size, request.listingParams.batchNumber, replies.map { it.data(userService.findUserById(request.userId)) })
+        return ServiceListingResponse(true, "Replies Retrieved!", replies.size, request.listingParams.batchNumber, replies.map { it.data(getRequestingUser(request.requestingUserId, userService)) })
     }
 
     override fun report(request: ReportContentRequest): ServiceResponse<ReportData> {
@@ -145,6 +144,5 @@ class CommentServiceImpl(
 
     private fun IComment.dataWithRepliesPreview(user: User) =
        this.data(user, commentPreviewProvider.getPreviewFor(this, user))
-
 
 }

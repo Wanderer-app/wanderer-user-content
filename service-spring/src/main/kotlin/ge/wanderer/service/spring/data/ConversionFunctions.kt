@@ -18,7 +18,7 @@ fun IComment.data(
 
 fun DiscussionElement.data(
     commentsPreview: List<CommentData> = listOf(),
-    user: User
+    requestingUser: User
 ): DiscussionElementData =
     DiscussionElementData(
         id(),
@@ -34,7 +34,7 @@ fun DiscussionElement.data(
         content(),
         attachedFiles(),
         contentType(),
-        userVoteType(user)
+        userVoteType(requestingUser)
     )
 
 fun DiscussionElement.userVoteType(user: User): VoteType? =

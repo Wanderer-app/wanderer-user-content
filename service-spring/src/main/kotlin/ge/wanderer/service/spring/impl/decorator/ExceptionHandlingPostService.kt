@@ -1,7 +1,5 @@
 package ge.wanderer.service.spring.impl.decorator
 
-import ge.wanderer.core.model.report.Report
-import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.service.protocol.data.CommentData
 import ge.wanderer.service.protocol.data.DiscussionElementData
 import ge.wanderer.service.protocol.data.RatingData
@@ -26,8 +24,8 @@ class ExceptionHandlingPostService(
     override fun updatePost(request: UpdatePostRequest): ServiceResponse<DiscussionElementData> =
         handle { postServiceImpl.updatePost(request) }
 
-    override fun findById(id: Long, userId: Long): ServiceResponse<DiscussionElementData> =
-        handle { postServiceImpl.findById(id, userId) }
+    override fun findById(id: Long, requestingUserId: Long?): ServiceResponse<DiscussionElementData> =
+        handle { postServiceImpl.findById(id, requestingUserId) }
 
     override fun activate(request: OperateOnContentRequest): ServiceResponse<DiscussionElementData> =
         handle { postServiceImpl.activate(request) }

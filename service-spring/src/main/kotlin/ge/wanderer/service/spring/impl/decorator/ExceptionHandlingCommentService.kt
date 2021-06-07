@@ -1,7 +1,5 @@
 package ge.wanderer.service.spring.impl.decorator
 
-import ge.wanderer.core.model.report.Report
-import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.service.protocol.data.CommentData
 import ge.wanderer.service.protocol.data.RatingData
 import ge.wanderer.service.protocol.data.ReportData
@@ -23,8 +21,8 @@ class ExceptionHandlingCommentService(
     override fun updateComment(request: UpdateCommentRequest): ServiceResponse<CommentData> =
         handle { commentServiceImpl.updateComment(request) }
 
-    override fun findById(id: Long, userId: Long): ServiceResponse<CommentData> =
-        handle { commentServiceImpl.findById(id, userId) }
+    override fun findById(id: Long, requestingUserId: Long?): ServiceResponse<CommentData> =
+        handle { commentServiceImpl.findById(id, requestingUserId) }
 
     override fun activate(request: OperateOnContentRequest): ServiceResponse<CommentData> =
         handle { commentServiceImpl.activate(request) }

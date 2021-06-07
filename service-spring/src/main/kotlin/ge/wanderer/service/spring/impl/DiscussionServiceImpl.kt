@@ -8,6 +8,7 @@ import ge.wanderer.service.protocol.interfaces.DiscussionService
 import ge.wanderer.service.protocol.response.ServiceListingResponse
 import ge.wanderer.service.spring.CommentPreviewProvider
 import ge.wanderer.service.spring.data.data
+import ge.wanderer.service.spring.data.getRequestingUser
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -18,9 +19,9 @@ class DiscussionServiceImpl(
     @Autowired private val userService: UserService
 ): DiscussionService {
 
-    override fun getDiscussionForRoute(routeCode: String, userId: Long, listingParams: ListingParams): ServiceListingResponse<DiscussionElementData> {
+    override fun getDiscussionForRoute(routeCode: String, requestingUserId: Long?, listingParams: ListingParams): ServiceListingResponse<DiscussionElementData> {
         val discussions = discussionRepository.listForRoute(routeCode, listingParams)
-        val user = userService.findUserById(userId)
+        val user = getRequestingUser(requestingUserId, userService)
         return ServiceListingResponse(
             true,
             "Discussions fetched",

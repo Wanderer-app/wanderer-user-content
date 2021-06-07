@@ -39,7 +39,7 @@ class PollController(
         httpResponse(pollService.selectAnswer(request))
 
     @GetMapping("/{id}")
-    fun getPoll(@PathVariable id: Long, @RequestHeader(name = "user-token", required = true) loggedInUserId: Long): ResponseEntity<ServiceResponse<DiscussionElementData>> =
+    fun getPoll(@PathVariable id: Long, @RequestHeader(name = "user-token", required = false) loggedInUserId: Long?): ResponseEntity<ServiceResponse<DiscussionElementData>> =
         httpResponse(pollService.findById(id, loggedInUserId))
 
     @PostMapping("/activate")
@@ -58,7 +58,7 @@ class PollController(
     fun listComments(
         @RequestBody listingParams: ListingParams,
         @PathVariable contentId: Long,
-        @RequestHeader(name = "user-token", required = true) loggedInUserId: Long
+        @RequestHeader(name = "user-token", required = false) loggedInUserId: Long
     ): ResponseEntity<ServiceListingResponse<CommentData>> =
         httpResponse(pollService.listComments(ListCommentsRequest(contentId, loggedInUserId, listingParams)))
 

@@ -1,6 +1,5 @@
 package ge.wanderer.service.spring.impl.decorator
 
-import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.service.protocol.data.CommentData
 import ge.wanderer.service.protocol.data.DiscussionElementData
 import ge.wanderer.service.protocol.interfaces.PollService
@@ -32,8 +31,8 @@ class ExceptionHandlingPollService(
     override fun selectAnswer(request: SelectPollAnswerRequest): ServiceResponse<DiscussionElementData> =
         handle { pollServiceImpl.selectAnswer(request) }
 
-    override fun findById(id: Long, userId: Long): ServiceResponse<DiscussionElementData> =
-        handle { pollServiceImpl.findById(id, userId) }
+    override fun findById(id: Long, requestingUserId: Long?): ServiceResponse<DiscussionElementData> =
+        handle { pollServiceImpl.findById(id, requestingUserId) }
 
     override fun activate(request: OperateOnContentRequest): ServiceResponse<DiscussionElementData> =
         handle { pollServiceImpl.activate(request) }

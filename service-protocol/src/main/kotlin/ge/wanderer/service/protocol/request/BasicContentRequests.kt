@@ -19,6 +19,6 @@ data class ReportContentRequest (
 
 data class ListCommentsRequest(
     val contentId: Long,
-    val userId: Long,
+    val requestingUserId: Long?,
     val listingParams: ListingParams
 )

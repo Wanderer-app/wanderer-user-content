@@ -29,6 +29,7 @@ import ge.wanderer.service.protocol.response.ServiceResponse
 import ge.wanderer.service.spring.CommentPreviewProvider
 import ge.wanderer.service.spring.command.CommandProvider
 import ge.wanderer.service.spring.data.data
+import ge.wanderer.service.spring.data.getRequestingUser
 import ge.wanderer.service.spring.data.noDataResponse
 import ge.wanderer.service.spring.data.ratingResponse
 import ge.wanderer.service.spring.logger
@@ -67,9 +68,9 @@ class PostServiceImpl(
         )
     }
 
-    override fun findById(id: Long, userId: Long): ServiceResponse<DiscussionElementData> {
+    override fun findById(id: Long, requestingUserId: Long?): ServiceResponse<DiscussionElementData> {
         val post = postRepository.findById(id)
-        return ServiceResponse(true, "Post fetched", post.dataWithCommentsPreview(userService.findUserById(userId)))
+        return ServiceResponse(true, "Post fetched", post.dataWithCommentsPreview(getRequestingUser(requestingUserId, userService)))
     }
 
     override fun activate(request: OperateOnContentRequest): ServiceResponse<DiscussionElementData> {
@@ -132,7 +133,7 @@ class PostServiceImpl(
 
     override fun listComments(request: ListCommentsRequest): ServiceListingResponse<CommentData> {
         val post = postRepository.findById(request.contentId)
-        val user = userService.findUserById(request.userId)
+        val user = getRequestingUser(request.requestingUserId, userService)
         val comments = commentRepository.listActiveFor(post, request.listingParams)
         return ServiceListingResponse(true, "Comments Retrieved!", comments.size, request.listingParams.batchNumber, comments.map { it.data(user) })
     }

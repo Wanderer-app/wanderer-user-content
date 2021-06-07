@@ -8,7 +8,6 @@ import ge.wanderer.core.command.discussion.*
 import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.core.model.UpdateDiscussionElementData
 import ge.wanderer.core.model.discussion.poll.IPoll
-import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.core.integration.user.User
 import ge.wanderer.persistence.repository.CommentRepository
 import ge.wanderer.persistence.repository.PollRepository
@@ -21,6 +20,7 @@ import ge.wanderer.service.protocol.response.ServiceResponse
 import ge.wanderer.service.spring.CommentPreviewProvider
 import ge.wanderer.service.spring.command.CommandProvider
 import ge.wanderer.service.spring.data.data
+import ge.wanderer.service.spring.data.getRequestingUser
 import ge.wanderer.service.spring.logger
 import ge.wanderer.service.spring.model.NoComment
 import ge.wanderer.service.spring.model.NoPoll
@@ -86,8 +86,8 @@ class PollServiceImpl(
         )
     }
 
-    override fun findById(id: Long, userId: Long): ServiceResponse<DiscussionElementData> =
-        ServiceResponse(true, "Poll fetched", pollRepository.findById(id).dataWithCommentsPreview(userService.findUserById(userId)))
+    override fun findById(id: Long, requestingUserId: Long?): ServiceResponse<DiscussionElementData> =
+        ServiceResponse(true, "Poll fetched", pollRepository.findById(id).dataWithCommentsPreview(getRequestingUser(requestingUserId, userService)))
 
 
     override fun activate(request: OperateOnContentRequest): ServiceResponse<DiscussionElementData> {
@@ -121,7 +121,7 @@ class PollServiceImpl(
 
     override fun listComments(request: ListCommentsRequest): ServiceListingResponse<CommentData> {
         val poll = pollRepository.findById(request.contentId)
-        val user = userService.findUserById(request.userId)
+        val user = getRequestingUser(request.requestingUserId, userService)
         val commentsData = commentRepository.listActiveFor(poll, request.listingParams)
             .map { it.data(user, commentPreviewProvider.getPreviewFor(it, user)) }
 

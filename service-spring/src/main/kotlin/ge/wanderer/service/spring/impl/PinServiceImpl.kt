@@ -28,10 +28,7 @@ import ge.wanderer.service.protocol.response.ServiceListingResponse
 import ge.wanderer.service.protocol.response.ServiceResponse
 import ge.wanderer.service.spring.CommentPreviewProvider
 import ge.wanderer.service.spring.command.CommandProvider
-import ge.wanderer.service.spring.data.data
-import ge.wanderer.service.spring.data.mapData
-import ge.wanderer.service.spring.data.noDataResponse
-import ge.wanderer.service.spring.data.ratingResponse
+import ge.wanderer.service.spring.data.*
 import ge.wanderer.service.spring.logger
 import ge.wanderer.service.spring.model.NoComment
 import ge.wanderer.service.spring.model.NoPin
@@ -63,9 +60,9 @@ class PinServiceImpl(
         return ServiceListingResponse(true, "Pins Fetched!", pins.size, listingParams.batchNumber, pins.map { it.mapData() })
     }
 
-    override fun list(listingParams: ListingParams, userId: Long): ServiceListingResponse<PinData> {
+    override fun list(listingParams: ListingParams, requestingUserId: Long?): ServiceListingResponse<PinData> {
         val pins = pinRepository.list(listingParams)
-        return ServiceListingResponse(true, "Pins Fetched!", pins.size, listingParams.batchNumber, pins.map { it.dataWithCommentsPreview(userService.findUserById(userId)) })
+        return ServiceListingResponse(true, "Pins Fetched!", pins.size, listingParams.batchNumber, pins.map { it.dataWithCommentsPreview(getRequestingUser(requestingUserId, userService)) })
     }
 
     override fun reportIrrelevant(request: OperateOnContentRequest): ServiceResponse<PinData> {
@@ -88,9 +85,9 @@ class PinServiceImpl(
         )
     }
 
-    override fun findById(id: Long, userId: Long): ServiceResponse<PinData> {
+    override fun findById(id: Long, requestingUserId: Long?): ServiceResponse<PinData> {
         val pin = pinRepository.findById(id)
-        return ServiceResponse(true, "Pin fetched!", pin.dataWithCommentsPreview(userService.findUserById(userId)))
+        return ServiceResponse(true, "Pin fetched!", pin.dataWithCommentsPreview(getRequestingUser(requestingUserId, userService)))
     }
 
     override fun activate(request: OperateOnContentRequest): ServiceResponse<PinData> {
@@ -154,9 +151,9 @@ class PinServiceImpl(
 
     override fun listComments(request: ListCommentsRequest): ServiceListingResponse<CommentData> {
         val pin = pinRepository.findById(request.contentId)
-        val user = userService.findUserById(request.userId)
+        val requestingUser = getRequestingUser(request.requestingUserId, userService)
         val commentsData = commentRepository.listActiveFor(pin, request.listingParams)
-            .map { it.data(user, commentPreviewProvider.getPreviewFor(it, user)) }
+            .map { it.data(requestingUser, commentPreviewProvider.getPreviewFor(it, requestingUser)) }
 
         return ServiceListingResponse(true, "Comments fetched!", commentsData.size, request.listingParams.batchNumber, commentsData)
     }

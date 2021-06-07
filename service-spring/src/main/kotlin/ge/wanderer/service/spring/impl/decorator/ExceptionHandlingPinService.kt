@@ -1,6 +1,5 @@
 package ge.wanderer.service.spring.impl.decorator
 
-import ge.wanderer.core.model.report.Report
 import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.service.protocol.data.*
 import ge.wanderer.service.protocol.interfaces.PinService
@@ -22,8 +21,8 @@ class ExceptionHandlingPinService(
     override fun listForRoute(routeCode: String, listingParams: ListingParams): ServiceListingResponse<PinMapData> =
         handleListing { pinServiceImpl.listForRoute(routeCode, listingParams) }
 
-    override fun list(listingParams: ListingParams, userId: Long): ServiceListingResponse<PinData> =
-        handleListing { pinServiceImpl.list(listingParams, userId) }
+    override fun list(listingParams: ListingParams, requestingUserId: Long?): ServiceListingResponse<PinData> =
+        handleListing { pinServiceImpl.list(listingParams, requestingUserId) }
 
     override fun reportIrrelevant(request: OperateOnContentRequest): ServiceResponse<PinData> =
         handle { pinServiceImpl.reportIrrelevant(request) }
@@ -31,8 +30,8 @@ class ExceptionHandlingPinService(
     override fun updatePin(request: UpdatePinRequest): ServiceResponse<PinData> =
         handle { pinServiceImpl.updatePin(request) }
 
-    override fun findById(id: Long, userId: Long): ServiceResponse<PinData> =
-        handle { pinServiceImpl.findById(id, userId) }
+    override fun findById(id: Long, requestingUserId: Long?): ServiceResponse<PinData> =
+        handle { pinServiceImpl.findById(id, requestingUserId) }
 
     override fun activate(request: OperateOnContentRequest): ServiceResponse<PinData> =
         handle { pinServiceImpl.activate(request) }
