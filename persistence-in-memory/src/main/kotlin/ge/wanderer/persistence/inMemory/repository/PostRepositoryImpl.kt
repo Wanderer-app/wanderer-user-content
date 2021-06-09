@@ -30,11 +30,11 @@ class PostRepositoryImpl(
 
     private val currentId = AtomicLong(1)
     private val posts = hashMapOf(
-        create(1, now(), "TB201301", "aqa mshvidoba", listOf(), setOf(Pair(2L, "Baro baro"), Pair(3L, "zd"))),
-        create(2, now(), "TB201301", "es ra yle marshrutia", listOf(), setOf(Pair(1L, "atrakeb"))),
-        create(3, now(), "TB201301", "aaaaa", listOf(), setOf(Pair(2L, "nomeri dawere"))),
-        create(4, now(), "TB201301", "aq unda wavide", listOf(), setOf(Pair(1L, "mec wamiyvane raaa"))),
-        create(5, now(), "TB201301", "salami", listOf(), setOf(Pair(4L, "salami bijebs truiki gvichers")))
+        create(1, now(), "TB201301", "აქა მშვიდობა", listOf(), setOf(Pair(2L, "ბარო ბარო"), Pair(3L, "zd"))),
+        create(2, now(), "TB201301", "ეს რა ცუდი მარშრუტია", listOf(), setOf(Pair(1L, "მეც არ მამეწონა"))),
+        create(3, now(), "TB201301", "ააააა", listOf(), setOf(Pair(2L, "ზახრუმა"))),
+        create(4, now(), "TB201301", "აქ უნდა წავიდე", listOf(), setOf(Pair(1L, "მეც წამიყვანე პლზ"))),
+        create(5, now(), "TB201301", "სალამი", listOf(), setOf(Pair(4L, "სალამი ბიჭებს ტრუსიკი გვიჭერს")))
     )
 
     private fun create(

@@ -1,6 +1,5 @@
 package ge.wanderer.service.spring.impl.decorator
 
-import ge.wanderer.core.model.report.Report
 import ge.wanderer.common.listing.ListingParams
 import ge.wanderer.service.protocol.data.ReportData
 import ge.wanderer.service.protocol.interfaces.ReportsService

@@ -44,11 +44,11 @@ class PinRepositoryImpl(
 
     private val currentId = AtomicLong(1)
     private val pins = hashMapOf(
-        create(1, now(), "TB201301", "aqa prtxilad", "volkebi dadian", null, LatLng(41.81309452631177f, 44.84830571006798f), WARNING, setOf(Pair(2L, "ragacas atrakeb"))),
-        create(2, now(), "TB201301", "mewyeri chamowva", "ver gaivlit", null, LatLng(41.80877688066833f, 44.858985100557675f), TIP, setOf(Pair(1L, "dges vnaxe da agaraa"))),
-        create(1, now(), "TB201301", "dasasvenebeli adgili", "banakistvis kai adgilia", null, LatLng(41.801802130108065f, 44.87436234552735f), RESTING_PLACE, setOf(Pair(1L, "martalia es kaci"))),
-        create(4, now(), "TB201301", "tesli adgili", "kai xedia aqedan", AttachedFile("user-images/1622887057360-butterfly.jpg"), LatLng(41.8055665996977f, 44.86248552819858f), SIGHT, setOf(Pair(6L, "diax diax"))),
-        create(5, now(), "TB201301", "aqa prtxilad", "datvebi dadian", null, LatLng(41.81216881837967f, 44.853783440245074f), TIP, setOf(Pair(2L, "ragacas atrakeb")))
+        create(1, now(), "TB201301", "აქა ფრთხილად", "ვოლკები დადიან", null, LatLng(41.81309452631177f, 44.84830571006798f), WARNING, setOf(Pair(2L, "რაღაცას გვატყუებ"))),
+        create(2, now(), "TB201301", "მეწყერი ჩამოწვა", "ვერ გაივლით", null, LatLng(41.80877688066833f, 44.858985100557675f), TIP, setOf(Pair(1L, "დღეს ვნახე და აღარაა"))),
+        create(1, now(), "TB201301", "დასასვენებელი ადგილი", "ბაკაისთვის კაი ადგილია. ჭაჭას დალევ და გაითიშები", null, LatLng(41.801802130108065f, 44.87436234552735f), RESTING_PLACE, setOf(Pair(1L, "მართალია ეს კაცი"))),
+        create(4, now(), "TB201301", "მაგარი ადგილი", "კაი ხედია აქედან", AttachedFile("user-images/1622887057360-butterfly.jpg"), LatLng(41.8055665996977f, 44.86248552819858f), SIGHT, setOf(Pair(6L, "დიახ დიახ"))),
+        create(5, now(), "TB201301", "ოო იეე", "აქ პირველად ვაკოცე გოგოს", null, LatLng(41.81216881837967f, 44.853783440245074f), TIP, setOf(Pair(2L, "ფანტაზიორი ხაააარ")))
     )
 
     private fun create(
