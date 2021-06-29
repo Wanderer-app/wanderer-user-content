@@ -35,7 +35,7 @@ class PinRepositoryImplTest(
         assertTrue(pinRepositoryImpl.list(DEFAULT_LISTING_PARAMS).isNotEmpty())
         val pin = pinRepositoryImpl.findById(3)
 
-        val user = userService.findUserById("7")
+        val user = userService.findUserById("90d36b5f-e060-4f67-a4a2-c6d06ee76b04")
         pin.addComment(Comment(TRANSIENT_ID, user, now(), "New comment", Active(now(), user)))
 
         val comments = commentRepositoryImpl.listActiveFor(pin, DEFAULT_LISTING_PARAMS)

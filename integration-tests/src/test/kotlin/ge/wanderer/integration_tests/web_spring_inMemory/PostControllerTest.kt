@@ -48,7 +48,7 @@ class PostControllerTest(
     @Test
     fun updatesPost() {
         val postId = 1L
-        val request = UpdatePostRequest(1, "New text", listOf(FileData("1", FileType.IMAGE), FileData("1", FileType.IMAGE)), "1")
+        val request = UpdatePostRequest(1, "New text", listOf(FileData("1", FileType.IMAGE), FileData("1", FileType.IMAGE)), "5760b116-6aab-4f04-b8be-650e27a85d09")
 
         mockMvc.post(controllerPath + "update", toJson(request))
             .andExpect(status().isOk)
@@ -61,7 +61,7 @@ class PostControllerTest(
 
     @Test
     fun createsPost() {
-        val request = CreatePostRequest(now(), "1", "1234", "Some text", listOf(FileData("1", FileType.IMAGE)))
+        val request = CreatePostRequest(now(), "5760b116-6aab-4f04-b8be-650e27a85d09", "1234", "Some text", listOf(FileData("1", FileType.IMAGE)))
 
         mockMvc.post(controllerPath + "create", toJson(request))
             .andExpect(status().isOk)
@@ -74,7 +74,7 @@ class PostControllerTest(
     fun removesAndActivatesPost() {
         val postId = 1L
 
-        mockMvc.post(controllerPath + "remove", toJson(OperateOnContentRequest(postId, "2", now())))
+        mockMvc.post(controllerPath + "remove", toJson(OperateOnContentRequest(postId, "85fa0681-b7bd-4ee3-b5b5-eb2672181ae2", now())))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.isSuccessful").value(true))
             .andExpect(jsonPath("$.message").value("POST removed successfully!"))
@@ -82,7 +82,7 @@ class PostControllerTest(
             .andExpect(jsonPath("$.data.isActive").value(false))
             .andExpect(jsonPath("$.data.isRemoved").value(true))
 
-        mockMvc.post(controllerPath + "activate", toJson(OperateOnContentRequest(postId, "2", now())))
+        mockMvc.post(controllerPath + "activate", toJson(OperateOnContentRequest(postId, "85fa0681-b7bd-4ee3-b5b5-eb2672181ae2", now())))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.isSuccessful").value(true))
             .andExpect(jsonPath("$.message").value("POST activated successfully!"))
@@ -95,19 +95,19 @@ class PostControllerTest(
     fun ratesPost() {
         val postId = 1L
 
-        mockMvc.post(controllerPath + "up-vote", toJson(OperateOnContentRequest(postId, "2", now())))
+        mockMvc.post(controllerPath + "up-vote", toJson(OperateOnContentRequest(postId, "85fa0681-b7bd-4ee3-b5b5-eb2672181ae2", now())))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.isSuccessful").value(true))
             .andExpect(jsonPath("$.message").value("Vote added"))
             .andExpect(jsonPath("$.data.totalRating").value(1))
 
-        mockMvc.post(controllerPath + "down-vote", toJson(OperateOnContentRequest(postId, "2", now())))
+        mockMvc.post(controllerPath + "down-vote", toJson(OperateOnContentRequest(postId, "85fa0681-b7bd-4ee3-b5b5-eb2672181ae2", now())))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.isSuccessful").value(true))
             .andExpect(jsonPath("$.message").value("Vote added"))
             .andExpect(jsonPath("$.data.totalRating").value(-1))
 
-        mockMvc.post(controllerPath + "remove-vote", toJson(OperateOnContentRequest(postId, "2", now())))
+        mockMvc.post(controllerPath + "remove-vote", toJson(OperateOnContentRequest(postId, "85fa0681-b7bd-4ee3-b5b5-eb2672181ae2", now())))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.isSuccessful").value(true))
             .andExpect(jsonPath("$.message").value("Vote Removed"))
@@ -118,32 +118,32 @@ class PostControllerTest(
     fun commentsPost() {
         val postId = 1L
 
-        val request = AddCommentRequest(postId, "2", "Some comment", now())
+        val request = AddCommentRequest(postId, "85fa0681-b7bd-4ee3-b5b5-eb2672181ae2", "Some comment", now())
         mockMvc.post(controllerPath + "add-comment", toJson(request))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.isSuccessful").value(true))
             .andExpect(jsonPath("$.message").value("Comment added"))
             .andExpect(jsonPath("$.data.text").value("Some comment"))
-            .andExpect(jsonPath("$.data.author.id").value(2))
+            .andExpect(jsonPath("$.data.author.id").value("85fa0681-b7bd-4ee3-b5b5-eb2672181ae2"))
 
         val commentsResponseString = mockMvc.post(controllerPath + "1/comments", toJson(DEFAULT_LISTING_PARAMS))
             .andExpect(status().isOk)
             .andReturn().response.contentAsString
 
         val comments = fromJson<ServiceListingResponse<CommentData>>(commentsResponseString).data
-        assertTrue { comments.any { it.text == "Some comment" && it.author.id == "2" && it.id != TRANSIENT_ID } }
+        assertTrue { comments.any { it.text == "Some comment" && it.author.id == "85fa0681-b7bd-4ee3-b5b5-eb2672181ae2" && it.id != TRANSIENT_ID } }
     }
 
     @Test
     fun reportsPost() {
         val postId: Long = 2
-        mockMvc.post(controllerPath + "report", toJson(ReportContentRequest(postId, "2", now(), ReportReason.INAPPROPRIATE_CONTENT)))
+        mockMvc.post(controllerPath + "report", toJson(ReportContentRequest(postId, "85fa0681-b7bd-4ee3-b5b5-eb2672181ae2", now(), ReportReason.INAPPROPRIATE_CONTENT)))
             .andExpect(status().isOk)
 
-        mockMvc.post(controllerPath + "report", toJson(ReportContentRequest(postId, "3", now(), ReportReason.INAPPROPRIATE_CONTENT)))
+        mockMvc.post(controllerPath + "report", toJson(ReportContentRequest(postId, "04e51444-85af-4d92-b89a-c8f761b7f3ea", now(), ReportReason.INAPPROPRIATE_CONTENT)))
             .andExpect(status().isOk)
 
-        mockMvc.post(controllerPath + "report", toJson(ReportContentRequest(postId, "4", now(), ReportReason.INAPPROPRIATE_CONTENT)))
+        mockMvc.post(controllerPath + "report", toJson(ReportContentRequest(postId, "b41c2dd8-db85-4d96-a1f4-92f90851f7f2", now(), ReportReason.INAPPROPRIATE_CONTENT)))
             .andExpect(status().isOk)
 
         val reportsString = mockMvc.post(controllerPath + "${postId}/reports", toJson(DEFAULT_LISTING_PARAMS))

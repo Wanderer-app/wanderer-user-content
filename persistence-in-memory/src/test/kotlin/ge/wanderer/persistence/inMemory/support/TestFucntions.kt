@@ -50,8 +50,8 @@ fun createNewPostWithoutFiles(id: Long, user: User, content: String, createDate:
     )
 
 
-fun jambura(): User = User("1", "Nika", "Jamburia", 10, true)
-fun patata(): User = User("2", "Nikoloz", "Patatishvili", 10, false)
+fun jambura(): User = User("5760b116-6aab-4f04-b8be-650e27a85d09", "Nika", "Jamburia", 10, true)
+fun patata(): User = User("85fa0681-b7bd-4ee3-b5b5-eb2672181ae2", "Nikoloz", "Patatishvili", 10, false)
 
 fun pollWithAnswers(id: Long, creator: User, createTime: LocalDateTime, routeCode: String, title: String, answers: Set<String>): Poll {
     val pollAnswers: MutableSet<IPollAnswer> = answers

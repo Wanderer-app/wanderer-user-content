@@ -47,7 +47,7 @@ class CommentControllerTest(
 
     @Test
     fun updatesComment() {
-        mockMvc.post(controllerPath + "update", toJson(UpdateCommentRequest(1, "2", "Updated text")))
+        mockMvc.post(controllerPath + "update", toJson(UpdateCommentRequest(1, "85fa0681-b7bd-4ee3-b5b5-eb2672181ae2", "Updated text")))
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.isSuccessful").value(true))
             .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Comment updated"))
@@ -57,7 +57,7 @@ class CommentControllerTest(
     @Test
     fun activatesAndRemovesComment() {
         val commentId = 1L
-        mockMvc.post(controllerPath + "remove", toJson(OperateOnContentRequest(commentId, "2", now())))
+        mockMvc.post(controllerPath + "remove", toJson(OperateOnContentRequest(commentId, "85fa0681-b7bd-4ee3-b5b5-eb2672181ae2", now())))
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.isSuccessful").value(true))
             .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("COMMENT removed successfully!"))
@@ -65,7 +65,7 @@ class CommentControllerTest(
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.isActive").value(false))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.isRemoved").value(true))
 
-        mockMvc.post(controllerPath + "activate", toJson(OperateOnContentRequest(commentId, "2", now())))
+        mockMvc.post(controllerPath + "activate", toJson(OperateOnContentRequest(commentId, "85fa0681-b7bd-4ee3-b5b5-eb2672181ae2", now())))
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.isSuccessful").value(true))
             .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("COMMENT activated successfully!"))
@@ -78,19 +78,19 @@ class CommentControllerTest(
     fun ratesComment() {
         val commentId = 1L
 
-        mockMvc.post(controllerPath + "up-vote", toJson(OperateOnContentRequest(commentId, "1", now())))
+        mockMvc.post(controllerPath + "up-vote", toJson(OperateOnContentRequest(commentId, "b41c2dd8-db85-4d96-a1f4-92f90851f7f2", now())))
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.isSuccessful").value(true))
             .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Vote added"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.totalRating").value(1))
 
-        mockMvc.post(controllerPath + "down-vote", toJson(OperateOnContentRequest(commentId, "1", now())))
+        mockMvc.post(controllerPath + "down-vote", toJson(OperateOnContentRequest(commentId, "b41c2dd8-db85-4d96-a1f4-92f90851f7f2", now())))
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.isSuccessful").value(true))
             .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Vote added"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.totalRating").value(-1))
 
-        mockMvc.post(controllerPath + "remove-vote", toJson(OperateOnContentRequest(commentId, "1", now())))
+        mockMvc.post(controllerPath + "remove-vote", toJson(OperateOnContentRequest(commentId, "b41c2dd8-db85-4d96-a1f4-92f90851f7f2", now())))
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.isSuccessful").value(true))
             .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Vote Removed"))
@@ -101,31 +101,31 @@ class CommentControllerTest(
     fun addsReplies() {
         val commentId = 1L
 
-        val request = AddCommentRequest(commentId, "2", "Some comment", now())
+        val request = AddCommentRequest(commentId, "85fa0681-b7bd-4ee3-b5b5-eb2672181ae2", "Some comment", now())
         mockMvc.post(controllerPath + "add-reply", toJson(request))
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.jsonPath("$.isSuccessful").value(true))
             .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Comment added"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.data.text").value("Some comment"))
-            .andExpect(MockMvcResultMatchers.jsonPath("$.data.author.id").value(2))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.data.author.id").value("85fa0681-b7bd-4ee3-b5b5-eb2672181ae2"))
 
         val commentsResponseString = mockMvc.post(controllerPath + "1/replies", toJson(DEFAULT_LISTING_PARAMS))
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andReturn().response.contentAsString
 
         val comments = fromJson<ServiceListingResponse<CommentData>>(commentsResponseString).data
-        assertTrue { comments.any { it.text == "Some comment" && it.author.id == "2" && it.id != TRANSIENT_ID } }
+        assertTrue { comments.any { it.text == "Some comment" && it.author.id == "85fa0681-b7bd-4ee3-b5b5-eb2672181ae2" && it.id != TRANSIENT_ID } }
     }
 
     @Test
     fun reportsComment() {
-        mockMvc.post(controllerPath + "report", toJson(ReportContentRequest(1, "2", now(), ReportReason.INAPPROPRIATE_CONTENT)))
+        mockMvc.post(controllerPath + "report", toJson(ReportContentRequest(1, "85fa0681-b7bd-4ee3-b5b5-eb2672181ae2", now(), ReportReason.INAPPROPRIATE_CONTENT)))
             .andExpect(MockMvcResultMatchers.status().isOk)
 
-        mockMvc.post(controllerPath + "report", toJson(ReportContentRequest(1, "3", now(), ReportReason.INAPPROPRIATE_CONTENT)))
+        mockMvc.post(controllerPath + "report", toJson(ReportContentRequest(1, "04e51444-85af-4d92-b89a-c8f761b7f3ea", now(), ReportReason.INAPPROPRIATE_CONTENT)))
             .andExpect(MockMvcResultMatchers.status().isOk)
 
-        mockMvc.post(controllerPath + "report", toJson(ReportContentRequest(1, "4", now(), ReportReason.INAPPROPRIATE_CONTENT)))
+        mockMvc.post(controllerPath + "report", toJson(ReportContentRequest(1, "b41c2dd8-db85-4d96-a1f4-92f90851f7f2", now(), ReportReason.INAPPROPRIATE_CONTENT)))
             .andExpect(MockMvcResultMatchers.status().isOk)
 
         val reportsString = mockMvc.post(controllerPath + "1/reports", toJson(DEFAULT_LISTING_PARAMS))

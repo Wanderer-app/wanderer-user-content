@@ -24,8 +24,8 @@ class FilterParameterEvaluatorTest {
         val post = createNewPostWithoutFiles(1, jambura(), "zd all" , dateTime("2020-04-15T12:12:11"))
         post.giveVote(Vote(TRANSIENT_ID, patata(), now(), Active(now(), patata()), 1, VoteType.UP))
 
-        assertTrue(evaluate(FilterParam("creatorId", IS, "1"), post))
-        assertFalse(evaluate(FilterParam("creatorId", IS_NOT, "1"), post))
+        assertTrue(evaluate(FilterParam("creatorId", IS, "5760b116-6aab-4f04-b8be-650e27a85d09"), post))
+        assertFalse(evaluate(FilterParam("creatorId", IS_NOT, "5760b116-6aab-4f04-b8be-650e27a85d09"), post))
         assertFalse(evaluate(FilterParam("rating", IS_MORE_THEN, "2"), post))
         assertFalse(evaluate(FilterParam("rating", IS_LESS_THEN, "-2"), post))
         assertTrue(evaluate(FilterParam("rating", IS_MORE_THEN, "-2"), post))

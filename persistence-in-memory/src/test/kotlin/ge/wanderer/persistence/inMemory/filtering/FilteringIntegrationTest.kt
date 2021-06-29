@@ -71,16 +71,16 @@ class FilteringIntegrationTest(
         val post3 = postRepository.findById(3)
 
         // post 1 has 3 votes
-        vote(post1, "5")
-        vote(post1, "6")
-        vote(post1, "7")
+        vote(post1, "755520ef-f06a-49e2-af7e-a0f4c19b1aba")
+        vote(post1, "5673a717-9083-4150-8b7e-c3fb25675e3a")
+        vote(post1, "90d36b5f-e060-4f67-a4a2-c6d06ee76b04")
 
         // post 2 has 2 votes
-        vote(post2, "5")
-        vote(post2, "6")
+        vote(post2, "755520ef-f06a-49e2-af7e-a0f4c19b1aba")
+        vote(post2, "5673a717-9083-4150-8b7e-c3fb25675e3a")
 
         // post 3 has 1 vote
-        vote(post3, "5")
+        vote(post3, "755520ef-f06a-49e2-af7e-a0f4c19b1aba")
 
         val postsWithRating3 = postRepository.list(
             withFilters(FilterParam("rating", IS, "3"))
@@ -147,7 +147,7 @@ class FilteringIntegrationTest(
         assertEquals("Listing request can't have more then 3 filters!", exception.message!!)
     }
 
-    private fun postWithDate(localDateTime: LocalDateTime) = createNewPostWithoutFiles(TRANSIENT_ID, userService.findUserById("1"), "aaa", localDateTime)
+    private fun postWithDate(localDateTime: LocalDateTime) = createNewPostWithoutFiles(TRANSIENT_ID, userService.findUserById("5760b116-6aab-4f04-b8be-650e27a85d09"), "aaa", localDateTime)
 
     private fun vote(content: RateableContent, voterId: String) {
         val user = userService.findUserById(voterId)

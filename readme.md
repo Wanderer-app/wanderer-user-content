@@ -10,3 +10,7 @@ Useful Links:
     <li><b>Aws:</b>  http://wandererusercontent-env.eba-mjjpzm2p.us-east-2.elasticbeanstalk.com/api/pins/1 </li>
     <li><b>Aws Env:</b>  https://us-east-2.console.aws.amazon.com/elasticbeanstalk/home?region=us-east-2#/environments </li>
 </ul>
+
+#Docker
+$ docker build . -t wanderer-user-content
+$ docker run -p 8080:8080 wanderer-user-content
