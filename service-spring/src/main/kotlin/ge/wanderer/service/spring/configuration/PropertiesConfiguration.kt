@@ -5,9 +5,7 @@ import ge.wanderer.common.enums.UserContentType.*
 import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.service.spring.configuration.UserServiceImplementationType.MOCKED
 import ge.wanderer.service.spring.configuration.UserServiceImplementationType.REAL
-import ge.wanderer.service.spring.integration.user.api.UsersApiClientType
-import ge.wanderer.service.spring.integration.user.api.mockedUserApiClient
-import ge.wanderer.service.spring.integration.user.api.realUserApiClient
+import ge.wanderer.service.spring.integration.user.api.*
 import ge.wanderer.service.spring.integration.user.service.UserServiceImpl
 import ge.wanderer.service.spring.integration.user.service.UserServiceMockImpl
 import org.http4k.core.HttpHandler
@@ -73,12 +71,13 @@ class PropertiesConfiguration {
     @Bean
     @Primary
     fun usersApi(
-        @Value("\${integration.users.api.url}") url: String,
-        @Value("\${integration.users.api.type:MOCKED}") type: UsersApiClientType
-    ): HttpHandler =
+        @Value("\${integration.users.api.type:MOCKED}") type: UsersApiClientType,
+        @Autowired mockedUserApiClientProvider: MockedUserApiClientProvider,
+        @Autowired realUserApiClientProvider: RealUserApiClientProvider
+    ): UserApiClientProvider =
         when(type) {
-            UsersApiClientType.MOCKED -> mockedUserApiClient()
-            UsersApiClientType.REAL -> realUserApiClient(url)
+            UsersApiClientType.MOCKED -> mockedUserApiClientProvider
+            UsersApiClientType.REAL -> realUserApiClientProvider
         }
 
 

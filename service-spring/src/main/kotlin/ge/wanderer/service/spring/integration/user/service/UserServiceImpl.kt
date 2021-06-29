@@ -12,7 +12,9 @@ import ge.wanderer.core.model.content.UserAddedContent
 import ge.wanderer.core.model.discussion.DiscussionElement
 import ge.wanderer.core.model.map.IPin
 import ge.wanderer.core.model.rating.IVote
+import ge.wanderer.service.spring.integration.user.api.RealUserApiClientProvider
 import ge.wanderer.service.spring.integration.user.api.RequireOkResponse
+import ge.wanderer.service.spring.integration.user.api.UserApiClientProvider
 import ge.wanderer.service.spring.integration.user.api.request.CreateNotificationRequest
 import ge.wanderer.service.spring.integration.user.api.request.NotificationType
 import ge.wanderer.service.spring.integration.user.api.response.GetUserResponse
@@ -24,12 +26,11 @@ import org.springframework.stereotype.Component
 
 @Component
 class UserServiceImpl(
-    @Autowired
-    private val httpClient: HttpHandler
+    @Autowired private val apiClientProvider: UserApiClientProvider
 ): UserService {
 
     override fun findUserById(userId: String): User {
-        val client = RequireOkResponse().then(httpClient)
+        val client = RequireOkResponse().then(apiClientProvider.getClient())
         val response = client(Request(Method.GET, "/get_user").query("id", userId))
         val userResponse: GetUserResponse = fromJson(response.bodyString())
         return userFromResponse(userResponse)
@@ -37,9 +38,11 @@ class UserServiceImpl(
 
 
     override fun usersContentWasRated(rateableContent: RateableContent, vote: IVote) {
-        val response = httpClient(
+        val client = apiClientProvider.getClient()
+        val response = client(
             Request(Method.POST, "/notifications")
                 .header("content-type", "application/json")
+                .header("Accept", "text/plain")
                 .body(toJson(
                     createNotificationRequest(rateableContent, vote.createdAt(), vote.creator().userName, NotificationType.RATING)
                 ))
@@ -47,7 +50,7 @@ class UserServiceImpl(
     }
 
     override fun notifyContentStatusChange(content: UserAddedContent) {
-        val response = httpClient(
+        val response = apiClientProvider.getClient()(
             Request(Method.POST, "/notifications")
                 .header("content-type", "application/json")
                 .body(toJson(
@@ -57,7 +60,7 @@ class UserServiceImpl(
     }
 
     override fun getAdministrationUser(): User {
-        val client = RequireOkResponse().then(httpClient)
+        val client = RequireOkResponse().then(apiClientProvider.getClient())
         val response = client(Request(Method.GET, "/get_administration_user"))
         return userFromResponse(fromJson(response.bodyString()))
     }
@@ -65,7 +68,7 @@ class UserServiceImpl(
     override fun notifyAdministrationAboutReport(reportableContent: ReportableContent) {}
 
     override fun notifyContentWasCommented(commentableContent: CommentableContent, comment: IComment) {
-        val response = httpClient(
+        val response = apiClientProvider.getClient()(
             Request(Method.POST, "/notifications")
                 .header("content-type", "application/json")
                 .body(toJson(

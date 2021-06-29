@@ -19,16 +19,16 @@ class UserServiceImplTest {
     private val apiUrl = "http://127.0.0.1:5000/api/v1/"
 
     private val TEST_MOCKED = true
-    private val apiClient = if (TEST_MOCKED) {
-        mockedUserApiClient()
+    private val apiClientProvider = if (TEST_MOCKED) {
+        MockedUserApiClientProvider()
     } else {
-        realUserApiClient(apiUrl)
+        RealUserApiClientProvider(apiUrl)
     }
 
     @Test
     fun getsUserById() {
 
-        val service = UserServiceImpl(apiClient)
+        val service = UserServiceImpl(apiClientProvider)
 
         val user = service.findUserById("85fa0681-b7bd-4ee3-b5b5-eb2672181ae2")
         assertEquals("85fa0681-b7bd-4ee3-b5b5-eb2672181ae2", user.id)
@@ -46,7 +46,7 @@ class UserServiceImplTest {
     @Test
     fun throwsExceptionOnNotFound() {
 
-        val service = UserServiceImpl(apiClient)
+        val service = UserServiceImpl(apiClientProvider)
 
         val exception = assertThrows<IllegalStateException> { service.findUserById("1") }
         assertEquals("404 User not found", exception.message!!)
@@ -55,7 +55,7 @@ class UserServiceImplTest {
 
     @Test
     fun throwsExceptionIfIdNotProvided() {
-        val service = UserServiceImpl(apiClient)
+        val service = UserServiceImpl(apiClientProvider)
 
         val exception = assertThrows<IllegalStateException> { service.findUserById("") }
         assertEquals("400 Id should be provided", exception.message!!)
@@ -63,7 +63,7 @@ class UserServiceImplTest {
 
     @Test
     fun sendsNotificationOnContentRated() {
-        val service = UserServiceImpl(apiClient)
+        val service = UserServiceImpl(apiClientProvider)
 
         val user = User("5760b116-6aab-4f04-b8be-650e27a85d09", "Nika", "Jamburia", 5, true)
         val pin = createPin(1, PinType.DANGER, user, now(), LatLng(1f, 1f), "TB201301", "some text")
@@ -75,7 +75,7 @@ class UserServiceImplTest {
 
     @Test
     fun getsAdminUser() {
-        val service = UserServiceImpl(apiClient)
+        val service = UserServiceImpl(apiClientProvider)
 
         val user = service.getAdministrationUser()
         assertTrue(user.isAdmin)
