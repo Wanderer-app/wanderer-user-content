@@ -19,7 +19,7 @@ import io.mockk.mockk
 import org.joda.time.LocalDateTime
 import java.net.URL
 
-val DEFAULT_LOGGED_IN_USER_ID = 1L
+const val DEFAULT_LOGGED_IN_USER_ID = "1"
 val DEFAULT_LOGGED_IN_USER = mockk<User> { every { id } returns DEFAULT_LOGGED_IN_USER_ID }
 
 fun createNewComment(id: Long, createDate: LocalDateTime, text: String, author: User): Comment =
@@ -73,11 +73,11 @@ fun createNewPostWithoutFiles(id: Long, user: User, content: String, createDate:
 fun createUpVote(id: Long, user: User, date: LocalDateTime, value: Int) = Vote(id, user, date, Active(date, user), value, VoteType.UP)
 fun createDownVote(id: Long, user: User, date: LocalDateTime, value: Int) = Vote(id, user, date, Active(date, user), value, VoteType.DOWN)
 
-fun jambura(): User = User(1, "Nika", "Jamburia", 10, true)
-fun patata(): User = User(2, "Nika", "Patatishvili", 5, true)
-fun jangula(): User = User(3, "Nika", "Jangulashvili", 5, true)
-fun vipiSoxumski(): User = User(4, "Vipi", "Soxumski", 1, false)
-fun kalduna(): User = User(5, "Kalduna", "Kalduna", 10, false)
+fun jambura(): User = User("1", "Nika", "Jamburia", 10, true)
+fun patata(): User = User("2", "Nika", "Patatishvili", 5, true)
+fun jangula(): User = User("3", "Nika", "Jangulashvili", 5, true)
+fun vipiSoxumski(): User = User("4", "Vipi", "Soxumski", 1, false)
+fun kalduna(): User = User("5", "Kalduna", "Kalduna", 10, false)
 
 fun pollAnswer(id: Long, answerText: String, createTime: LocalDateTime, answerers: MutableSet<User>, creator: User): PollAnswer {
     return PollAnswer(

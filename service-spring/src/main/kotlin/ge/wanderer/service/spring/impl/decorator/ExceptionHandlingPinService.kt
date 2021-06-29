@@ -21,7 +21,7 @@ class ExceptionHandlingPinService(
     override fun listForRoute(routeCode: String, listingParams: ListingParams): ServiceListingResponse<PinMapData> =
         handleListing { pinServiceImpl.listForRoute(routeCode, listingParams) }
 
-    override fun list(listingParams: ListingParams, requestingUserId: Long?): ServiceListingResponse<PinData> =
+    override fun list(listingParams: ListingParams, requestingUserId: String?): ServiceListingResponse<PinData> =
         handleListing { pinServiceImpl.list(listingParams, requestingUserId) }
 
     override fun reportIrrelevant(request: OperateOnContentRequest): ServiceResponse<PinData> =
@@ -30,7 +30,7 @@ class ExceptionHandlingPinService(
     override fun updatePin(request: UpdatePinRequest): ServiceResponse<PinData> =
         handle { pinServiceImpl.updatePin(request) }
 
-    override fun findById(id: Long, requestingUserId: Long?): ServiceResponse<PinData> =
+    override fun findById(id: Long, requestingUserId: String?): ServiceResponse<PinData> =
         handle { pinServiceImpl.findById(id, requestingUserId) }
 
     override fun activate(request: OperateOnContentRequest): ServiceResponse<PinData> =

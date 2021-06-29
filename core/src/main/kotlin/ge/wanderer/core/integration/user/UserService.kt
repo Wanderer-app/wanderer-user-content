@@ -8,7 +8,7 @@ import ge.wanderer.core.model.content.UserAddedContent
 import ge.wanderer.core.model.rating.IVote
 
 interface UserService {
-    fun findUserById(userId: Long): User
+    fun findUserById(userId: String): User
     fun usersContentWasRated(rateableContent: RateableContent, vote: IVote)
     fun notifyContentStatusChange(content: UserAddedContent)
     fun getAdministrationUser(): User

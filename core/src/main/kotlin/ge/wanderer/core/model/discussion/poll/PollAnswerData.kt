@@ -5,6 +5,6 @@ import java.math.BigDecimal
 data class PollAnswerData (
     val answerId: Long,
     val title: String,
-    val answererIds: List<Long>,
+    val answererIds: List<String>,
     val percentage: BigDecimal
 )

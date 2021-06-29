@@ -44,7 +44,7 @@ class PinServiceImplTest {
         every { pinRepository.persist(any()) } answers { arg(0) }
 
         val createDate = dateTime("2021-03-26T10:21:11")
-        val request = CreatePinRequest(createDate, 5, WARNING, "Dangerous place", "Be careful here", null, LatLng(20f, 10f), "12345")
+        val request = CreatePinRequest(createDate, "5", WARNING, "Dangerous place", "Be careful here", null, LatLng(20f, 10f), "12345")
 
         val response = service.createPin(request)
 
@@ -67,7 +67,7 @@ class PinServiceImplTest {
         assertNull(newPin.attachedFile)
         assertEquals(WARNING, newPin.type)
 
-        verify(exactly = 1) { userService.findUserById(5) }
+        verify(exactly = 1) { userService.findUserById("5") }
         verify(exactly = 1) { pinRepository.persist(any()) }
     }
 
@@ -77,7 +77,7 @@ class PinServiceImplTest {
         every { pinRepository.persist(any()) } throws IllegalStateException("Could not persist")
         val createDate = dateTime("2021-03-26T10:21:11")
 
-        val request = CreatePinRequest(createDate, 5, WARNING, "Dangerous place", "Be careful here", null, LatLng(20f, 10f), "12345")
+        val request = CreatePinRequest(createDate, "5", WARNING, "Dangerous place", "Be careful here", null, LatLng(20f, 10f), "12345")
         val response = service.createPin(request)
 
         assertFalse(response.isSuccessful)
@@ -115,7 +115,7 @@ class PinServiceImplTest {
     fun correctlyReportsPinAsIrrelevant() {
         every { reportingConfiguration.shouldBeMarkedIrrelevant(pin5) } returns false
 
-        val request = OperateOnContentRequest(5, 1, dateTime("2021-03-27T17:00:00"))
+        val request = OperateOnContentRequest(5, "1", dateTime("2021-03-27T17:00:00"))
         val response = service.reportIrrelevant(request)
 
         assertTrue(response.isSuccessful)
@@ -129,7 +129,7 @@ class PinServiceImplTest {
     fun correctlyReportsAndMarksPinAsIrrelevant() {
         every { reportingConfiguration.shouldBeMarkedIrrelevant(pin5) } returns true
 
-        val request = OperateOnContentRequest(5, 1, dateTime("2021-03-27T17:00:00"))
+        val request = OperateOnContentRequest(5, "1", dateTime("2021-03-27T17:00:00"))
         val response = service.reportIrrelevant(request)
 
         assertTrue(response.isSuccessful)
@@ -149,7 +149,7 @@ class PinServiceImplTest {
 
     @Test
     fun correctlyUpdatesPin() {
-        val request = UpdatePinRequest(5, "aaaa", "aaaa", FileData("1", FileType.IMAGE), 4)
+        val request = UpdatePinRequest(5, "aaaa", "aaaa", FileData("1", FileType.IMAGE), "4")
 
         val response = service.updatePin(request)
         assertTrue(response.isSuccessful)
@@ -173,7 +173,7 @@ class PinServiceImplTest {
     @Test
     fun correctlyActivatesPin() {
         pin1.remove(now(), jambura())
-        val request = OperateOnContentRequest(1, 1, dateTime("2021-03-27T12:00:00"))
+        val request = OperateOnContentRequest(1, "1", dateTime("2021-03-27T12:00:00"))
         val response = service.activate(request)
 
         assertTrue(response.isSuccessful)
@@ -185,7 +185,7 @@ class PinServiceImplTest {
 
     @Test
     fun correctlyRemovesPin() {
-        val request = OperateOnContentRequest(5, 2, dateTime("2021-03-27T12:00:00"))
+        val request = OperateOnContentRequest(5, "2", dateTime("2021-03-27T12:00:00"))
         val response = service.remove(request)
 
         assertTrue(response.isSuccessful)
@@ -199,31 +199,31 @@ class PinServiceImplTest {
 
     @Test
     fun correctlyRatesPin() {
-        var request = OperateOnContentRequest(1, 2, now())
+        var request = OperateOnContentRequest(1, "2", now())
         var response = service.giveUpVote(request)
         assertTrue(response.isSuccessful)
         assertEquals(5, response.data!!.totalRating)
         assertEquals(5, pin1.rating())
 
-        request = OperateOnContentRequest(1, 4, now())
+        request = OperateOnContentRequest(1, "4", now())
         response = service.giveUpVote(request)
         assertTrue(response.isSuccessful)
         assertEquals(6, response.data!!.totalRating)
         assertEquals(6, pin1.rating())
 
-        request = OperateOnContentRequest(1, 2, now())
+        request = OperateOnContentRequest(1, "2", now())
         response = service.giveDownVote(request)
         assertTrue(response.isSuccessful)
         assertEquals(-4, response.data!!.totalRating)
         assertEquals(-4, pin1.rating())
 
-        request = OperateOnContentRequest(1, 2, now())
+        request = OperateOnContentRequest(1, "2", now())
         response = service.removeVote(request)
         assertTrue(response.isSuccessful)
         assertEquals(1, response.data!!.totalRating)
         assertEquals(1, pin1.rating())
 
-        request = OperateOnContentRequest(1, 1, now())
+        request = OperateOnContentRequest(1, "1", now())
         response = service.giveUpVote(request)
         assertFalse(response.isSuccessful)
         assertEquals("Cant vote for your own content!", response.message)
@@ -231,7 +231,7 @@ class PinServiceImplTest {
 
     @Test
     fun correctlyAddsCommentsToPin() {
-        val request = AddCommentRequest(1, 2, "maladeeec", now())
+        val request = AddCommentRequest(1, "2", "maladeeec", now())
         val response = service.addComment(request)
 
         assertTrue(response.isSuccessful)
@@ -266,7 +266,7 @@ class PinServiceImplTest {
         every { reportingConfiguration.shouldBeRemoved(any()) } returns false
         every { reportingConfiguration.shouldNotifyAdministration(any()) } returns true
 
-        val request = ReportContentRequest(1, 5, now(), ReportReason.INAPPROPRIATE_CONTENT)
+        val request = ReportContentRequest(1, "5", now(), ReportReason.INAPPROPRIATE_CONTENT)
         val response = service.report(request)
 
         assertTrue(response.isSuccessful)
@@ -282,7 +282,7 @@ class PinServiceImplTest {
         every { reportingConfiguration.shouldBeRemoved(any()) } returns false
         every { reportingConfiguration.shouldNotifyAdministration(any()) } returns true
 
-        val request = ReportContentRequest(1, 5, now(), ReportReason.IRRELEVANT)
+        val request = ReportContentRequest(1, "5", now(), ReportReason.IRRELEVANT)
 
         val exception = assertThrows<IllegalStateException> { service.report(request) }
         assertEquals("Use reportIrrelevant() method for reporting a pin as irrelevant", exception.message!!)

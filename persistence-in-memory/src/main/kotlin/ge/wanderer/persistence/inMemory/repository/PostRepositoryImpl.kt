@@ -30,20 +30,20 @@ class PostRepositoryImpl(
 
     private val currentId = AtomicLong(1)
     private val posts = hashMapOf(
-        create(1, now(), "TB201301", "აქა მშვიდობა", listOf(), setOf(Pair(2L, "ბარო ბარო"), Pair(3L, "zd"))),
-        create(2, now(), "TB201301", "ეს რა ცუდი მარშრუტია", listOf(), setOf(Pair(1L, "მეც არ მამეწონა"))),
-        create(3, now(), "TB201301", "ააააა", listOf(), setOf(Pair(2L, "ზახრუმა"))),
-        create(4, now(), "TB201301", "აქ უნდა წავიდე", listOf(), setOf(Pair(1L, "მეც წამიყვანე პლზ"))),
-        create(5, now(), "TB201301", "სალამი", listOf(), setOf(Pair(4L, "სალამი ბიჭებს ტრუსიკი გვიჭერს")))
+        create("5760b116-6aab-4f04-b8be-650e27a85d09", now(), "TB201301", "აქა მშვიდობა", listOf(), setOf(Pair("85fa0681-b7bd-4ee3-b5b5-eb2672181ae2", "ბარო ბარო"), Pair("04e51444-85af-4d92-b89a-c8f761b7f3ea", "zd"))),
+        create("85fa0681-b7bd-4ee3-b5b5-eb2672181ae2", now(), "TB201301", "ეს რა ცუდი მარშრუტია", listOf(), setOf(Pair("5760b116-6aab-4f04-b8be-650e27a85d09", "მეც არ მამეწონა"))),
+        create("04e51444-85af-4d92-b89a-c8f761b7f3ea", now(), "TB201301", "ააააა", listOf(), setOf(Pair("85fa0681-b7bd-4ee3-b5b5-eb2672181ae2", "ზახრუმა"))),
+        create("b41c2dd8-db85-4d96-a1f4-92f90851f7f2", now(), "TB201301", "აქ უნდა წავიდე", listOf(), setOf(Pair("5760b116-6aab-4f04-b8be-650e27a85d09", "მეც წამიყვანე პლზ"))),
+        create("755520ef-f06a-49e2-af7e-a0f4c19b1aba", now(), "TB201301", "სალამი", listOf(), setOf(Pair("b41c2dd8-db85-4d96-a1f4-92f90851f7f2", "სალამი ბიჭებს ტრუსიკი გვიჭერს")))
     )
 
     private fun create(
-        userId: Long,
+        userId: String,
         createDate: LocalDateTime,
         routeCode: String,
         text: String,
         attachedFiles: List<AttachedFile>,
-        commentsData: Set<Pair<Long, String>>
+        commentsData: Set<Pair<String, String>>
     ): Pair<Long, IPost> {
         val id = currentId.getAndIncrement()
         val user = userService.findUserById(userId)
@@ -55,7 +55,7 @@ class PostRepositoryImpl(
         )
     }
 
-    private fun createComment(userId: Long, text: String, createDate: LocalDateTime): IComment {
+    private fun createComment(userId: String, text: String, createDate: LocalDateTime): IComment {
         val user = userService.findUserById(userId)
         val comment =  Comment(TRANSIENT_ID, user, createDate, text, Active(createDate, user))
         return commentRepository.persist(comment)

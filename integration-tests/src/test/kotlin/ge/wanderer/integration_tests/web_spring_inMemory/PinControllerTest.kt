@@ -75,22 +75,22 @@ class PinControllerTest(
     fun reportsAsIrrelevant() {
         val pinId = 1L
 
-        mockMvc.post(controllerPath + "report-irrelevant", toJson(OperateOnContentRequest(pinId, 2, now())))
+        mockMvc.post(controllerPath + "report-irrelevant", toJson(OperateOnContentRequest(pinId, "2", now())))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.isSuccessful").value(true))
             .andExpect(jsonPath("$.message").value("Content Reported!"))
             .andExpect(jsonPath("$.data.id").value(pinId))
             .andExpect(jsonPath("$.data.isRelevant").value(true))
 
-        mockMvc.post(controllerPath + "report-irrelevant", toJson(OperateOnContentRequest(pinId, 3, now())))
+        mockMvc.post(controllerPath + "report-irrelevant", toJson(OperateOnContentRequest(pinId, "3", now())))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.data.isRelevant").value(true))
 
-        mockMvc.post(controllerPath + "report-irrelevant", toJson(OperateOnContentRequest(pinId, 3, now())))
+        mockMvc.post(controllerPath + "report-irrelevant", toJson(OperateOnContentRequest(pinId, "3", now())))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.message").value("You already reported this content"))
 
-        mockMvc.post(controllerPath + "report-irrelevant", toJson(OperateOnContentRequest(pinId, 4, now())))
+        mockMvc.post(controllerPath + "report-irrelevant", toJson(OperateOnContentRequest(pinId, "4", now())))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.data.isRelevant").value(false))
             .andExpect(jsonPath("$.data.isActive").value(false))
@@ -99,7 +99,7 @@ class PinControllerTest(
 
     @Test
     fun createsAndUpdatesPin() {
-        val request = CreatePinRequest(now(), 1, PinType.TIP, "Some title", "aaaaa", null, LatLng(1f, 2f), "1234")
+        val request = CreatePinRequest(now(), "1", PinType.TIP, "Some title", "aaaaa", null, LatLng(1f, 2f), "1234")
 
         val responseString = mockMvc.post(controllerPath + "create", toJson(request))
             .andExpect(status().isOk)
@@ -112,7 +112,7 @@ class PinControllerTest(
             .response.contentAsString
         val newPinId = fromJson<ServiceResponse<PinData>>(responseString).data!!.id
 
-        val updateRequest = UpdatePinRequest(newPinId, "Some title", "Some text", FileData("1", FileType.IMAGE), 1)
+        val updateRequest = UpdatePinRequest(newPinId, "Some title", "Some text", FileData("1", FileType.IMAGE), "1")
         mockMvc.post(controllerPath + "update", toJson(updateRequest))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.isSuccessful").value(true))
@@ -126,7 +126,7 @@ class PinControllerTest(
     fun removesAndActivatesPin() {
         val pinId = 2L
 
-        mockMvc.post(controllerPath + "remove", toJson(OperateOnContentRequest(pinId, 1, now())))
+        mockMvc.post(controllerPath + "remove", toJson(OperateOnContentRequest(pinId, "1", now())))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.isSuccessful").value(true))
             .andExpect(jsonPath("$.message").value("PIN removed successfully!"))
@@ -134,7 +134,7 @@ class PinControllerTest(
             .andExpect(jsonPath("$.data.isActive").value(false))
             .andExpect(jsonPath("$.data.isRemoved").value(true))
 
-        mockMvc.post(controllerPath + "activate", toJson(OperateOnContentRequest(pinId, 1, now())))
+        mockMvc.post(controllerPath + "activate", toJson(OperateOnContentRequest(pinId, "1", now())))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.isSuccessful").value(true))
             .andExpect(jsonPath("$.message").value("PIN activated successfully!"))
@@ -147,19 +147,19 @@ class PinControllerTest(
     fun ratesPin() {
         val pinId = 1L
 
-        mockMvc.post(controllerPath + "up-vote", toJson(OperateOnContentRequest(pinId, 2, now())))
+        mockMvc.post(controllerPath + "up-vote", toJson(OperateOnContentRequest(pinId, "2", now())))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.isSuccessful").value(true))
             .andExpect(jsonPath("$.message").value("Vote added"))
             .andExpect(jsonPath("$.data.totalRating").value(10))
 
-        mockMvc.post(controllerPath + "down-vote", toJson(OperateOnContentRequest(pinId, 2, now())))
+        mockMvc.post(controllerPath + "down-vote", toJson(OperateOnContentRequest(pinId, "2", now())))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.isSuccessful").value(true))
             .andExpect(jsonPath("$.message").value("Vote added"))
             .andExpect(jsonPath("$.data.totalRating").value(-10))
 
-        mockMvc.post(controllerPath + "remove-vote", toJson(OperateOnContentRequest(pinId, 2, now())))
+        mockMvc.post(controllerPath + "remove-vote", toJson(OperateOnContentRequest(pinId, "2", now())))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.isSuccessful").value(true))
             .andExpect(jsonPath("$.message").value("Vote Removed"))
@@ -170,7 +170,7 @@ class PinControllerTest(
     fun commentsPin() {
         val pinId = 1L
 
-        val request = AddCommentRequest(pinId, 2, "Some comment", now())
+        val request = AddCommentRequest(pinId, "2", "Some comment", now())
         mockMvc.post(controllerPath + "add-comment", toJson(request))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.isSuccessful").value(true))
@@ -183,18 +183,18 @@ class PinControllerTest(
             .andReturn().response.contentAsString
 
         val comments = fromJson<ServiceListingResponse<CommentData>>(commentsResponseString).data
-        assertTrue { comments.any { it.text == "Some comment" && it.author.id == 2L && it.id != TRANSIENT_ID } }
+        assertTrue { comments.any { it.text == "Some comment" && it.author.id == "2" && it.id != TRANSIENT_ID } }
     }
 
     @Test
     fun reportsPin() {
-        mockMvc.post(controllerPath + "report", toJson(ReportContentRequest(1, 5, now(), ReportReason.INAPPROPRIATE_CONTENT)))
+        mockMvc.post(controllerPath + "report", toJson(ReportContentRequest(1, "5", now(), ReportReason.INAPPROPRIATE_CONTENT)))
             .andExpect(status().isOk)
 
-        mockMvc.post(controllerPath + "report", toJson(ReportContentRequest(1, 6, now(), ReportReason.INAPPROPRIATE_CONTENT)))
+        mockMvc.post(controllerPath + "report", toJson(ReportContentRequest(1, "6", now(), ReportReason.INAPPROPRIATE_CONTENT)))
             .andExpect(status().isOk)
 
-        mockMvc.post(controllerPath + "report", toJson(ReportContentRequest(1, 7, now(), ReportReason.INAPPROPRIATE_CONTENT)))
+        mockMvc.post(controllerPath + "report", toJson(ReportContentRequest(1, "7", now(), ReportReason.INAPPROPRIATE_CONTENT)))
             .andExpect(status().isOk)
 
         val reportsString = mockMvc.post(controllerPath + "1/reports", toJson(DEFAULT_LISTING_PARAMS))

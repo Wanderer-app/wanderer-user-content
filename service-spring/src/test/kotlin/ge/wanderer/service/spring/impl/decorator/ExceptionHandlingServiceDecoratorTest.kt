@@ -29,7 +29,7 @@ class ExceptionHandlingServiceDecoratorTest {
         assertEquals( "Wrong input", updateResult.message)
         assertNull(updateResult.data)
 
-        val listingResult = decorator.listComments(ListCommentsRequest(1, 1, mockk()))
+        val listingResult = decorator.listComments(ListCommentsRequest(1, "1", mockk()))
         assertFalse(listingResult.isSuccessful)
         assertEquals( "Comment not found", listingResult.message)
         assertTrue(listingResult.data.isEmpty())
@@ -61,12 +61,12 @@ class ExceptionHandlingServiceDecoratorTest {
         assertTrue(result.data.isEmpty())
 
         val listingParams = ListingParams(1, 1, null, listOf())
-        result = decorator.getDiscussionForRoute("123", 1, listingParams)
+        result = decorator.getDiscussionForRoute("123", "1", listingParams)
         assertTrue(result.isSuccessful)
         assertEquals("Discussions fetched", result.message)
         assertFalse(result.data.isEmpty())
 
-        result = decorator.getDiscussionForRoute("1235", 1, mockk())
+        result = decorator.getDiscussionForRoute("1235", "1", mockk())
         assertFalse(result.isSuccessful)
         assertTrue(result.message.startsWith("Exception occurred: java.lang.IllegalStateException"))
         assertTrue(result.data.isEmpty())

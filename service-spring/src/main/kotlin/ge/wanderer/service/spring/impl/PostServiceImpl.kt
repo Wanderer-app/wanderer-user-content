@@ -68,7 +68,7 @@ class PostServiceImpl(
         )
     }
 
-    override fun findById(id: Long, requestingUserId: Long?): ServiceResponse<DiscussionElementData> {
+    override fun findById(id: Long, requestingUserId: String?): ServiceResponse<DiscussionElementData> {
         val post = postRepository.findById(id)
         return ServiceResponse(true, "Post fetched", post.dataWithCommentsPreview(getRequestingUser(requestingUserId, userService)))
     }

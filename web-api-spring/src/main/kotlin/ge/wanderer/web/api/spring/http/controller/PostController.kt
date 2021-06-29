@@ -28,7 +28,7 @@ class PostController(
     @GetMapping("/{id}")
     fun getPost(
         @PathVariable id: Long,
-        @RequestHeader(name = "user-token", required = false) loggedInUserId: Long
+        @RequestHeader(name = "user-token", required = false) loggedInUserId: String
     ): ResponseEntity<ServiceResponse<DiscussionElementData>> =
         httpResponse(postService.findById(id, loggedInUserId))
 
@@ -60,7 +60,7 @@ class PostController(
     fun listComments(
         @RequestBody listingParams: ListingParams,
         @PathVariable id: Long,
-        @RequestHeader(name = "user-token", required = false) loggedInUserId: Long?
+        @RequestHeader(name = "user-token", required = false) loggedInUserId: String?
     ): ResponseEntity<ServiceListingResponse<CommentData>> =
         httpResponse(postService.listComments(ListCommentsRequest(id, loggedInUserId, listingParams)))
 

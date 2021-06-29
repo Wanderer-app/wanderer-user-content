@@ -31,7 +31,7 @@ class ExceptionHandlingPollService(
     override fun selectAnswer(request: SelectPollAnswerRequest): ServiceResponse<DiscussionElementData> =
         handle { pollServiceImpl.selectAnswer(request) }
 
-    override fun findById(id: Long, requestingUserId: Long?): ServiceResponse<DiscussionElementData> =
+    override fun findById(id: Long, requestingUserId: String?): ServiceResponse<DiscussionElementData> =
         handle { pollServiceImpl.findById(id, requestingUserId) }
 
     override fun activate(request: OperateOnContentRequest): ServiceResponse<DiscussionElementData> =

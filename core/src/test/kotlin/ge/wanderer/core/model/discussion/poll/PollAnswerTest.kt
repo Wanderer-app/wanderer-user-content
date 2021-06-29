@@ -23,7 +23,7 @@ class PollAnswerTest {
         assertEquals(1, data.answerId)
         assertEquals("GTO", data.title)
         assertEquals(amount(33.33), data.percentage)
-        assertTrue(data.answererIds.containsAll(listOf(1L, 2L, 3L)))
+        assertTrue(data.answererIds.containsAll(listOf("1", "2", "3")))
     }
 
     @Test

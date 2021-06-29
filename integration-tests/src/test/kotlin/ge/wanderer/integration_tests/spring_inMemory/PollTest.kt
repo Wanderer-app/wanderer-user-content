@@ -34,7 +34,7 @@ class PollTest(
 
     @Test
     fun createsPoll() {
-        val request = CreatePollRequest(now(), 1, "123456", "What is the best video game?", setOf("Rdr", "Gta"))
+        val request = CreatePollRequest(now(), "1", "123456", "What is the best video game?", setOf("Rdr", "Gta"))
         val response = pollService.createPoll(request)
 
         assertTrue(response.isSuccessful)
@@ -53,7 +53,7 @@ class PollTest(
     @Test
     fun addsAnswer() {
         val poll = pollService.createPoll(
-            CreatePollRequest(now(), 1, "123456", "What is the best video game?", setOf("Rdr", "Gta"))
+            CreatePollRequest(now(), "1", "123456", "What is the best video game?", setOf("Rdr", "Gta"))
         ).data!!
 
         val response = pollService.addAnswer(AddAnswerToPollRequest(poll.id, poll.creator.id, "Witcher", now()))
@@ -65,7 +65,7 @@ class PollTest(
     @Test
     fun removesAnswer() {
         val poll = pollService.createPoll(
-            CreatePollRequest(now(), 1, "123456", "What is the best video game?", setOf("Rdr", "Gta", "Witcher"))
+            CreatePollRequest(now(), "1", "123456", "What is the best video game?", setOf("Rdr", "Gta", "Witcher"))
         ).data!!
         val answerInfo = poll.answerInfo()
         val answerToRemove = answerInfo.first { it.title == "Witcher" }
@@ -94,9 +94,9 @@ class PollTest(
         val answer1Id = answerInfo.first().answerId
         val answer2Id = answerInfo.last().answerId
 
-        pollService.selectAnswer(SelectPollAnswerRequest(pollId, 2, answer1Id))
-        pollService.selectAnswer(SelectPollAnswerRequest(pollId, 3, answer1Id))
-        pollService.selectAnswer(SelectPollAnswerRequest(pollId, 4, answer1Id))
+        pollService.selectAnswer(SelectPollAnswerRequest(pollId, "2", answer1Id))
+        pollService.selectAnswer(SelectPollAnswerRequest(pollId, "3", answer1Id))
+        pollService.selectAnswer(SelectPollAnswerRequest(pollId, "4", answer1Id))
         answerInfo = pollService.findById(pollId, DEFAULT_LOGGED_IN_USER_ID).data!!.answerInfo()
 
         assertEquals(3, answerInfo.byId(answer1Id).answererIds.size)
@@ -104,7 +104,7 @@ class PollTest(
         assertTrue(answerInfo.byId(answer2Id).answererIds.isEmpty())
         assertEquals(zeroAmount(), answerInfo.byId(answer2Id).percentage)
 
-        pollService.selectAnswer(SelectPollAnswerRequest(pollId, 5, answer2Id))
+        pollService.selectAnswer(SelectPollAnswerRequest(pollId, "5", answer2Id))
         answerInfo = pollService.findById(pollId, DEFAULT_LOGGED_IN_USER_ID).data!!.answerInfo()
 
         assertEquals(3, answerInfo.byId(answer1Id).answererIds.size)
@@ -112,7 +112,7 @@ class PollTest(
         assertEquals(1, answerInfo.byId(answer2Id).answererIds.size)
         assertEquals(amount(25.00), answerInfo.byId(answer2Id).percentage)
 
-        pollService.selectAnswer(SelectPollAnswerRequest(pollId, 2, answer2Id))
+        pollService.selectAnswer(SelectPollAnswerRequest(pollId, "2", answer2Id))
         answerInfo = pollService.findById(pollId, DEFAULT_LOGGED_IN_USER_ID).data!!.answerInfo()
 
         assertEquals(2, answerInfo.byId(answer1Id).answererIds.size)
@@ -120,7 +120,7 @@ class PollTest(
         assertEquals(2, answerInfo.byId(answer2Id).answererIds.size)
         assertEquals(amount(50.00), answerInfo.byId(answer2Id).percentage)
 
-        pollService.selectAnswer(SelectPollAnswerRequest(pollId, 4, answer1Id))
+        pollService.selectAnswer(SelectPollAnswerRequest(pollId, "4", answer1Id))
         answerInfo = pollService.findById(pollId, DEFAULT_LOGGED_IN_USER_ID).data!!.answerInfo()
 
         assertEquals(1, answerInfo.byId(answer1Id).answererIds.size)
@@ -133,25 +133,25 @@ class PollTest(
     @Test
     fun updatesPoll() {
         val poll = pollService.createPoll(
-            CreatePollRequest(now(), 1, "123456", "What is best game", setOf("Rdr", "Gta"))
+            CreatePollRequest(now(), "1", "123456", "What is best game", setOf("Rdr", "Gta"))
         ).data!!
 
-        val errorResponse = pollService.updatePoll(UpdatePollRequest(poll.id, "What is the best video game?", 2))
+        val errorResponse = pollService.updatePoll(UpdatePollRequest(poll.id, "What is the best video game?", "2"))
         assertFalse(errorResponse.isSuccessful)
         assertEquals("You can't update this element", errorResponse.message)
 
-        val successResponse = pollService.updatePoll(UpdatePollRequest(poll.id, "What is the best video game?", 1))
+        val successResponse = pollService.updatePoll(UpdatePollRequest(poll.id, "What is the best video game?", "1"))
         assertTrue(successResponse.isSuccessful)
         assertTrue(pollService.findById(poll.id, DEFAULT_LOGGED_IN_USER_ID).data!!.content.contains("What is the best video game?"))
     }
 
     @Test
     fun removesAndActivatesPoll() {
-        pollService.remove(OperateOnContentRequest(1, 1, now()))
+        pollService.remove(OperateOnContentRequest(1, "1", now()))
         assertTrue(pollService.findById(1, DEFAULT_LOGGED_IN_USER_ID).data!!.isRemoved)
         assertFalse(pollService.findById(1, DEFAULT_LOGGED_IN_USER_ID).data!!.isActive)
 
-        pollService.activate(OperateOnContentRequest(1, 1, dateTime("20201-04-05T12:00:00")))
+        pollService.activate(OperateOnContentRequest(1, "1", dateTime("20201-04-05T12:00:00")))
         val poll = pollService.findById(1, DEFAULT_LOGGED_IN_USER_ID).data!!
         assertFalse(poll.isRemoved)
         assertTrue(poll.isActive)
@@ -161,13 +161,13 @@ class PollTest(
     @Test
     fun addsCommentsToPolls() {
         val pollId = pollService.createPoll(
-            CreatePollRequest(now(), 1, "123456", "What is best game", setOf("Rdr", "Gta"))
+            CreatePollRequest(now(), "1", "123456", "What is best game", setOf("Rdr", "Gta"))
         ).data!!.id
-        pollService.addComment(AddCommentRequest(pollId, 2, "Comment 1", now()))
-        pollService.addComment(AddCommentRequest(pollId, 2, "Comment 1", now()))
-        pollService.addComment(AddCommentRequest(pollId, 2, "Comment 1", now()))
-        pollService.addComment(AddCommentRequest(pollId, 2, "Comment 1", now()))
-        pollService.addComment(AddCommentRequest(pollId, 2, "Comment 1", now())).data!!
+        pollService.addComment(AddCommentRequest(pollId, "2", "Comment 1", now()))
+        pollService.addComment(AddCommentRequest(pollId, "2", "Comment 1", now()))
+        pollService.addComment(AddCommentRequest(pollId, "2", "Comment 1", now()))
+        pollService.addComment(AddCommentRequest(pollId, "2", "Comment 1", now()))
+        pollService.addComment(AddCommentRequest(pollId, "2", "Comment 1", now())).data!!
 
         val listCommentsResponse = pollService.listComments(ListCommentsRequest(pollId, DEFAULT_LOGGED_IN_USER_ID, DEFAULT_LISTING_PARAMS))
         assertEquals(5, listCommentsResponse.resultSize)

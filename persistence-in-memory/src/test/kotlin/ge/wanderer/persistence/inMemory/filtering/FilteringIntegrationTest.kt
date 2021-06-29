@@ -39,28 +39,28 @@ class FilteringIntegrationTest(
                 FilterParam("creatorId", IS, "1")
             )
         )
-        assertTrue(pinsForUser1.all { it.creator().id == 1L })
+        assertTrue(pinsForUser1.all { it.creator().id == "1" })
 
         val pinsForUser2 = pinRepository.list(
             withFilters(
                 FilterParam("creatorId", IS, "2")
             )
         )
-        assertTrue(pinsForUser2.all { it.creator().id == 2L })
+        assertTrue(pinsForUser2.all { it.creator().id == "2" })
 
         val pinsNotForUser1 = pinRepository.list(
             withFilters(
                 FilterParam("creatorId", IS_NOT, "1")
             )
         )
-        assertTrue(pinsNotForUser1.none { it.creator().id == 1L })
+        assertTrue(pinsNotForUser1.none { it.creator().id == "1" })
 
         val forRouteAndUser1 = pinRepository.listForRoute("123",
             withFilters(
                 FilterParam("creatorId", IS, "1")
             )
         )
-        assertTrue(forRouteAndUser1.all { it.creator().id == 1L && it.routeCode() == "123" && it.isActive() })
+        assertTrue(forRouteAndUser1.all { it.creator().id == "1" && it.routeCode() == "123" && it.isActive() })
 
     }
 
@@ -71,16 +71,16 @@ class FilteringIntegrationTest(
         val post3 = postRepository.findById(3)
 
         // post 1 has 3 votes
-        vote(post1, 5)
-        vote(post1, 6)
-        vote(post1, 7)
+        vote(post1, "5")
+        vote(post1, "6")
+        vote(post1, "7")
 
         // post 2 has 2 votes
-        vote(post2, 5)
-        vote(post2, 6)
+        vote(post2, "5")
+        vote(post2, "6")
 
         // post 3 has 1 vote
-        vote(post3, 5)
+        vote(post3, "5")
 
         val postsWithRating3 = postRepository.list(
             withFilters(FilterParam("rating", IS, "3"))
@@ -147,9 +147,9 @@ class FilteringIntegrationTest(
         assertEquals("Listing request can't have more then 3 filters!", exception.message!!)
     }
 
-    private fun postWithDate(localDateTime: LocalDateTime) = createNewPostWithoutFiles(TRANSIENT_ID, userService.findUserById(1), "aaa", localDateTime)
+    private fun postWithDate(localDateTime: LocalDateTime) = createNewPostWithoutFiles(TRANSIENT_ID, userService.findUserById("1"), "aaa", localDateTime)
 
-    private fun vote(content: RateableContent, voterId: Long) {
+    private fun vote(content: RateableContent, voterId: String) {
         val user = userService.findUserById(voterId)
         content.giveVote(Vote(TRANSIENT_ID, user, now(), Active(now(), user), 1, VoteType.UP))
     }

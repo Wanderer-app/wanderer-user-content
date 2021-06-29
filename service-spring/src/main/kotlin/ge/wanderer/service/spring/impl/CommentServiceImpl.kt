@@ -48,7 +48,7 @@ class CommentServiceImpl(
         )
     }
 
-    override fun findById(id: Long, requestingUserId: Long?): ServiceResponse<CommentData> {
+    override fun findById(id: Long, requestingUserId: String?): ServiceResponse<CommentData> {
         val comment = commentRepository.findById(id)
         val loggedInUser = getRequestingUser(requestingUserId, userService)
         return ServiceResponse(true, "Successfully retrieved comment", comment.dataWithRepliesPreview(loggedInUser))

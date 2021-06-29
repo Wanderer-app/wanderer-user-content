@@ -7,7 +7,7 @@ import org.joda.time.LocalDateTime
 
 data class CreatePinRequest (
     val onDate: LocalDateTime,
-    val userId: Long,
+    val userId: String,
     val type: PinType,
     val title: String,
     val text: String,
@@ -21,5 +21,5 @@ data class UpdatePinRequest(
     val newTitle: String,
     val newText: String,
     val newFile: FileData?,
-    val updaterId: Long
+    val updaterId: String
 )

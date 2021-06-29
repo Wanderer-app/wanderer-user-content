@@ -33,7 +33,7 @@ class PollServiceImplTest {
     @Test
     fun correctlyCreatesPoll() {
         every { pollRepository.persist(any()) } answers { arg(0) }
-        val request = CreatePollRequest(now(), 1, "123", "Some question", setOf("Answer 1", "Answer 2"))
+        val request = CreatePollRequest(now(), "1", "123", "Some question", setOf("Answer 1", "Answer 2"))
         val response = service.createPoll(request)
 
         assertTrue(response.isSuccessful)
@@ -49,13 +49,13 @@ class PollServiceImplTest {
         assertTrue(data.attachedFiles.isEmpty())
         assertEquals(UserContentType.POLL, data.type)
 
-        verify(exactly = 1) { userService.findUserById(1) }
+        verify(exactly = 1) { userService.findUserById("1") }
         verify(exactly = 1) { pollRepository.persist(any()) }
     }
 
     @Test
     fun correctlyHandlesErrorOnCommandExecution() {
-        val request = CreatePollRequest(now(), 1, "123", "Some question", setOf())
+        val request = CreatePollRequest(now(), "1", "123", "Some question", setOf())
         val response = service.createPoll(request)
 
         assertFalse(response.isSuccessful)
@@ -65,7 +65,7 @@ class PollServiceImplTest {
     @Test
     fun correctlyUpdatesPoll() {
         every { pollRepository.findById(1) } returns pollWithAnswers(1, jangula(), now(), "123", "Some question", mutableSetOf("Answer 1", "Answer 2"))
-        val request = UpdatePollRequest(1, "Pick one", 3)
+        val request = UpdatePollRequest(1, "Pick one", "3")
         val response = service.updatePoll(request)
 
         assertTrue(response.isSuccessful)
@@ -76,7 +76,7 @@ class PollServiceImplTest {
     @Test
     fun correctlyAddsAnswerToPoll() {
         every { pollRepository.findById(1) } returns pollWithAnswers(1, jangula(), now(), "123", "Some question", mutableSetOf("Answer 1", "Answer 2"))
-        val request = AddAnswerToPollRequest(1, 3, "Answer 3", now())
+        val request = AddAnswerToPollRequest(1, "3", "Answer 3", now())
         val response = service.addAnswer(request)
 
         assertTrue(response.isSuccessful)
@@ -93,7 +93,7 @@ class PollServiceImplTest {
 
         every { pollRepository.findById(1) } returns poll
 
-        val request = RemovePollAnswerRequest(1, 2, 3, now())
+        val request = RemovePollAnswerRequest(1, 2, "3", now())
         val response = service.removeAnswer(request)
 
         assertTrue(response.isSuccessful)
@@ -111,7 +111,7 @@ class PollServiceImplTest {
         val poll = createPoll(1, jambura(), now(), "123", "Some question", mutableSetOf(answer1, answer2))
         every { pollRepository.findById(1) } returns poll
 
-        var request = SelectPollAnswerRequest(1, 4, 1)
+        var request = SelectPollAnswerRequest(1, "4", 1)
         var response = service.selectAnswer(request)
         assertTrue(response.isSuccessful)
         assertEquals("Answer Selected", response.message)
@@ -119,18 +119,18 @@ class PollServiceImplTest {
 
         val answer1Data = poll.answersData().first { it.title == "Answer 1" }
         assertEquals(amount(100), answer1Data.percentage)
-        assertEquals(4, answer1Data.answererIds[0])
+        assertEquals("4", answer1Data.answererIds[0])
 
-        request = SelectPollAnswerRequest(1, 5, 2)
+        request = SelectPollAnswerRequest(1, "5", 2)
         response = service.selectAnswer(request)
         assertTrue(response.isSuccessful)
 
         val answer2Data = poll.answersData().first { it.title == "Answer 2" }
         assertEquals(amount(50), answer2Data.percentage)
-        assertEquals(5, answer2Data.answererIds[0])
+        assertEquals("5", answer2Data.answererIds[0])
         assertEquals(amount(50), poll.answersData().first { it.title == "Answer 1" }.percentage)
 
-        service.selectAnswer(SelectPollAnswerRequest(1, 4, 1))
+        service.selectAnswer(SelectPollAnswerRequest(1, "4", 1))
         assertEquals(amount(0), poll.answersData().first { it.title == "Answer 1" }.percentage)
         assertEquals(amount(100), poll.answersData().first { it.title == "Answer 2" }.percentage)
 
@@ -156,7 +156,7 @@ class PollServiceImplTest {
         poll.remove(now(), jambura())
         every { pollRepository.findById(1) } returns poll
 
-        val request = OperateOnContentRequest(1, 1, dateTime("2021-03-28T16:00:00"))
+        val request = OperateOnContentRequest(1, "1", dateTime("2021-03-28T16:00:00"))
         val response = service.activate(request)
 
         assertTrue(response.isSuccessful)
@@ -171,7 +171,7 @@ class PollServiceImplTest {
         val poll = pollWithAnswers(1, jangula(), now(), "123", "Some question", mutableSetOf("Answer 1", "Answer 2"))
         every { pollRepository.findById(1) } returns poll
 
-        val request = OperateOnContentRequest(1, 1, dateTime("2021-03-28T16:00:00"))
+        val request = OperateOnContentRequest(1, "1", dateTime("2021-03-28T16:00:00"))
         val response = service.remove(request)
 
         assertTrue(response.isSuccessful)
@@ -186,7 +186,7 @@ class PollServiceImplTest {
     fun addsCommentToPoll() {
         every { pollRepository.findById(1) } returns pollWithAnswers(1, jangula(), now(), "123", "Some question", mutableSetOf("Answer 1", "Answer 2"))
 
-        val request = AddCommentRequest(1, 1, "gaparchanavebs?", now())
+        val request = AddCommentRequest(1, "1", "gaparchanavebs?", now())
         val response = service.addComment(request)
 
         assertTrue(response.isSuccessful)

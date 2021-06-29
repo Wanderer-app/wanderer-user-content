@@ -9,9 +9,9 @@ class UserTest {
 
     @Test
     fun usersWithSameIdAreEqual() {
-        val user1 = User(1, "nika", "jamburia", 1, true)
-        val user2 = User(1, "vigaca", "vigaca", 1, true)
-        val user3 = User(2, "vigaca", "vigaca", 1, true)
+        val user1 = User("1", "nika", "jamburia", 1, true)
+        val user2 = User("1", "vigaca", "vigaca", 1, true)
+        val user3 = User("2", "vigaca", "vigaca", 1, true)
 
         assertEquals(user1, user2)
         assertNotEquals(user2, user3)

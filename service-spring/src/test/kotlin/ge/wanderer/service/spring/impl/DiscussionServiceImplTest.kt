@@ -66,7 +66,7 @@ class DiscussionServiceImplTest {
         }
         val service = DiscussionServiceImpl(repository, testCommentPreviewProvider(), mockedUserService())
 
-        val exception = assertThrows<IllegalStateException> { service.getDiscussionForRoute("123", 1L, mockk()) }
+        val exception = assertThrows<IllegalStateException> { service.getDiscussionForRoute("123", "1", mockk()) }
         assertEquals("Route does not exist", exception.message!!)
     }
 }

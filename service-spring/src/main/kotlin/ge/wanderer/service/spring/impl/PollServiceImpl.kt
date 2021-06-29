@@ -86,7 +86,7 @@ class PollServiceImpl(
         )
     }
 
-    override fun findById(id: Long, requestingUserId: Long?): ServiceResponse<DiscussionElementData> =
+    override fun findById(id: Long, requestingUserId: String?): ServiceResponse<DiscussionElementData> =
         ServiceResponse(true, "Poll fetched", pollRepository.findById(id).dataWithCommentsPreview(getRequestingUser(requestingUserId, userService)))
 
 

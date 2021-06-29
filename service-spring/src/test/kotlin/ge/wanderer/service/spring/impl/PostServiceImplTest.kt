@@ -29,7 +29,7 @@ class PostServiceImplTest {
     fun correctlyCreatesPost() {
         every { postRepository.persist(any()) } answers { arg(0) }
 
-        val request = CreatePostRequest(now(), 1, "123", "Some text", listOf(FileData("1", FileType.IMAGE), FileData("2", FileType.IMAGE)))
+        val request = CreatePostRequest(now(), "1", "123", "Some text", listOf(FileData("1", FileType.IMAGE), FileData("2", FileType.IMAGE)))
         val response = service.createPost(request)
 
         assertTrue(response.isSuccessful)
@@ -43,14 +43,14 @@ class PostServiceImplTest {
         assertTrue(data.isActive)
         assertFalse(data.isRemoved)
 
-        verify(exactly = 1) { userService.findUserById(1) }
+        verify(exactly = 1) { userService.findUserById("1") }
         verify(exactly = 1) { postRepository.persist(any()) }
     }
 
     @Test
     fun correctlyUpdatesPost() {
         every { postRepository.findById(1) } returns createNewPostWithoutFiles(1, jambura(), "Some text", now())
-        val request = UpdatePostRequest(1, "Updated text", listOf(FileData("1", FileType.IMAGE)), 1)
+        val request = UpdatePostRequest(1, "Updated text", listOf(FileData("1", FileType.IMAGE)), "1")
         val response = service.updatePost(request)
 
         assertTrue(response.isSuccessful)
@@ -81,7 +81,7 @@ class PostServiceImplTest {
         post.remove(now(), jambura())
         every { postRepository.findById(1) } returns post
 
-        val request = OperateOnContentRequest(1, 1, dateTime("2021-03-31T12:00:00"))
+        val request = OperateOnContentRequest(1, "1", dateTime("2021-03-31T12:00:00"))
         val response = service.activate(request)
 
         assertTrue(response.isSuccessful)
@@ -98,7 +98,7 @@ class PostServiceImplTest {
         val post = createNewPostWithoutFiles(1, jambura(), "Some text", now())
         every { postRepository.findById(1) } returns post
 
-        val request = OperateOnContentRequest(1, 1, dateTime("2021-03-31T12:00:00"))
+        val request = OperateOnContentRequest(1, "1", dateTime("2021-03-31T12:00:00"))
         val response = service.remove(request)
 
         assertTrue(response.isSuccessful)
@@ -115,17 +115,17 @@ class PostServiceImplTest {
         val post = createNewPostWithoutFiles(1, jambura(), "Some text", now())
         every { postRepository.findById(1) } returns post
 
-        var request = OperateOnContentRequest(1, 2, now())
+        var request = OperateOnContentRequest(1, "2", now())
         var response = service.giveUpVote(request)
         assertTrue(response.isSuccessful)
         assertEquals(1, response.data!!.totalRating)
 
-        request = OperateOnContentRequest(1, 2, now())
+        request = OperateOnContentRequest(1, "2", now())
         response = service.giveDownVote(request)
         assertTrue(response.isSuccessful)
         assertEquals(-1, response.data!!.totalRating)
 
-        request = OperateOnContentRequest(1, 2, now())
+        request = OperateOnContentRequest(1, "2", now())
         response = service.removeVote(request)
         assertTrue(response.isSuccessful)
         assertEquals(0, response.data!!.totalRating)
@@ -135,7 +135,7 @@ class PostServiceImplTest {
     fun correctlyAddsCommentToPost() {
         every { postRepository.findById(1) } returns createNewPostWithoutFiles(1, jambura(), "Some text", now())
 
-        val request = AddCommentRequest(1, 2, "aaaa", now())
+        val request = AddCommentRequest(1, "2", "aaaa", now())
         val response = service.addComment(request)
 
         assertTrue(response.isSuccessful)
@@ -170,7 +170,7 @@ class PostServiceImplTest {
         val post = createNewPostWithoutFiles(1, jambura(), "Some text", now())
         every { postRepository.findById(1) } returns post
 
-        val request = ReportContentRequest(1, 2, now(), ReportReason.INAPPROPRIATE_CONTENT)
+        val request = ReportContentRequest(1, "2", now(), ReportReason.INAPPROPRIATE_CONTENT)
         val response = service.report(request)
 
         assertTrue(response.isSuccessful)

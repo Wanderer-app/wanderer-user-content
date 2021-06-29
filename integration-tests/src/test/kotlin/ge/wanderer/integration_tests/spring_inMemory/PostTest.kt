@@ -27,7 +27,7 @@ class PostTest(
 
     @Test
     fun postCanBeCreated() {
-        val request = CreatePostRequest(now(), 1, "123", "Some teeext", listOf(FileData("1", FileType.IMAGE), FileData("2", FileType.IMAGE)))
+        val request = CreatePostRequest(now(), "1", "123", "Some teeext", listOf(FileData("1", FileType.IMAGE), FileData("2", FileType.IMAGE)))
         val response = postService.createPost(request)
         assertTrue(response.isSuccessful)
         assertEquals("Post created!. New model persisted successfully", response.message)
@@ -41,7 +41,7 @@ class PostTest(
     @Test
     fun canBeUpdated() {
         val post = postService.createPost(
-            CreatePostRequest(now(), 1, "123", "Some teeext", listOf(FileData("1", FileType.IMAGE), FileData("1", FileType.IMAGE)))
+            CreatePostRequest(now(), "1", "123", "Some teeext", listOf(FileData("1", FileType.IMAGE), FileData("1", FileType.IMAGE)))
         ).data!!
 
         val request = UpdatePostRequest(post.id, "Updated text", listOf(), post.creator.id)
@@ -58,17 +58,17 @@ class PostTest(
         var post = postService.findById(1, DEFAULT_LOGGED_IN_USER_ID).data!!
         assertEquals(0, post.ratingData!!.totalRating)
 
-        var response = postService.giveUpVote(OperateOnContentRequest(post.id, 2, now()))
+        var response = postService.giveUpVote(OperateOnContentRequest(post.id, "2", now()))
         assertEquals(1, response.data!!.totalRating)
 
-        response = postService.giveDownVote(OperateOnContentRequest(post.id, 3, now()))
+        response = postService.giveDownVote(OperateOnContentRequest(post.id, "3", now()))
         assertEquals(0, response.data!!.totalRating)
 
         response = postService.giveUpVote(OperateOnContentRequest(post.id, post.creator.id, now()))
         assertFalse(response.isSuccessful)
         assertEquals("Cant vote for your own content!", response.message)
 
-        response = postService.removeVote(OperateOnContentRequest(post.id, 2, now()))
+        response = postService.removeVote(OperateOnContentRequest(post.id, "2", now()))
         assertTrue(response.isSuccessful)
 
         post = postService.findById(1, DEFAULT_LOGGED_IN_USER_ID).data!!
@@ -78,8 +78,8 @@ class PostTest(
     @Test
     fun canBeCommented() {
         val commentsBefore = postService.findById(1, DEFAULT_LOGGED_IN_USER_ID).data!!.commentsAmount
-        postService.addComment(AddCommentRequest(1, 2, "maladec sheen", now()))
-        postService.addComment(AddCommentRequest(1, 6, "madloba", now()))
+        postService.addComment(AddCommentRequest(1, "2", "maladec sheen", now()))
+        postService.addComment(AddCommentRequest(1, "6", "madloba", now()))
 
         val comments = postService.listComments(ListCommentsRequest(1, DEFAULT_LOGGED_IN_USER_ID, DEFAULT_LISTING_PARAMS)).data
         assertEquals(commentsBefore + 2, comments.size)
@@ -88,17 +88,17 @@ class PostTest(
 
     @Test
     fun canBeReportedAndThenRemoved() {
-        postService.report(ReportContentRequest(2, 2, now(), ReportReason.INAPPROPRIATE_CONTENT))
-        postService.report(ReportContentRequest(2, 3, now(), ReportReason.INAPPROPRIATE_CONTENT))
+        postService.report(ReportContentRequest(2, "2", now(), ReportReason.INAPPROPRIATE_CONTENT))
+        postService.report(ReportContentRequest(2, "3", now(), ReportReason.INAPPROPRIATE_CONTENT))
 
         assertTrue(postService.findById(2, DEFAULT_LOGGED_IN_USER_ID).data!!.isActive)
         assertEquals(2, postService.listReportsForContent(2).data.size)
 
-        val response = postService.report(ReportContentRequest(2, 3, now(), ReportReason.INAPPROPRIATE_CONTENT))
+        val response = postService.report(ReportContentRequest(2, "3", now(), ReportReason.INAPPROPRIATE_CONTENT))
         assertFalse(response.isSuccessful)
         assertEquals("You already reported this content", response.message)
 
-        postService.report(ReportContentRequest(2, 5, now(), ReportReason.OFFENSIVE_CONTENT))
+        postService.report(ReportContentRequest(2, "5", now(), ReportReason.OFFENSIVE_CONTENT))
         val post = postService.findById(2, DEFAULT_LOGGED_IN_USER_ID).data!!
 
         assertFalse(post.isActive)
@@ -108,7 +108,7 @@ class PostTest(
     @Test
     fun canBeRemovedAndActivated() {
         val post = postService.createPost(
-            CreatePostRequest(now(), 1, "123", "Some teeext", listOf(FileData("1", FileType.IMAGE), FileData("1", FileType.IMAGE)))
+            CreatePostRequest(now(), "1", "123", "Some teeext", listOf(FileData("1", FileType.IMAGE), FileData("1", FileType.IMAGE)))
         ).data!!
 
         val removeResponse = postService.remove(OperateOnContentRequest(post.id, post.creator.id, now()))
@@ -116,7 +116,7 @@ class PostTest(
         assertEquals("POST removed successfully!", removeResponse.message)
         assertTrue(removeResponse.data!!.isRemoved)
 
-        val failResponse = postService.activate(OperateOnContentRequest(post.id, 5, now()))
+        val failResponse = postService.activate(OperateOnContentRequest(post.id, "5", now()))
         assertFalse(failResponse.isSuccessful)
         assertEquals("You dont have rights to activate this content", failResponse.message)
 

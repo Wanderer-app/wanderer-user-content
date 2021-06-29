@@ -28,7 +28,7 @@ class PinController(
     @PostMapping("/list")
     fun list(
         @RequestBody listingParams: ListingParams,
-        @RequestHeader(name = "user-token", required = false) loggedInUserId: Long?
+        @RequestHeader(name = "user-token", required = false) loggedInUserId: String?
     ): ResponseEntity<ServiceListingResponse<PinData>> =
         httpResponse(pinService.list(listingParams, loggedInUserId))
 
@@ -41,7 +41,7 @@ class PinController(
         httpResponse(pinService.updatePin(request))
 
     @GetMapping("/{id}")
-    fun getPin(@PathVariable id: Long, @RequestHeader(name = "user-token", required = false) loggedInUserId: Long?): ResponseEntity<ServiceResponse<PinData>> =
+    fun getPin(@PathVariable id: Long, @RequestHeader(name = "user-token", required = false) loggedInUserId: String?): ResponseEntity<ServiceResponse<PinData>> =
         httpResponse(pinService.findById(id, loggedInUserId))
 
     @PostMapping("/activate")
@@ -72,7 +72,7 @@ class PinController(
     fun listComments(
         @RequestBody listingParams: ListingParams,
         @PathVariable contentId: Long,
-        @RequestHeader(name = "user-token", required = false) loggedInUserId: Long?
+        @RequestHeader(name = "user-token", required = false) loggedInUserId: String?
     ): ResponseEntity<ServiceListingResponse<CommentData>> =
         httpResponse(pinService.listComments(ListCommentsRequest(contentId, loggedInUserId, listingParams)))
 

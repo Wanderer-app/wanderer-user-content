@@ -4,13 +4,13 @@ import org.joda.time.LocalDateTime
 
 data class UpdateCommentRequest(
     val commentId: Long,
-    val updaterId: Long,
+    val updaterId: String,
     val text: String
 )
 
 data class AddCommentRequest(
     val contentId: Long,
-    val commenterId: Long,
+    val commenterId: String,
     val commentContent: String,
     val date: LocalDateTime
 )

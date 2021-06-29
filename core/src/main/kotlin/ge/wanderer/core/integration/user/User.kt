@@ -1,11 +1,12 @@
 package ge.wanderer.core.integration.user
 
 data class User (
-    val id: Long,
+    val id: String,
     val firstName: String,
     val lastName: String,
     val pinVoteWeight: Int,
-    val isAdmin: Boolean
+    val isAdmin: Boolean,
+    val userName: String = "${firstName}.${lastName}"
 ) {
     override fun equals(other: Any?): Boolean {
         other as User

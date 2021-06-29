@@ -1,1 +1,1 @@
-{"question":"What is the best video game?","answers":[{"answerId":1,"title":"Gta","answererIds":[1],"percentage":100.00},{"answerId":2,"title":"Rdr","answererIds":[],"percentage":0.00}]}
+{"question":"What is the best video game?","answers":[{"answerId":1,"title":"Gta","answererIds":["1"],"percentage":100.00},{"answerId":2,"title":"Rdr","answererIds":[],"percentage":0.00}]}

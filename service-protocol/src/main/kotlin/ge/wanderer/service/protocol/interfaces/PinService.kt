@@ -17,7 +17,7 @@ interface PinService : UserContentService<PinData>, RateableContentService, Comm
 
     fun createPin(request: CreatePinRequest): ServiceResponse<PinData>
     fun listForRoute(routeCode: String, listingParams: ListingParams): ServiceListingResponse<PinMapData>
-    fun list(listingParams: ListingParams, requestingUserId: Long?): ServiceListingResponse<PinData>
+    fun list(listingParams: ListingParams, requestingUserId: String?): ServiceListingResponse<PinData>
     fun reportIrrelevant(request: OperateOnContentRequest): ServiceResponse<PinData>
     fun updatePin(request: UpdatePinRequest): ServiceResponse<PinData>
 }

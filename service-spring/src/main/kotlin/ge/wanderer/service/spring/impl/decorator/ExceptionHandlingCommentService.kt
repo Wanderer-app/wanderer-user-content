@@ -21,7 +21,7 @@ class ExceptionHandlingCommentService(
     override fun updateComment(request: UpdateCommentRequest): ServiceResponse<CommentData> =
         handle { commentServiceImpl.updateComment(request) }
 
-    override fun findById(id: Long, requestingUserId: Long?): ServiceResponse<CommentData> =
+    override fun findById(id: Long, requestingUserId: String?): ServiceResponse<CommentData> =
         handle { commentServiceImpl.findById(id, requestingUserId) }
 
     override fun activate(request: OperateOnContentRequest): ServiceResponse<CommentData> =

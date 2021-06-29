@@ -5,8 +5,12 @@ import ge.wanderer.common.enums.UserContentType.*
 import ge.wanderer.core.integration.user.UserService
 import ge.wanderer.service.spring.configuration.UserServiceImplementationType.MOCKED
 import ge.wanderer.service.spring.configuration.UserServiceImplementationType.REAL
-import ge.wanderer.service.spring.integration.user.UserServiceImpl
-import ge.wanderer.service.spring.integration.user.UserServiceMockImpl
+import ge.wanderer.service.spring.integration.user.api.UsersApiClientType
+import ge.wanderer.service.spring.integration.user.api.mockedUserApiClient
+import ge.wanderer.service.spring.integration.user.api.realUserApiClient
+import ge.wanderer.service.spring.integration.user.service.UserServiceImpl
+import ge.wanderer.service.spring.integration.user.service.UserServiceMockImpl
+import org.http4k.core.HttpHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -64,6 +68,17 @@ class PropertiesConfiguration {
         when(type) {
             MOCKED -> mockedUserService
             REAL -> realUserService
+        }
+
+    @Bean
+    @Primary
+    fun usersApi(
+        @Value("\${integration.users.api.url}") url: String,
+        @Value("\${integration.users.api.type:MOCKED}") type: UsersApiClientType
+    ): HttpHandler =
+        when(type) {
+            UsersApiClientType.MOCKED -> mockedUserApiClient()
+            UsersApiClientType.REAL -> realUserApiClient(url)
         }
 
 

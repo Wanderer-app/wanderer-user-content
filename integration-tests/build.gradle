@@ -3,6 +3,7 @@ project(":integration-tests") {
 
     dependencies {
         implementation project(":common")
+        implementation project(":core")
 
         implementation project(":web-api-spring")
 

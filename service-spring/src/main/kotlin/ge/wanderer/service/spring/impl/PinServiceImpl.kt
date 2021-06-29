@@ -60,7 +60,7 @@ class PinServiceImpl(
         return ServiceListingResponse(true, "Pins Fetched!", pins.size, listingParams.batchNumber, pins.map { it.mapData() })
     }
 
-    override fun list(listingParams: ListingParams, requestingUserId: Long?): ServiceListingResponse<PinData> {
+    override fun list(listingParams: ListingParams, requestingUserId: String?): ServiceListingResponse<PinData> {
         val pins = pinRepository.list(listingParams)
         return ServiceListingResponse(true, "Pins Fetched!", pins.size, listingParams.batchNumber, pins.map { it.dataWithCommentsPreview(getRequestingUser(requestingUserId, userService)) })
     }
@@ -85,7 +85,7 @@ class PinServiceImpl(
         )
     }
 
-    override fun findById(id: Long, requestingUserId: Long?): ServiceResponse<PinData> {
+    override fun findById(id: Long, requestingUserId: String?): ServiceResponse<PinData> {
         val pin = pinRepository.findById(id)
         return ServiceResponse(true, "Pin fetched!", pin.dataWithCommentsPreview(getRequestingUser(requestingUserId, userService)))
     }

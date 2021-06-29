@@ -37,7 +37,7 @@ class CommentServiceImplTest {
 
     @Test
     fun correctlyUpdatesComments() {
-        val request = UpdateCommentRequest(4, 5, "sadaa chemi 1000 maneti?")
+        val request = UpdateCommentRequest(4, "5", "sadaa chemi 1000 maneti?")
 
         val response = service.updateComment(request)
         assertTrue(response.isSuccessful)
@@ -49,12 +49,12 @@ class CommentServiceImplTest {
         assertEquals("sadaa chemi 1000 maneti?", commentData.text)
 
         verify(exactly = 1) { commentRepository.findById(4) }
-        verify(exactly = 1) { userService.findUserById(5) }
+        verify(exactly = 1) { userService.findUserById("5") }
     }
 
     @Test
     fun correctlyHandlesErrorOnUpdate() {
-        val request = UpdateCommentRequest(4, 1, "sadaa chemi 1 maneti?")
+        val request = UpdateCommentRequest(4, "1", "sadaa chemi 1 maneti?")
 
         val response = service.updateComment(request)
         assertFalse(response.isSuccessful)
@@ -75,7 +75,7 @@ class CommentServiceImplTest {
     @Test
     fun correctlyActivatesComment() {
         comment1.remove(dateTime("2021-03-29"), jambura())
-        val request = OperateOnContentRequest(1, 1, dateTime("2021-03-30"))
+        val request = OperateOnContentRequest(1, "1", dateTime("2021-03-30"))
 
         val result = service.activate(request)
         assertTrue(result.isSuccessful)
@@ -91,7 +91,7 @@ class CommentServiceImplTest {
     @Test
     fun returnsCorrectResponseOnActivationError() {
         comment1.remove(dateTime("2021-03-29"), jambura())
-        val request = OperateOnContentRequest(1, 5, dateTime("2021-03-30"))
+        val request = OperateOnContentRequest(1, "5", dateTime("2021-03-30"))
 
         val result = service.activate(request)
         assertFalse(result.isSuccessful)
@@ -100,7 +100,7 @@ class CommentServiceImplTest {
 
     @Test
     fun correctlyRemovesContent() {
-        val request = OperateOnContentRequest(4, 2, dateTime("2021-03-30"))
+        val request = OperateOnContentRequest(4, "2", dateTime("2021-03-30"))
 
         val result = service.remove(request)
 
@@ -118,32 +118,32 @@ class CommentServiceImplTest {
     @Test
     fun correctlyRatesContent() {
         // user(id=2) up votes comment(id=1)
-        var request = OperateOnContentRequest(1, 2, now())
+        var request = OperateOnContentRequest(1, "2", now())
         var result = service.giveUpVote(request)
         assertTrue(result.isSuccessful)
         assertEquals(1, result.data!!.totalRating)
 
         // user(id=3) up votes comment(id=1)
-        request = OperateOnContentRequest(1, 3, now())
+        request = OperateOnContentRequest(1, "3", now())
         result = service.giveUpVote(request)
         assertTrue(result.isSuccessful)
         assertEquals(2, result.data!!.totalRating)
 
         // user(id=5) down votes comment(id=1)
-        request = OperateOnContentRequest(1, 5, now())
+        request = OperateOnContentRequest(1, "5", now())
         result = service.giveDownVote(request)
         assertTrue(result.isSuccessful)
         assertEquals(1, result.data!!.totalRating)
 
         // user(id=1) tries to up vote own comment(id=1)
-        request = OperateOnContentRequest(1, 1, now())
+        request = OperateOnContentRequest(1, "1", now())
         result = service.giveDownVote(request)
         assertFalse(result.isSuccessful)
         assertEquals("Cant vote for your own content!", result.message)
         assertEquals(1, result.data!!.totalRating)
 
         // user(id=3) removes his up vote
-        request = OperateOnContentRequest(1, 3, now())
+        request = OperateOnContentRequest(1, "3", now())
         result = service.removeVote(request)
         assertTrue(result.isSuccessful)
         assertEquals(0, result.data!!.totalRating)
@@ -151,14 +151,14 @@ class CommentServiceImplTest {
 
     @Test
     fun correctlyAddsRepliesToComments() {
-        var request = AddCommentRequest(4, 1, "lashas mamas hqonda", now())
+        var request = AddCommentRequest(4, "1", "lashas mamas hqonda", now())
         var response = service.addComment(request)
 
         assertTrue(response.isSuccessful)
         assertEquals("Comment added", response.message)
         assertEquals("lashas mamas hqonda", response.data!!.text)
 
-        request = AddCommentRequest(4, 5, "axla atrakeb", now())
+        request = AddCommentRequest(4, "5", "axla atrakeb", now())
         response = service.addComment(request)
 
         assertTrue(response.isSuccessful)
@@ -182,7 +182,7 @@ class CommentServiceImplTest {
 
     @Test
     fun correctlyReportsComments() {
-        val request = ReportContentRequest(4, 1, now(), ReportReason.INAPPROPRIATE_CONTENT)
+        val request = ReportContentRequest(4, "1", now(), ReportReason.INAPPROPRIATE_CONTENT)
         val response = service.report(request)
 
         assertTrue(response.isSuccessful)
@@ -192,7 +192,7 @@ class CommentServiceImplTest {
 
     @Test
     fun administrationCanBeNotifiedAndContentRemovedOnReport() {
-        val request = ReportContentRequest(4, 1, now(), ReportReason.INAPPROPRIATE_CONTENT)
+        val request = ReportContentRequest(4, "1", now(), ReportReason.INAPPROPRIATE_CONTENT)
         val response = service.report(request)
 
         assertTrue(response.isSuccessful)

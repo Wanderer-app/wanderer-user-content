@@ -24,7 +24,7 @@ class ExceptionHandlingPostService(
     override fun updatePost(request: UpdatePostRequest): ServiceResponse<DiscussionElementData> =
         handle { postServiceImpl.updatePost(request) }
 
-    override fun findById(id: Long, requestingUserId: Long?): ServiceResponse<DiscussionElementData> =
+    override fun findById(id: Long, requestingUserId: String?): ServiceResponse<DiscussionElementData> =
         handle { postServiceImpl.findById(id, requestingUserId) }
 
     override fun activate(request: OperateOnContentRequest): ServiceResponse<DiscussionElementData> =

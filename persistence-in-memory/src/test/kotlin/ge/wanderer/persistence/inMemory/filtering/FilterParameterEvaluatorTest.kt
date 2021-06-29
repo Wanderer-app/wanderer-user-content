@@ -1,8 +1,13 @@
 package ge.wanderer.persistence.inMemory.filtering
 
+import ge.wanderer.common.constants.TRANSIENT_ID
 import ge.wanderer.common.dateTime
+import ge.wanderer.common.enums.VoteType
 import ge.wanderer.common.listing.FilterOperation.*
 import ge.wanderer.common.listing.FilterParam
+import ge.wanderer.common.now
+import ge.wanderer.core.model.content.status.Active
+import ge.wanderer.core.model.rating.Vote
 import ge.wanderer.persistence.inMemory.support.createNewPostWithoutFiles
 import ge.wanderer.persistence.inMemory.support.jambura
 import ge.wanderer.persistence.inMemory.support.patata
@@ -17,13 +22,14 @@ class FilterParameterEvaluatorTest {
     @Test
     fun correctlyChecksNumberParameters() {
         val post = createNewPostWithoutFiles(1, jambura(), "zd all" , dateTime("2020-04-15T12:12:11"))
+        post.giveVote(Vote(TRANSIENT_ID, patata(), now(), Active(now(), patata()), 1, VoteType.UP))
 
         assertTrue(evaluate(FilterParam("creatorId", IS, "1"), post))
         assertFalse(evaluate(FilterParam("creatorId", IS_NOT, "1"), post))
-        assertFalse(evaluate(FilterParam("creatorId", IS_MORE_THEN, "2"), post))
-        assertFalse(evaluate(FilterParam("creatorId", IS_LESS_THEN, "-2"), post))
-        assertTrue(evaluate(FilterParam("creatorId", IS_MORE_THEN, "-2"), post))
-        assertTrue(evaluate(FilterParam("creatorId", IS_LESS_THEN, "2"), post))
+        assertFalse(evaluate(FilterParam("rating", IS_MORE_THEN, "2"), post))
+        assertFalse(evaluate(FilterParam("rating", IS_LESS_THEN, "-2"), post))
+        assertTrue(evaluate(FilterParam("rating", IS_MORE_THEN, "-2"), post))
+        assertTrue(evaluate(FilterParam("rating", IS_LESS_THEN, "2"), post))
     }
 
         @Test

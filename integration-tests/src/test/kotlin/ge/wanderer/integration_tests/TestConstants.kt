@@ -8,7 +8,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import java.math.BigDecimal
 
 val DEFAULT_LISTING_PARAMS = ListingParams(100, 1, null, listOf())
-val DEFAULT_LOGGED_IN_USER_ID = 1L
+const val DEFAULT_LOGGED_IN_USER_ID = "1"
 
 data class PollData(
     val question: String,

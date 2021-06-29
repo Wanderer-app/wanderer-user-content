@@ -20,12 +20,12 @@ class SelectPollAnswerCommandTest {
 
         var result = SelectPollAnswerCommand(poll, 1, jambura()).execute()
         assertTrue(result.isSuccessful)
-        assertTrue(poll.answersData().first().answererIds.contains(1))
+        assertTrue(poll.answersData().first().answererIds.contains("1"))
 
         result = SelectPollAnswerCommand(poll, 2, jambura()).execute()
         assertTrue(result.isSuccessful)
         assertTrue(poll.answersData().first().answererIds.isEmpty())
-        assertTrue(poll.answersData().last().answererIds.contains(1))
+        assertTrue(poll.answersData().last().answererIds.contains("1"))
 
         result = SelectPollAnswerCommand(poll, 2, jambura()).execute()
         assertTrue(result.isSuccessful)

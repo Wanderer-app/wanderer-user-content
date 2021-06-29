@@ -44,15 +44,15 @@ class PinRepositoryImpl(
 
     private val currentId = AtomicLong(1)
     private val pins = hashMapOf(
-        create(1, now(), "TB201301", "აქა ფრთხილად", "ვოლკები დადიან", null, LatLng(41.81309452631177f, 44.84830571006798f), WARNING, setOf(Pair(2L, "რაღაცას გვატყუებ"))),
-        create(2, now(), "TB201301", "მეწყერი ჩამოწვა", "ვერ გაივლით", null, LatLng(41.80877688066833f, 44.858985100557675f), TIP, setOf(Pair(1L, "დღეს ვნახე და აღარაა"))),
-        create(1, now(), "TB201301", "დასასვენებელი ადგილი", "ბანაკისთვის კაი ადგილია. ჭაჭას დალევ და გაითიშები", null, LatLng(41.801802130108065f, 44.87436234552735f), RESTING_PLACE, setOf(Pair(1L, "მართალია ეს კაცი"))),
-        create(4, now(), "TB201301", "მაგარი ადგილი", "კაი ხედია აქედან", AttachedFile("user-images/1622887057360-butterfly.jpg"), LatLng(41.8055665996977f, 44.86248552819858f), SIGHT, setOf(Pair(6L, "დიახ დიახ"))),
-        create(5, now(), "TB201301", "ოო იეე", "აქ პირველად ვაკოცე გოგოს", null, LatLng(41.81216881837967f, 44.853783440245074f), TIP, setOf(Pair(2L, "ფანტაზიორი ხაააარ")))
+        create("5760b116-6aab-4f04-b8be-650e27a85d09", now(), "TB201301", "აქა ფრთხილად", "ვოლკები დადიან", null, LatLng(41.81309452631177f, 44.84830571006798f), WARNING, setOf(Pair("85fa0681-b7bd-4ee3-b5b5-eb2672181ae2", "რაღაცას გვატყუებ"))),
+        create("85fa0681-b7bd-4ee3-b5b5-eb2672181ae2", now(), "TB201301", "მეწყერი ჩამოწვა", "ვერ გაივლით", null, LatLng(41.80877688066833f, 44.858985100557675f), TIP, setOf(Pair("5760b116-6aab-4f04-b8be-650e27a85d09", "დღეს ვნახე და აღარაა"))),
+        create("5760b116-6aab-4f04-b8be-650e27a85d09", now(), "TB201301", "დასასვენებელი ადგილი", "ბანაკისთვის კაი ადგილია. ჭაჭას დალევ და გაითიშები", null, LatLng(41.801802130108065f, 44.87436234552735f), RESTING_PLACE, setOf(Pair("5760b116-6aab-4f04-b8be-650e27a85d09", "მართალია ეს კაცი"))),
+        create("b41c2dd8-db85-4d96-a1f4-92f90851f7f2", now(), "TB201301", "მაგარი ადგილი", "კაი ხედია აქედან", AttachedFile("user-images/1622887057360-butterfly.jpg"), LatLng(41.8055665996977f, 44.86248552819858f), SIGHT, setOf(Pair("5673a717-9083-4150-8b7e-c3fb25675e3a", "დიახ დიახ"))),
+        create("755520ef-f06a-49e2-af7e-a0f4c19b1aba", now(), "TB201301", "ოო იეე", "აქ პირველად ვაკოცე გოგოს", null, LatLng(41.81216881837967f, 44.853783440245074f), TIP, setOf(Pair("85fa0681-b7bd-4ee3-b5b5-eb2672181ae2", "fefefafafa")))
     )
 
     private fun create(
-        userId: Long,
+        userId: String,
         createDate: LocalDateTime,
         routeCode: String,
         title: String,
@@ -60,7 +60,7 @@ class PinRepositoryImpl(
         attachedFile: AttachedFile?,
         location: LatLng,
         type: PinType,
-        commentsData: Set<Pair<Long, String>>
+        commentsData: Set<Pair<String, String>>
     ): Pair<Long, IPin> {
         val id = currentId.getAndIncrement()
         val user = userService.findUserById(userId)
@@ -73,7 +73,7 @@ class PinRepositoryImpl(
         )
     }
 
-    private fun createComment(userId: Long, text: String, createDate: LocalDateTime): IComment {
+    private fun createComment(userId: String, text: String, createDate: LocalDateTime): IComment {
         val user = userService.findUserById(userId)
         val comment =  Comment(TRANSIENT_ID, user, createDate, text, Active(createDate, user))
         return commentRepository.persist(comment)

@@ -43,7 +43,7 @@ class FilterParameterEvaluator<T>(
     private fun <T : UserAddedContent> getFieldValueForUserContent(element: T, filterParam: FilterParam): Filter<*> {
         return when(filterParam.fieldName) {
             "createdAt" -> timeFilter(element.createdAt(), filterParam)
-            "creatorId" -> numberFilter(element.creator().id, filterParam)
+            "creatorId" -> stringFilter(element.creator().id, filterParam)
             "contentType" -> stringFilter(element.contentType().toString(), filterParam)
             "isActive" -> booleanFilter(element.isActive(), filterParam)
             else -> error("Can't filter by field ${filterParam.fieldName}")

@@ -1,3 +1,7 @@
+def okHttp4kVersion = "4.9.8.0"
+def springVersion = "5.2.8.RELEASE"
+def springBootVersion = "2.3.4.RELEASE"
+
 project(":service-spring") {
     description = "Service protocol implementation in Spring framework"
 
@@ -9,9 +13,14 @@ project(":service-spring") {
         implementation project(":persistence")
         implementation project(":common")
 
-        implementation 'org.springframework:spring-core:5.2.8.RELEASE'
-        implementation 'org.springframework:spring-context:5.2.8.RELEASE'
-        implementation 'org.springframework.boot:spring-boot-starter:2.3.4.RELEASE'
-        implementation 'org.springframework:spring-tx:5.2.8.RELEASE'
+        implementation "org.springframework:spring-core:${springVersion}"
+        implementation "org.springframework:spring-context:${springVersion}"
+        implementation "org.springframework.boot:spring-boot-starter:${springBootVersion}"
+        implementation "org.springframework:spring-tx:${springVersion}"
+
+        implementation "org.http4k:http4k-core:${okHttp4kVersion}"
+        implementation "org.http4k:http4k-server-jetty:${okHttp4kVersion}"
+        implementation "org.http4k:http4k-client-okhttp:${okHttp4kVersion}"
+        implementation "org.http4k:http4k-format-jackson:${okHttp4kVersion}"
     }
 }

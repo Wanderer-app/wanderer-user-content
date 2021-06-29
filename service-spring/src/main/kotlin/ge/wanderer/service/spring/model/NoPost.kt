@@ -20,7 +20,7 @@ class NoPost: IPost {
     override fun comments(): List<IComment> = listOf()
     override fun addComment(comment: IComment): IComment = comment
     override fun id(): Long = 0
-    override fun creator(): User = User(0, "No", "User", 0, false)
+    override fun creator(): User = User("0", "No", "User", 0, false)
     override fun createdAt(): LocalDateTime = now()
     override fun isActive(): Boolean = false
     override fun isRemoved(): Boolean = false

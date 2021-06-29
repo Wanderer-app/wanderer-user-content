@@ -6,5 +6,5 @@ import ge.wanderer.service.protocol.response.ServiceListingResponse
 
 interface DiscussionService {
 
-    fun getDiscussionForRoute(routeCode: String, requestingUserId: Long?, listingParams: ListingParams): ServiceListingResponse<DiscussionElementData>
+    fun getDiscussionForRoute(routeCode: String, requestingUserId: String?, listingParams: ListingParams): ServiceListingResponse<DiscussionElementData>
 }

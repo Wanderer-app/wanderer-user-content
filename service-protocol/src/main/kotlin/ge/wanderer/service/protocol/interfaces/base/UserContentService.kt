@@ -5,7 +5,7 @@ import ge.wanderer.service.protocol.response.ServiceResponse
 
 interface UserContentService<T> {
 
-    fun findById(id: Long, requestingUserId: Long?): ServiceResponse<T>
+    fun findById(id: Long, requestingUserId: String?): ServiceResponse<T>
     fun activate(request: OperateOnContentRequest): ServiceResponse<T>
     fun remove(request: OperateOnContentRequest): ServiceResponse<T>
 }

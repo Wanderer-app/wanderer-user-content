@@ -19,7 +19,7 @@ class DiscussionServiceImpl(
     @Autowired private val userService: UserService
 ): DiscussionService {
 
-    override fun getDiscussionForRoute(routeCode: String, requestingUserId: Long?, listingParams: ListingParams): ServiceListingResponse<DiscussionElementData> {
+    override fun getDiscussionForRoute(routeCode: String, requestingUserId: String?, listingParams: ListingParams): ServiceListingResponse<DiscussionElementData> {
         val discussions = discussionRepository.listForRoute(routeCode, listingParams)
         val user = getRequestingUser(requestingUserId, userService)
         return ServiceListingResponse(

@@ -34,7 +34,7 @@ class PollControllerTest(
 
     @Test
     fun createsAndUpdatesPoll() {
-        val request = CreatePollRequest(now(), 1, "1234", "ragaca ragaca", setOf("a1", "a2", "a3"))
+        val request = CreatePollRequest(now(), "1", "1234", "ragaca ragaca", setOf("a1", "a2", "a3"))
 
         val responseString = mockMvc.post(controllerPath + "create", toJson(request))
             .andExpect(status().isOk)
@@ -49,7 +49,7 @@ class PollControllerTest(
         assertTrue(poll.content.contains("a2"))
         assertTrue(poll.content.contains("a3"))
 
-        val updateRequest = UpdatePollRequest(poll.id, "Some question", 1)
+        val updateRequest = UpdatePollRequest(poll.id, "Some question", "1")
         val updateResponse = mockMvc.post(controllerPath + "update", toJson(updateRequest))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.isSuccessful").value(true))
@@ -63,7 +63,7 @@ class PollControllerTest(
 
     @Test
     fun addsAndRemovesAnswerToPoll() {
-        val poll = createPoll(CreatePollRequest(now(), 1, "1234", "ragaca ragaca", setOf("a1", "a2", "a3")))
+        val poll = createPoll(CreatePollRequest(now(), "1", "1234", "ragaca ragaca", setOf("a1", "a2", "a3")))
 
         var responseString = mockMvc.post(controllerPath + "add-answer", toJson(AddAnswerToPollRequest(poll.id, poll.creator.id, "a4", now())))
             .andExpect(status().isOk)
@@ -89,10 +89,10 @@ class PollControllerTest(
 
     @Test
     fun selectsPollAnswer() {
-        val poll = createPoll(CreatePollRequest(now(), 1, "1234", "ragaca ragaca", setOf("a1", "a2", "a3")))
+        val poll = createPoll(CreatePollRequest(now(), "1", "1234", "ragaca ragaca", setOf("a1", "a2", "a3")))
         val answerToSelect = fromJson<PollData>(poll.content).answers.first { it.title == "a2" }
 
-        val responseString = mockMvc.post(controllerPath + "select-answer", toJson(SelectPollAnswerRequest(poll.id, 2, answerToSelect.answerId)))
+        val responseString = mockMvc.post(controllerPath + "select-answer", toJson(SelectPollAnswerRequest(poll.id, "2", answerToSelect.answerId)))
             .andExpect(status().isOk)
             .andReturn()
             .response.contentAsString
@@ -108,7 +108,7 @@ class PollControllerTest(
 
     @Test
     fun findsPollById() {
-        val poll = createPoll(CreatePollRequest(now(), 1, "1234", "ragaca ragaca", setOf("a1", "a2", "a3")))
+        val poll = createPoll(CreatePollRequest(now(), "1", "1234", "ragaca ragaca", setOf("a1", "a2", "a3")))
 
         mockMvc.get(controllerPath + poll.id)
             .andExpect(status().isOk)
@@ -119,9 +119,9 @@ class PollControllerTest(
 
     @Test
     fun activatesAndRemovesPolls() {
-        val poll = createPoll(CreatePollRequest(now(), 1, "1234", "ragaca ragaca", setOf("a1", "a2", "a3")))
+        val poll = createPoll(CreatePollRequest(now(), "1", "1234", "ragaca ragaca", setOf("a1", "a2", "a3")))
 
-        mockMvc.post(controllerPath + "remove", toJson(OperateOnContentRequest(poll.id, 2, now())))
+        mockMvc.post(controllerPath + "remove", toJson(OperateOnContentRequest(poll.id, "2", now())))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.isSuccessful").value(true))
             .andExpect(jsonPath("$.message").value("POLL removed successfully!"))
@@ -129,7 +129,7 @@ class PollControllerTest(
             .andExpect(jsonPath("$.data.isActive").value(false))
             .andExpect(jsonPath("$.data.isRemoved").value(true))
 
-        mockMvc.post(controllerPath + "activate", toJson(OperateOnContentRequest(poll.id, 2, dateTime("2021-04-05T12:00:00"))))
+        mockMvc.post(controllerPath + "activate", toJson(OperateOnContentRequest(poll.id, "2", dateTime("2021-04-05T12:00:00"))))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.isSuccessful").value(true))
             .andExpect(jsonPath("$.message").value("POLL activated successfully!"))
@@ -143,7 +143,7 @@ class PollControllerTest(
     fun commentsPoll() {
         val pollId = 1L
 
-        val request = AddCommentRequest(pollId, 2, "Some comment", now())
+        val request = AddCommentRequest(pollId, "2", "Some comment", now())
         mockMvc.post(controllerPath + "add-comment", toJson(request))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.isSuccessful").value(true))
@@ -156,7 +156,7 @@ class PollControllerTest(
             .andReturn().response.contentAsString
 
         val comments = fromJson<ServiceListingResponse<CommentData>>(commentsResponseString).data
-        assertTrue { comments.any { it.text == "Some comment" && it.author.id == 2L && it.id != TRANSIENT_ID } }
+        assertTrue { comments.any { it.text == "Some comment" && it.author.id == "2" && it.id != TRANSIENT_ID } }
     }
 
 
