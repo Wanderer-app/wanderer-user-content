@@ -13,4 +13,4 @@ Useful Links:
 
 #Docker
 $ docker build . -t wanderer-user-content
-$ docker run -p 8080:8080 wanderer-user-content
+$ docker run -d -p 8080:8080 wanderer-user-content
