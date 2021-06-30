@@ -6,16 +6,16 @@ import org.http4k.core.Uri
 import org.http4k.core.then
 import org.http4k.filter.ClientFilters
 import org.http4k.filter.DebuggingFilters
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
 class RealUserApiClientProvider(
-    @Value("\${integration.users.api.url}")
-    private val apiBaseUri: String
+    @Autowired private val userApiUrl: String
 ): UserApiClientProvider {
 
-    override fun getClient(): HttpHandler = realUserApiClient(apiBaseUri)
+    override fun getClient(): HttpHandler = realUserApiClient(userApiUrl)
 
     private fun realUserApiClient(apiBaseUri: String): HttpHandler =
         DebuggingFilters.PrintResponse()

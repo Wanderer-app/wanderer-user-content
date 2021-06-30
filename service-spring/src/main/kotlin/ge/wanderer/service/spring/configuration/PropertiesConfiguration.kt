@@ -14,9 +14,12 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
+import org.springframework.core.env.Environment
 
 @Configuration
-class PropertiesConfiguration {
+class PropertiesConfiguration(
+    @Autowired private val environment: Environment
+) {
 
     @Bean
     fun commentPreviewProperties(
@@ -78,6 +81,17 @@ class PropertiesConfiguration {
         when(type) {
             UsersApiClientType.MOCKED -> mockedUserApiClientProvider
             UsersApiClientType.REAL -> realUserApiClientProvider
+        }
+
+    @Bean
+    fun userApiUrl(
+        @Value("\${integration.users.api.url}") localUrl: String,
+        @Value("\${integration.users.api.url.prod}") prodUrl: String
+    ): String =
+        if (environment.activeProfiles.contains("prod")) {
+            prodUrl
+        } else {
+            localUrl
         }
 
 
